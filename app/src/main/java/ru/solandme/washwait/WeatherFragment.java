@@ -1,6 +1,7 @@
 package ru.solandme.washwait;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.POJO.CurrentWeatherResponse;
-import ru.solandme.washwait.POJO.List;
 import ru.solandme.washwait.POJO.WeatherResponse;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
@@ -38,6 +38,7 @@ public class WeatherFragment extends Fragment {
     TextView currentTemperatureField;
     TextView weatherIcon;
     TextView forecast;
+    ProgressDialog progress;
 
     String lat = "35";
     String lon = "139";
@@ -57,6 +58,7 @@ public class WeatherFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
+        progress = new ProgressDialog(getActivity());
     }
 
 
@@ -76,17 +78,23 @@ public class WeatherFragment extends Fragment {
 
         getWeather();
 
+
         return rootView;
     }
 
 
     void getWeather() {
+
+        progress.setMessage("Getting forecast ...");
+        progress.show();
+
         final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
         Call<CurrentWeatherResponse> currentWeatherResponseCall = apiService.getCurrentWeatherByCityName(city, units, lang, appid);
         currentWeatherResponseCall.enqueue(new Callback<CurrentWeatherResponse>() {
             @Override
             public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+                progress.dismiss();
                 CurrentWeatherResponse currentWeatherResponse = response.body();
                 String cityName = currentWeatherResponse.getName();
                 Long dt = (long) currentWeatherResponse.getDt();
@@ -95,13 +103,14 @@ public class WeatherFragment extends Fragment {
                 double pressure = currentWeatherResponse.getMain().getPressure();
 
                 cityField.setText(cityName);
+                detailsField.setTypeface(weatherFont);
+                currentTemperatureField.setTypeface(weatherFont);
 
-                detailsField.setText(
-                        currentWeatherResponse.getWeather().get(0).getDescription().toUpperCase() +
-                                "\n" + getString(R.string.humidity) + humidity + "%" +
-                                "\n" + getString(R.string.pressure) + pressure + " hPa");
+                detailsField.setText(currentWeatherResponse.getWeather().get(0).getDescription().toUpperCase() +
+                                "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%" +
+                                "\n" + getString(R.string.wi_barometer) + " " + getString(R.string.pressure) + pressure + " hPa");
 
-                currentTemperatureField.setText(String.format("%.1f", temp) + " ℃");
+                currentTemperatureField.setText(getString(R.string.wi_thermometer) + " " + String.format("%.1f", temp) + " " + getString(R.string.wi_celsius));
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm", Locale.getDefault());
                 String updatedOn = dateFormat.format(new Date(dt * 1000));
@@ -157,6 +166,7 @@ public class WeatherFragment extends Fragment {
             @Override
             public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
+                progress.dismiss();
             }
         });
 
@@ -176,9 +186,9 @@ public class WeatherFragment extends Fragment {
 
     private String createWashForecast(Response<WeatherResponse> response) {
         Log.e(TAG, "createWashForecast: "
-                + response.body().getList().get(0).getWeather().get(0).getId()
-                + " " + response.body().getList().get(1).getWeather().get(0).getId()
-                + " " + response.body().getList().get(2).getWeather().get(0).getId());
+                + response.body().getList().get(0).getWeather().get(0).getMain()
+                + " " + response.body().getList().get(1).getWeather().get(0).getMain()
+                + " " + response.body().getList().get(2).getWeather().get(0).getMain());
 
         if ((response.body().getList().get(0).getWeather().get(0).getId() < 700)
                 || (response.body().getList().get(1).getWeather().get(0).getId() < 700)
