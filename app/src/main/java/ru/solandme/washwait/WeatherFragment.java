@@ -36,6 +36,7 @@ public class WeatherFragment extends Fragment {
     TextView detailsField;
     TextView currentTemperatureField;
     TextView weatherIcon;
+    TextView forecast;
 
     String lat = "35";
     String lon = "139";
@@ -68,6 +69,7 @@ public class WeatherFragment extends Fragment {
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
         weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
+        forecast = (TextView) rootView.findViewById(R.id.forecast);
 
         weatherIcon.setTypeface(weatherFont);
 
@@ -94,14 +96,15 @@ public class WeatherFragment extends Fragment {
 
                 detailsField.setText(
                         list.getWeather().get(0).getDescription().toUpperCase() +
-                                "\n" + "Humidity: " + list.getHumidity() + "%" +
-                                "\n" + "Pressure: " + list.getPressure() + " hPa");
+                                "\n" + getString(R.string.humidity) + list.getHumidity() + "%" +
+                                "\n" + getString(R.string.pressure) + list.getPressure() + " hPa");
 
                 currentTemperatureField.setText(String.format("%.1f", list.getTemp().getDay()) + " ℃");
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMM yyyy", Locale.getDefault());
                 String updatedOn = dateFormat.format(new Date(dt * 1000));
-                updatedField.setText("Last update: " + updatedOn);
+                updatedField.setText(getString(R.string.last_update) + updatedOn);
+                forecast.setText(createWashForecast(response));
 
                 switch (response.body().getList().get(0).getWeather().get(0).getIcon()) {
                     case "01d":
@@ -154,6 +157,19 @@ public class WeatherFragment extends Fragment {
                 Log.e(TAG, "onError: " + t);
             }
         });
+    }
+
+    private String createWashForecast(Response<WeatherResponse> response) {
+        Log.e(TAG, "createWashForecast: "
+                + response.body().getList().get(0).getWeather().get(0).getId()
+                + " " + response.body().getList().get(1).getWeather().get(0).getId()
+                + " " + response.body().getList().get(2).getWeather().get(0).getId());
+
+        if ((response.body().getList().get(0).getWeather().get(0).getId() < 700)
+                || (response.body().getList().get(1).getWeather().get(0).getId() < 700)
+                || (response.body().getList().get(2).getWeather().get(0).getId() < 700)) {
+            return getString(R.string.not_wash);
+        } else return getString(R.string.can_wash);
     }
 
 }
