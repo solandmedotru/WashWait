@@ -134,4 +134,5 @@
     <string name="last_update">"Last update: "</string>
     <string name="humidity">"Humidity: "</string>
     <string name="pressure">"Pressure: "</string>
+    <string name="settings">Settings</string>
 </resources>
