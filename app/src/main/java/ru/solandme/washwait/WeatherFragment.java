@@ -18,6 +18,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.POJO.CurrentWeatherResponse;
 import ru.solandme.washwait.POJO.List;
 import ru.solandme.washwait.POJO.WeatherResponse;
 import ru.solandme.washwait.rest.ApiClient;
@@ -82,31 +83,32 @@ public class WeatherFragment extends Fragment {
     void getWeather() {
         final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        Call<WeatherResponse> call = apiService.getWeatherByCityName(city, cnt, units, lang, appid);
-        call.enqueue(new Callback<WeatherResponse>() {
+        Call<CurrentWeatherResponse> currentWeatherResponseCall = apiService.getCurrentWeatherByCityName(city, units, lang, appid);
+        currentWeatherResponseCall.enqueue(new Callback<CurrentWeatherResponse>() {
             @Override
-            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                Log.e(TAG, "onResponse: ");
-
-                List list = response.body().getList().get(0);
-                String cityName = response.body().getCity().getName();
-                Long dt = (long) list.getDt();
+            public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+                CurrentWeatherResponse currentWeatherResponse = response.body();
+                String cityName = currentWeatherResponse.getName();
+                Long dt = (long) currentWeatherResponse.getDt();
+                int humidity = currentWeatherResponse.getMain().getHumidity();
+                double temp = currentWeatherResponse.getMain().getTemp();
+                double pressure = currentWeatherResponse.getMain().getPressure();
 
                 cityField.setText(cityName);
 
                 detailsField.setText(
-                        list.getWeather().get(0).getDescription().toUpperCase() +
-                                "\n" + getString(R.string.humidity) + list.getHumidity() + "%" +
-                                "\n" + getString(R.string.pressure) + list.getPressure() + " hPa");
+                        currentWeatherResponse.getWeather().get(0).getDescription().toUpperCase() +
+                                "\n" + getString(R.string.humidity) + humidity + "%" +
+                                "\n" + getString(R.string.pressure) + pressure + " hPa");
 
-                currentTemperatureField.setText(String.format("%.1f", list.getTemp().getDay()) + " ℃");
+                currentTemperatureField.setText(String.format("%.1f", temp) + " ℃");
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE dd MMM yyyy", Locale.getDefault());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm", Locale.getDefault());
                 String updatedOn = dateFormat.format(new Date(dt * 1000));
                 updatedField.setText(getString(R.string.last_update) + updatedOn);
-                forecast.setText(createWashForecast(response));
 
-                switch (response.body().getList().get(0).getWeather().get(0).getIcon()) {
+
+                switch (currentWeatherResponse.getWeather().get(0).getIcon()) {
                     case "01d":
                         weatherIcon.setText(R.string.wi_day_sunny);
                         break;
@@ -150,6 +152,19 @@ public class WeatherFragment extends Fragment {
                         weatherIcon.setText(R.string.wi_night_snow);
                         break;
                 }
+            }
+
+            @Override
+            public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
+                Log.e(TAG, "onError: " + t);
+            }
+        });
+
+        Call<WeatherResponse> call = apiService.getWeatherByCityName(city, cnt, units, lang, appid);
+        call.enqueue(new Callback<WeatherResponse>() {
+            @Override
+            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+                forecast.setText(createWashForecast(response));
             }
 
             @Override
