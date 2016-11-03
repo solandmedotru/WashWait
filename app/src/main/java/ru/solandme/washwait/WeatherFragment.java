@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,10 +32,12 @@ import ru.solandme.washwait.POJO.WeatherResponse;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
 
-public class WeatherFragment extends Fragment {
+public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final String TAG = "ru.solandme.washwait";
     Typeface weatherFont;
+
+    SwipeRefreshLayout swipeRefreshLayout;
 
     TextView cityField;
     TextView updatedField;
@@ -67,6 +70,7 @@ public class WeatherFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
+
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         progress = new ProgressDialog(getActivity());
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -80,6 +84,10 @@ public class WeatherFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
+
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         cityField = (TextView) rootView.findViewById(R.id.city_field);
         updatedField = (TextView) rootView.findViewById(R.id.updated_field);
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
@@ -254,4 +262,10 @@ public class WeatherFragment extends Fragment {
 
     }
 
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        getWeather();
+        swipeRefreshLayout.setRefreshing(false);
+    }
 }
