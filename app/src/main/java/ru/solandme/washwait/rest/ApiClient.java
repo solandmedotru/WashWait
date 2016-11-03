@@ -44,39 +44,31 @@ public class ApiClient {
             okClientBuilder.cache(new Cache(cacheDir, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE));
         }
 
-        okClientBuilder.addNetworkInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request();
-
-                if (!isNetworkAvailable(context)) {
-                    request = chain.request();
-                    request = new Request.Builder()
-                            .cacheControl(new CacheControl.Builder()
-                                    .maxAge(1, TimeUnit.DAYS)
-                                    .maxStale(1, TimeUnit.DAYS)
-                                    .onlyIfCached()
-                                    .build())
-                            .url(request.url())
-                            .build();
-                }
-                return chain.proceed(request);
-            }
-        });
-
         okClientBuilder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
                 Request request = chain.request();
 
-                request = new Request.Builder()
-                        .cacheControl(new CacheControl.Builder()
-                                .maxStale(1, TimeUnit.DAYS)
-                                .minFresh(2, TimeUnit.HOURS)
-                                .build())
-                        .url(request.url())
-                        .build();
-                return chain.proceed(request);
+                if (!isNetworkAvailable(context)) {
+                    request = new Request.Builder()
+                            .cacheControl(new CacheControl.Builder()
+                                    .maxAge(1, TimeUnit.DAYS)
+                                    .maxStale(1, TimeUnit.DAYS)
+                                    .build())
+                            .url(request.url())
+                            .build();
+                    return chain.proceed(request);
+                } else {
+                    request = new Request.Builder()
+                            .cacheControl(new CacheControl.Builder()
+//                                    .maxAge(1, TimeUnit.DAYS)
+                                    .maxStale(1, TimeUnit.HOURS)
+                                    .minFresh(1, TimeUnit.HOURS)
+                                    .build())
+                            .url(request.url())
+                            .build();
+                    return chain.proceed(request);
+                }
             }
         });
 
