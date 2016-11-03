@@ -135,4 +135,17 @@
     <string name="humidity">"Humidity: "</string>
     <string name="pressure">"Pressure: "</string>
     <string name="settings">Settings</string>
+    <string name="error_from_response">Error!</string>
+    <string name="units_format_label">Units format</string>
+
+    <string-array name="units">
+        <item>metric</item>
+        <item>imperial</item>
+        <item>standart</item>
+    </string-array>
+    <string-array name="unitsName">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+        <item>Kelvin</item>
+    </string-array>
 </resources>

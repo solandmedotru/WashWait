@@ -1,12 +1,14 @@
 package ru.solandme.washwait;
 
-
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,9 +31,6 @@ import ru.solandme.washwait.POJO.WeatherResponse;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class WeatherFragment extends Fragment {
 
     private static final String TAG = "ru.solandme.washwait";
@@ -47,11 +47,16 @@ public class WeatherFragment extends Fragment {
     String lat = "35";
     String lon = "139";
     String cnt = "10";
-    String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-    private String city = "428000";
-    private String units = "metric";
-    private String lang = Locale.getDefault().getLanguage();
 
+    String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+
+    private String defaultCityCode = "428000";
+    private String defaultUnits = "metric";
+
+    private String lang = Locale.getDefault().getLanguage();
+    private String cityCode;
+    private String units;
+    SharedPreferences sharedPref;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -61,8 +66,12 @@ public class WeatherFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
+
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         progress = new ProgressDialog(getActivity());
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        cityCode = sharedPref.getString("city", defaultCityCode);
+        units = sharedPref.getString("units", defaultUnits);
     }
 
 
@@ -84,6 +93,7 @@ public class WeatherFragment extends Fragment {
         setHasOptionsMenu(true);
         return rootView;
     }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu, menu);
@@ -92,7 +102,7 @@ public class WeatherFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
         }
@@ -104,78 +114,15 @@ public class WeatherFragment extends Fragment {
         progress.setMessage("Getting forecast ...");
         progress.show();
 
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
-        Call<CurrentWeatherResponse> currentWeatherResponseCall = apiService.getCurrentWeatherByCityName(city, units, lang, appid);
+        Call<CurrentWeatherResponse> currentWeatherResponseCall = apiService.getCurrentWeatherByCityName(cityCode, units, lang, appid);
         currentWeatherResponseCall.enqueue(new Callback<CurrentWeatherResponse>() {
             @Override
             public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
                 progress.dismiss();
-                CurrentWeatherResponse currentWeatherResponse = response.body();
-                String cityName = currentWeatherResponse.getName();
-                Long dt = (long) currentWeatherResponse.getDt();
-                int humidity = currentWeatherResponse.getMain().getHumidity();
-                double temp = currentWeatherResponse.getMain().getTemp();
-                double pressure = currentWeatherResponse.getMain().getPressure();
-
-                cityField.setText(cityName);
-                detailsField.setTypeface(weatherFont);
-                currentTemperatureField.setTypeface(weatherFont);
-
-                detailsField.setText(currentWeatherResponse.getWeather().get(0).getDescription().toUpperCase() +
-                                "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%" +
-                                "\n" + getString(R.string.wi_barometer) + " " + getString(R.string.pressure) + pressure + " hPa");
-
-                currentTemperatureField.setText(getString(R.string.wi_thermometer) + " " + String.format("%.1f", temp) + " " + getString(R.string.wi_celsius));
-
-                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm", Locale.getDefault());
-                String updatedOn = dateFormat.format(new Date(dt * 1000));
-                updatedField.setText(getString(R.string.last_update) + updatedOn);
-
-
-                switch (currentWeatherResponse.getWeather().get(0).getIcon()) {
-                    case "01d":
-                        weatherIcon.setText(R.string.wi_day_sunny);
-                        break;
-                    case "02d":
-                        weatherIcon.setText(R.string.wi_cloudy_gusts);
-                        break;
-                    case "03d":
-                        weatherIcon.setText(R.string.wi_cloud_down);
-                        break;
-                    case "10d":
-                        weatherIcon.setText(R.string.wi_day_rain_mix);
-                        break;
-                    case "11d":
-                        weatherIcon.setText(R.string.wi_day_thunderstorm);
-                        break;
-                    case "13d":
-                        weatherIcon.setText(R.string.wi_day_snow);
-                        break;
-                    case "01n":
-                        weatherIcon.setText(R.string.wi_night_clear);
-                        break;
-                    case "04d":
-                        weatherIcon.setText(R.string.wi_cloudy);
-                        break;
-                    case "04n":
-                        weatherIcon.setText(R.string.wi_night_cloudy);
-                        break;
-                    case "02n":
-                        weatherIcon.setText(R.string.wi_night_cloudy);
-                        break;
-                    case "03n":
-                        weatherIcon.setText(R.string.wi_night_cloudy_gusts);
-                        break;
-                    case "10n":
-                        weatherIcon.setText(R.string.wi_night_cloudy_gusts);
-                        break;
-                    case "11n":
-                        weatherIcon.setText(R.string.wi_night_rain);
-                        break;
-                    case "13n":
-                        weatherIcon.setText(R.string.wi_night_snow);
-                        break;
+                if (response.isSuccessful()) {
+                    updateUI(response.body());
                 }
             }
 
@@ -183,24 +130,116 @@ public class WeatherFragment extends Fragment {
             public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
                 progress.dismiss();
+                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
 
-        Call<WeatherResponse> call = apiService.getWeatherByCityName(city, cnt, units, lang, appid);
+        Call<WeatherResponse> call = apiService.getWeatherByCityName(cityCode, cnt, units, lang, appid);
         call.enqueue(new Callback<WeatherResponse>() {
             @Override
             public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
-                forecast.setText(createWashForecast(response));
+                if (response.isSuccessful()) {
+                    forecast.setText(createWashForecast(response));
+                }
             }
 
             @Override
             public void onFailure(Call<WeatherResponse> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void updateUI(CurrentWeatherResponse currentWeatherResponse) {
+
+        String cityName = currentWeatherResponse.getName();
+        Long dt = (long) currentWeatherResponse.getDt();
+        int humidity = currentWeatherResponse.getMain().getHumidity();
+        double temp = currentWeatherResponse.getMain().getTemp();
+        double pressure = currentWeatherResponse.getMain().getPressure();
+
+        cityField.setText(cityName);
+        detailsField.setTypeface(weatherFont);
+        currentTemperatureField.setTypeface(weatherFont);
+        detailsField.setText(currentWeatherResponse.getWeather().get(0).getDescription().toUpperCase() +
+                "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%" +
+                "\n" + getString(R.string.wi_barometer) + " " + getString(R.string.pressure) + pressure + " hPa");
+
+        String unitTemperature;
+        switch (units) {
+            case "metric":
+                unitTemperature = String.format("%sC", getString(R.string.wi_degrees));
+                break;
+            case "imperial":
+                unitTemperature = String.format("%sF", getString(R.string.wi_degrees));
+                break;
+            default:
+                unitTemperature = String.format("%sK", getString(R.string.wi_degrees));
+                break;
+        }
+
+        currentTemperatureField.setText(String.format("%s %s %s",
+                getString(R.string.wi_thermometer),
+                String.format("%.1f", temp),
+                unitTemperature));
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm", Locale.getDefault());
+        String updatedOn = dateFormat.format(new Date(dt * 1000));
+
+        updatedField.setText(String.format("%s%s",
+                getString(R.string.last_update),
+                updatedOn));
+
+        switch (currentWeatherResponse.getWeather().get(0).getIcon()) {
+            case "01d":
+                weatherIcon.setText(R.string.wi_day_sunny);
+                break;
+            case "02d":
+                weatherIcon.setText(R.string.wi_cloudy_gusts);
+                break;
+            case "03d":
+                weatherIcon.setText(R.string.wi_cloud_down);
+                break;
+            case "10d":
+                weatherIcon.setText(R.string.wi_day_rain_mix);
+                break;
+            case "11d":
+                weatherIcon.setText(R.string.wi_day_thunderstorm);
+                break;
+            case "13d":
+                weatherIcon.setText(R.string.wi_day_snow);
+                break;
+            case "01n":
+                weatherIcon.setText(R.string.wi_night_clear);
+                break;
+            case "04d":
+                weatherIcon.setText(R.string.wi_cloudy);
+                break;
+            case "04n":
+                weatherIcon.setText(R.string.wi_night_cloudy);
+                break;
+            case "02n":
+                weatherIcon.setText(R.string.wi_night_cloudy);
+                break;
+            case "03n":
+                weatherIcon.setText(R.string.wi_night_cloudy_gusts);
+                break;
+            case "10n":
+                weatherIcon.setText(R.string.wi_night_cloudy_gusts);
+                break;
+            case "11n":
+                weatherIcon.setText(R.string.wi_night_rain);
+                break;
+            case "13n":
+                weatherIcon.setText(R.string.wi_night_snow);
+                break;
+
+        }
+    }
+
     private String createWashForecast(Response<WeatherResponse> response) {
+
         Log.e(TAG, "createWashForecast: "
                 + response.body().getList().get(0).getWeather().get(0).getMain()
                 + " " + response.body().getList().get(1).getWeather().get(0).getMain()
@@ -211,6 +250,8 @@ public class WeatherFragment extends Fragment {
                 || (response.body().getList().get(2).getWeather().get(0).getId() < 700)) {
             return getString(R.string.not_wash);
         } else return getString(R.string.can_wash);
+
+
     }
 
 }

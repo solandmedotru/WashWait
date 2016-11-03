@@ -7,4 +7,13 @@
     <string name="humidity">"Влажность: "</string>
     <string name="last_update">"Последнее обновление: "</string>
     <string name="pressure">"Давление: "</string>
+    <string name="error_from_response">Ошибка!</string>
+    <string name="settings">Настройки</string>
+
+    <string-array name="unitsName">
+        <item>Цельсии</item>
+        <item>Фаренгейты</item>
+        <item>Кельвины</item>
+    </string-array>
+    <string name="units_format_label">Единицы измерения</string>
 </resources>

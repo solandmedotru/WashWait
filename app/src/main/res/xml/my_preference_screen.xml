@@ -7,8 +7,12 @@
         android:singleLine="true"
         android:title="City name or post index (ex. Moscow,RU)"
         android:key="city" />
-    <SwitchPreference
-        android:defaultValue="true"
-        android:title="Metric Format"
+
+    <ListPreference
+        android:defaultValue="1"
+        android:title="@string/units_format_label"
+        android:entries="@array/unitsName"
+        android:entryValues="@array/units"
         android:key="units" />
+
 </PreferenceScreen>
