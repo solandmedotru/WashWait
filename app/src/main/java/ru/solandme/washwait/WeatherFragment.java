@@ -26,9 +26,8 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.POJO.CurrentWeatherResponse;
+import ru.solandme.washwait.POJO.CurrentWeather;
 import ru.solandme.washwait.POJO.WeatherFiveDays;
-import ru.solandme.washwait.POJO.WeatherResponse;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
 
@@ -88,11 +87,12 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         updatedField = (TextView) rootView.findViewById(R.id.updated_field);
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
-        weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
         forecast = (TextView) rootView.findViewById(R.id.forecast);
-//        progress = new ProgressDialog(getActivity());
 
+        weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
         weatherIcon.setTypeface(weatherFont);
+
+//        progress = new ProgressDialog(getActivity());
 
         setHasOptionsMenu(true);
         return rootView;
@@ -117,23 +117,22 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onResume() {
         super.onResume();
 
-        cityCode = sharedPref.getString("city", defaultCityCode);
-        units = sharedPref.getString("units", defaultUnits);
         getWeather();
     }
 
     void getWeather() {
-
+        cityCode = sharedPref.getString("city", defaultCityCode);
+        units = sharedPref.getString("units", defaultUnits);
 //        progress.setMessage("Getting forecast ...");
         swipeRefreshLayout.setRefreshing(true);
 //        progress.show();
 
         final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
-        Call<CurrentWeatherResponse> currentWeatherResponseCall = apiService.getCurrentWeatherByCityName(cityCode, units, lang, appid);
-        currentWeatherResponseCall.enqueue(new Callback<CurrentWeatherResponse>() {
+        Call<CurrentWeather> currentWeatherCall = apiService.getCurrentWeatherByCityName(cityCode, units, lang, appid);
+        currentWeatherCall.enqueue(new Callback<CurrentWeather>() {
             @Override
-            public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
+            public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
 //                progress.dismiss();
                 swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
@@ -142,7 +141,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
 
             @Override
-            public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
+            public void onFailure(Call<CurrentWeather> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
 //                progress.dismiss();
                 swipeRefreshLayout.setRefreshing(false);
@@ -150,8 +149,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         });
 
-        Call<WeatherFiveDays> call = apiService.getWeatherFiveDaysByCityName(cityCode, units, lang, appid);
-        call.enqueue(new Callback<WeatherFiveDays>() {
+        Call<WeatherFiveDays> weatherFiveDaysCall = apiService.getWeatherFiveDaysByCityName(cityCode, units, lang, appid);
+        weatherFiveDaysCall.enqueue(new Callback<WeatherFiveDays>() {
             @Override
             public void onResponse(Call<WeatherFiveDays> call, Response<WeatherFiveDays> response) {
                 if (response.isSuccessful()) {
@@ -167,18 +166,18 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-    private void updateUI(CurrentWeatherResponse currentWeatherResponse) {
+    private void updateUI(CurrentWeather currentWeather) {
 
-        String cityName = currentWeatherResponse.getName();
-        Long dt = (long) currentWeatherResponse.getDt();
-        Long humidity = currentWeatherResponse.getMain().getHumidity();
-        double temp = currentWeatherResponse.getMain().getTemp();
-        double pressure = currentWeatherResponse.getMain().getPressure();
+        String cityName = currentWeather.getName();
+        Long dt = (long) currentWeather.getDt();
+        Long humidity = currentWeather.getMain().getHumidity();
+        double temp = currentWeather.getMain().getTemp();
+        double pressure = currentWeather.getMain().getPressure();
 
         cityField.setText(cityName);
         detailsField.setTypeface(weatherFont);
         currentTemperatureField.setTypeface(weatherFont);
-        detailsField.setText(currentWeatherResponse.getWeather().get(0).getDescription().toUpperCase() +
+        detailsField.setText(currentWeather.getWeather().get(0).getDescription().toUpperCase() +
                 "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%" +
                 "\n" + getString(R.string.wi_barometer) + " " + getString(R.string.pressure) + pressure + " hPa");
 
@@ -207,7 +206,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 getString(R.string.last_update),
                 updatedOn));
 
-        switch (currentWeatherResponse.getWeather().get(0).getIcon()) {
+        switch (currentWeather.getWeather().get(0).getIcon()) {
             case "01d":
                 weatherIcon.setText(R.string.wi_day_sunny);
                 break;

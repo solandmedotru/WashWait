@@ -3,7 +3,7 @@ package ru.solandme.washwait.rest;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import ru.solandme.washwait.POJO.CurrentWeatherResponse;
+import ru.solandme.washwait.POJO.CurrentWeather;
 import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.POJO.WeatherResponse;
 
@@ -23,16 +23,16 @@ public interface ApiInterface {
                                                  @Query("appid") String appid);
 
     @GET("weather")
-    Call<CurrentWeatherResponse> getCurrentWeatherByCityName(@Query("q") String cityName,
-                                                             @Query("units") String units,
-                                                             @Query("lang") String lang,
-                                                             @Query("appid") String appid);
+    Call<CurrentWeather> getCurrentWeatherByCityName(@Query("q") String cityName,
+                                                     @Query("units") String units,
+                                                     @Query("lang") String lang,
+                                                     @Query("appid") String appid);
 
-    Call<CurrentWeatherResponse> getCurrentWeatherByCoordinats(@Query("lat") String lat,
-                                                 @Query("lon") String lon,
-                                                 @Query("units") String units,
-                                                 @Query("lang") String lang,
-                                                 @Query("appid") String appid);
+    Call<CurrentWeather> getCurrentWeatherByCoordinats(@Query("lat") String lat,
+                                                       @Query("lon") String lon,
+                                                       @Query("units") String units,
+                                                       @Query("lang") String lang,
+                                                       @Query("appid") String appid);
 
     @GET("forecast")
     Call<WeatherFiveDays> getWeatherFiveDaysByCityName(@Query("q") String cityName,
