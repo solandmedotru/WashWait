@@ -9,41 +9,38 @@ public class List {
 
     @SerializedName("dt")
     @Expose
-    private int dt;
-    @SerializedName("temp")
+    private long dt;
+    @SerializedName("main")
     @Expose
-    private Temp temp;
-    @SerializedName("pressure")
-    @Expose
-    private double pressure;
-    @SerializedName("humidity")
-    @Expose
-    private int humidity;
+    private Main main;
     @SerializedName("weather")
     @Expose
     private java.util.List<Weather> weather = new ArrayList<Weather>();
-    @SerializedName("speed")
-    @Expose
-    private double speed;
-    @SerializedName("deg")
-    @Expose
-    private int deg;
     @SerializedName("clouds")
     @Expose
-    private int clouds;
+    private Clouds clouds;
+    @SerializedName("wind")
+    @Expose
+    private Wind wind;
     @SerializedName("snow")
     @Expose
-    private double snow;
+    private Snow snow;
+    @SerializedName("sys")
+    @Expose
+    private Sys_ sys;
+    @SerializedName("dt_txt")
+    @Expose
+    private String dtTxt;
     @SerializedName("rain")
     @Expose
-    private double rain;
+    private Rain rain;
 
     /**
      * 
      * @return
      *     The dt
      */
-    public int getDt() {
+    public long getDt() {
         return dt;
     }
 
@@ -52,62 +49,26 @@ public class List {
      * @param dt
      *     The dt
      */
-    public void setDt(int dt) {
+    public void setDt(long dt) {
         this.dt = dt;
     }
 
     /**
      * 
      * @return
-     *     The temp
+     *     The main
      */
-    public Temp getTemp() {
-        return temp;
+    public Main getMain() {
+        return main;
     }
 
     /**
      * 
-     * @param temp
-     *     The temp
+     * @param main
+     *     The main
      */
-    public void setTemp(Temp temp) {
-        this.temp = temp;
-    }
-
-    /**
-     * 
-     * @return
-     *     The pressure
-     */
-    public double getPressure() {
-        return pressure;
-    }
-
-    /**
-     * 
-     * @param pressure
-     *     The pressure
-     */
-    public void setPressure(double pressure) {
-        this.pressure = pressure;
-    }
-
-    /**
-     * 
-     * @return
-     *     The humidity
-     */
-    public int getHumidity() {
-        return humidity;
-    }
-
-    /**
-     * 
-     * @param humidity
-     *     The humidity
-     */
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
+    public void setMain(Main main) {
+        this.main = main;
     }
 
     /**
@@ -131,45 +92,9 @@ public class List {
     /**
      * 
      * @return
-     *     The speed
-     */
-    public double getSpeed() {
-        return speed;
-    }
-
-    /**
-     * 
-     * @param speed
-     *     The speed
-     */
-    public void setSpeed(double speed) {
-        this.speed = speed;
-    }
-
-    /**
-     * 
-     * @return
-     *     The deg
-     */
-    public int getDeg() {
-        return deg;
-    }
-
-    /**
-     * 
-     * @param deg
-     *     The deg
-     */
-    public void setDeg(int deg) {
-        this.deg = deg;
-    }
-
-    /**
-     * 
-     * @return
      *     The clouds
      */
-    public int getClouds() {
+    public Clouds getClouds() {
         return clouds;
     }
 
@@ -178,8 +103,26 @@ public class List {
      * @param clouds
      *     The clouds
      */
-    public void setClouds(int clouds) {
+    public void setClouds(Clouds clouds) {
         this.clouds = clouds;
+    }
+
+    /**
+     * 
+     * @return
+     *     The wind
+     */
+    public Wind getWind() {
+        return wind;
+    }
+
+    /**
+     * 
+     * @param wind
+     *     The wind
+     */
+    public void setWind(Wind wind) {
+        this.wind = wind;
     }
 
     /**
@@ -187,7 +130,7 @@ public class List {
      * @return
      *     The snow
      */
-    public double getSnow() {
+    public Snow getSnow() {
         return snow;
     }
 
@@ -196,8 +139,44 @@ public class List {
      * @param snow
      *     The snow
      */
-    public void setSnow(double snow) {
+    public void setSnow(Snow snow) {
         this.snow = snow;
+    }
+
+    /**
+     * 
+     * @return
+     *     The sys
+     */
+    public Sys_ getSys() {
+        return sys;
+    }
+
+    /**
+     * 
+     * @param sys
+     *     The sys
+     */
+    public void setSys(Sys_ sys) {
+        this.sys = sys;
+    }
+
+    /**
+     * 
+     * @return
+     *     The dtTxt
+     */
+    public String getDtTxt() {
+        return dtTxt;
+    }
+
+    /**
+     * 
+     * @param dtTxt
+     *     The dt_txt
+     */
+    public void setDtTxt(String dtTxt) {
+        this.dtTxt = dtTxt;
     }
 
     /**
@@ -205,7 +184,7 @@ public class List {
      * @return
      *     The rain
      */
-    public double getRain() {
+    public Rain getRain() {
         return rain;
     }
 
@@ -214,7 +193,7 @@ public class List {
      * @param rain
      *     The rain
      */
-    public void setRain(double rain) {
+    public void setRain(Rain rain) {
         this.rain = rain;
     }
 

@@ -27,6 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.POJO.CurrentWeatherResponse;
+import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.POJO.WeatherResponse;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
@@ -70,10 +71,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         setRetainInstance(true);
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
-        progress = new ProgressDialog(getActivity());
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        cityCode = sharedPref.getString("city", defaultCityCode);
-        units = sharedPref.getString("units", defaultUnits);
     }
 
 
@@ -92,10 +90,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
         weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
         forecast = (TextView) rootView.findViewById(R.id.forecast);
+//        progress = new ProgressDialog(getActivity());
 
         weatherIcon.setTypeface(weatherFont);
-
-        getWeather();
 
         setHasOptionsMenu(true);
         return rootView;
@@ -119,6 +116,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onResume() {
         super.onResume();
+
+        cityCode = sharedPref.getString("city", defaultCityCode);
+        units = sharedPref.getString("units", defaultUnits);
         getWeather();
     }
 
@@ -150,17 +150,17 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
         });
 
-        Call<WeatherResponse> call = apiService.getWeatherByCityName(cityCode, cnt, units, lang, appid);
-        call.enqueue(new Callback<WeatherResponse>() {
+        Call<WeatherFiveDays> call = apiService.getWeatherFiveDaysByCityName(cityCode, units, lang, appid);
+        call.enqueue(new Callback<WeatherFiveDays>() {
             @Override
-            public void onResponse(Call<WeatherResponse> call, Response<WeatherResponse> response) {
+            public void onResponse(Call<WeatherFiveDays> call, Response<WeatherFiveDays> response) {
                 if (response.isSuccessful()) {
                     forecast.setText(createWashForecast(response));
                 }
             }
 
             @Override
-            public void onFailure(Call<WeatherResponse> call, Throwable t) {
+            public void onFailure(Call<WeatherFiveDays> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -171,7 +171,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         String cityName = currentWeatherResponse.getName();
         Long dt = (long) currentWeatherResponse.getDt();
-        int humidity = currentWeatherResponse.getMain().getHumidity();
+        Long humidity = currentWeatherResponse.getMain().getHumidity();
         double temp = currentWeatherResponse.getMain().getTemp();
         double pressure = currentWeatherResponse.getMain().getPressure();
 
@@ -200,7 +200,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 String.format("%.1f", temp),
                 unitTemperature));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, hh:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
         String updatedOn = dateFormat.format(new Date(dt * 1000));
 
         updatedField.setText(String.format("%s%s",
@@ -254,7 +254,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    private String createWashForecast(Response<WeatherResponse> response) {
+    private String createWashForecast(Response<WeatherFiveDays> response) {
 
         Log.e(TAG, "createWashForecast: "
                 + response.body().getList().get(0).getWeather().get(0).getMain()

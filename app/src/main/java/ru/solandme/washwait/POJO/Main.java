@@ -9,24 +9,27 @@ public class Main {
     @SerializedName("temp")
     @Expose
     private double temp;
-    @SerializedName("pressure")
-    @Expose
-    private double pressure;
-    @SerializedName("humidity")
-    @Expose
-    private int humidity;
     @SerializedName("temp_min")
     @Expose
     private double tempMin;
     @SerializedName("temp_max")
     @Expose
     private double tempMax;
+    @SerializedName("pressure")
+    @Expose
+    private double pressure;
     @SerializedName("sea_level")
     @Expose
     private double seaLevel;
     @SerializedName("grnd_level")
     @Expose
     private double grndLevel;
+    @SerializedName("humidity")
+    @Expose
+    private long humidity;
+    @SerializedName("temp_kf")
+    @Expose
+    private float tempKf;
 
     /**
      * 
@@ -44,42 +47,6 @@ public class Main {
      */
     public void setTemp(double temp) {
         this.temp = temp;
-    }
-
-    /**
-     * 
-     * @return
-     *     The pressure
-     */
-    public double getPressure() {
-        return pressure;
-    }
-
-    /**
-     * 
-     * @param pressure
-     *     The pressure
-     */
-    public void setPressure(double pressure) {
-        this.pressure = pressure;
-    }
-
-    /**
-     * 
-     * @return
-     *     The humidity
-     */
-    public int getHumidity() {
-        return humidity;
-    }
-
-    /**
-     * 
-     * @param humidity
-     *     The humidity
-     */
-    public void setHumidity(int humidity) {
-        this.humidity = humidity;
     }
 
     /**
@@ -121,6 +88,24 @@ public class Main {
     /**
      * 
      * @return
+     *     The pressure
+     */
+    public double getPressure() {
+        return pressure;
+    }
+
+    /**
+     * 
+     * @param pressure
+     *     The pressure
+     */
+    public void setPressure(double pressure) {
+        this.pressure = pressure;
+    }
+
+    /**
+     * 
+     * @return
      *     The seaLevel
      */
     public double getSeaLevel() {
@@ -152,6 +137,42 @@ public class Main {
      */
     public void setGrndLevel(double grndLevel) {
         this.grndLevel = grndLevel;
+    }
+
+    /**
+     * 
+     * @return
+     *     The humidity
+     */
+    public long getHumidity() {
+        return humidity;
+    }
+
+    /**
+     * 
+     * @param humidity
+     *     The humidity
+     */
+    public void setHumidity(long humidity) {
+        this.humidity = humidity;
+    }
+
+    /**
+     * 
+     * @return
+     *     The tempKf
+     */
+    public float getTempKf() {
+        return tempKf;
+    }
+
+    /**
+     * 
+     * @param tempKf
+     *     The temp_kf
+     */
+    public void setTempKf(long tempKf) {
+        this.tempKf = tempKf;
     }
 
 }

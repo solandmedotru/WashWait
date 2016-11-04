@@ -6,89 +6,26 @@ import com.google.gson.annotations.SerializedName;
 
 public class Sys {
 
-    @SerializedName("message")
+    @SerializedName("population")
     @Expose
-    private double message;
-    @SerializedName("country")
-    @Expose
-    private String country;
-    @SerializedName("sunrise")
-    @Expose
-    private int sunrise;
-    @SerializedName("sunset")
-    @Expose
-    private int sunset;
+    private long population;
 
     /**
      * 
      * @return
-     *     The message
+     *     The population
      */
-    public double getMessage() {
-        return message;
+    public long getPopulation() {
+        return population;
     }
 
     /**
      * 
-     * @param message
-     *     The message
+     * @param population
+     *     The population
      */
-    public void setMessage(double message) {
-        this.message = message;
-    }
-
-    /**
-     * 
-     * @return
-     *     The country
-     */
-    public String getCountry() {
-        return country;
-    }
-
-    /**
-     * 
-     * @param country
-     *     The country
-     */
-    public void setCountry(String country) {
-        this.country = country;
-    }
-
-    /**
-     * 
-     * @return
-     *     The sunrise
-     */
-    public int getSunrise() {
-        return sunrise;
-    }
-
-    /**
-     * 
-     * @param sunrise
-     *     The sunrise
-     */
-    public void setSunrise(int sunrise) {
-        this.sunrise = sunrise;
-    }
-
-    /**
-     * 
-     * @return
-     *     The sunset
-     */
-    public int getSunset() {
-        return sunset;
-    }
-
-    /**
-     * 
-     * @param sunset
-     *     The sunset
-     */
-    public void setSunset(int sunset) {
-        this.sunset = sunset;
+    public void setPopulation(long population) {
+        this.population = population;
     }
 
 }

@@ -8,7 +8,7 @@ public class City {
 
     @SerializedName("id")
     @Expose
-    private int id;
+    private long id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -20,14 +20,17 @@ public class City {
     private String country;
     @SerializedName("population")
     @Expose
-    private int population;
+    private long population;
+    @SerializedName("sys")
+    @Expose
+    private Sys sys;
 
     /**
      * 
      * @return
      *     The id
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -36,7 +39,7 @@ public class City {
      * @param id
      *     The id
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -99,7 +102,7 @@ public class City {
      * @return
      *     The population
      */
-    public int getPopulation() {
+    public long getPopulation() {
         return population;
     }
 
@@ -108,8 +111,26 @@ public class City {
      * @param population
      *     The population
      */
-    public void setPopulation(int population) {
+    public void setPopulation(long population) {
         this.population = population;
+    }
+
+    /**
+     * 
+     * @return
+     *     The sys
+     */
+    public Sys getSys() {
+        return sys;
+    }
+
+    /**
+     * 
+     * @param sys
+     *     The sys
+     */
+    public void setSys(Sys sys) {
+        this.sys = sys;
     }
 
 }

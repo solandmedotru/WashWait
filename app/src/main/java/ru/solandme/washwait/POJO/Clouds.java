@@ -8,14 +8,14 @@ public class Clouds {
 
     @SerializedName("all")
     @Expose
-    private int all;
+    private long all;
 
     /**
      * 
      * @return
      *     The all
      */
-    public int getAll() {
+    public long getAll() {
         return all;
     }
 
@@ -24,7 +24,7 @@ public class Clouds {
      * @param all
      *     The all
      */
-    public void setAll(int all) {
+    public void setAll(long all) {
         this.all = all;
     }
 

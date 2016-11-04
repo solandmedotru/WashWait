@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import ru.solandme.washwait.POJO.CurrentWeatherResponse;
+import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.POJO.WeatherResponse;
 
 public interface ApiInterface {
@@ -28,6 +29,18 @@ public interface ApiInterface {
                                                              @Query("appid") String appid);
 
     Call<CurrentWeatherResponse> getCurrentWeatherByCoordinats(@Query("lat") String lat,
+                                                 @Query("lon") String lon,
+                                                 @Query("units") String units,
+                                                 @Query("lang") String lang,
+                                                 @Query("appid") String appid);
+
+    @GET("forecast")
+    Call<WeatherFiveDays> getWeatherFiveDaysByCityName(@Query("q") String cityName,
+                                               @Query("units") String units,
+                                               @Query("lang") String lang,
+                                               @Query("appid") String appid);
+
+    Call<WeatherResponse> getWeatherFiveDaysByCoordinats(@Query("lat") String lat,
                                                  @Query("lon") String lon,
                                                  @Query("units") String units,
                                                  @Query("lang") String lang,
