@@ -1,12 +1,8 @@
 package ru.solandme.washwait;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.ListPreference;
-import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
-import android.view.View;
 
 public class SettingsActivity extends PreferenceActivity
 {

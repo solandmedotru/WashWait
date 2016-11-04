@@ -9,7 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,23 +34,23 @@ import ru.solandme.washwait.rest.ApiInterface;
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
     private static final String TAG = "ru.solandme.washwait";
-    Typeface weatherFont;
+    private Typeface weatherFont;
 
-    SwipeRefreshLayout swipeRefreshLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-    TextView cityField;
-    TextView updatedField;
-    TextView detailsField;
-    TextView currentTemperatureField;
-    TextView weatherIcon;
-    TextView forecast;
-    ProgressDialog progress;
+    private TextView cityField;
+    private TextView updatedField;
+    private TextView detailsField;
+    private TextView currentTemperatureField;
+    private TextView weatherIcon;
+    private TextView forecast;
+    private ProgressDialog progress;
 
-    String lat = "35";
-    String lon = "139";
-    String cnt = "10";
+    private String lat = "35";
+    private String lon = "139";
+    private String cnt = "10";
 
-    String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+    private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
     private String defaultCityCode = "428000";
     private String defaultUnits = "metric";
@@ -59,7 +58,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private String lang = Locale.getDefault().getLanguage();
     private String cityCode;
     private String units;
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -69,7 +68,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         progress = new ProgressDialog(getActivity());
@@ -98,6 +96,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIcon.setTypeface(weatherFont);
 
         getWeather();
+
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -117,10 +116,17 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getWeather();
+    }
+
     void getWeather() {
 
-        progress.setMessage("Getting forecast ...");
-        progress.show();
+//        progress.setMessage("Getting forecast ...");
+        swipeRefreshLayout.setRefreshing(true);
+//        progress.show();
 
         final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
@@ -128,7 +134,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         currentWeatherResponseCall.enqueue(new Callback<CurrentWeatherResponse>() {
             @Override
             public void onResponse(Call<CurrentWeatherResponse> call, Response<CurrentWeatherResponse> response) {
-                progress.dismiss();
+//                progress.dismiss();
+                swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     updateUI(response.body());
                 }
@@ -137,7 +144,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onFailure(Call<CurrentWeatherResponse> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
-                progress.dismiss();
+//                progress.dismiss();
+                swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -192,7 +200,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 String.format("%.1f", temp),
                 unitTemperature));
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy, hh:mm", Locale.getDefault());
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, hh:mm", Locale.getDefault());
         String updatedOn = dateFormat.format(new Date(dt * 1000));
 
         updatedField.setText(String.format("%s%s",
