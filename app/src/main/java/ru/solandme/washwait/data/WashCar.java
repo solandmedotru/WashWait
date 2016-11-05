@@ -8,10 +8,10 @@ public class WashCar {
 
     private static final String TAG = "ru.solandme.washwait";
 
-    private static int washDayNumber = -1;
-    private static int firstDirtyDay = -1;
-    private static int clearDaysCounter = 0;
-    private static int daysCounter = 0;
+    private int washDayNumber = -1;
+    private int firstDirtyDay = -1;
+    private int clearDaysCounter = 0;
+    private int daysCounter = 0;
 
     public WashCar(WeatherFiveDays weatherFiveDays) {
         Forecast[] forecasts = new Forecast[40];
@@ -31,21 +31,21 @@ public class WashCar {
             }
             if ((null != weatherFiveDays.getList().get(i).getSnow())) {
                 forecast.snowCounter = forecast.snowCounter + weatherFiveDays.getList().get(i).getSnow().get3h();
-                Log.e(TAG, "snow: " + String.valueOf(forecast.snowCounter));
+                Log.e(TAG, "snow: " + String.valueOf(forecast.snowCounter) + " " + forecast.temperature);
             }
             forecasts[i] = forecast;
         }
 
         for (int i = 0; i < forecasts.length; i++) {
-            if (i % 8 == 0) daysCounter++;
+            if (i == 7 || i == 15 || i == 23 || i == 31 || i == 39) daysCounter++;
             if (!forecasts[i].isDirty()) {
                 clearDaysCounter++;
-                if (clearDaysCounter == 8) {
-                    washDayNumber = daysCounter - 1;
+                if (clearDaysCounter == 16) {
+                    washDayNumber = i - clearDaysCounter + 1;
                 }
             } else {
                 if (firstDirtyDay == -1) {
-                    firstDirtyDay = daysCounter - 1;
+                    firstDirtyDay = daysCounter -1;
                 }
                 clearDaysCounter = 0;
             }
