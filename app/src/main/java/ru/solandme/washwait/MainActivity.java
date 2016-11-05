@@ -1,26 +1,30 @@
 package ru.solandme.washwait;
 
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "ru.solandme.washwait";
+    private static final String TAG_WEATHER_FRAG = "WeatherFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new WeatherFragment())
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        if (null == fragmentManager.findFragmentByTag(TAG_WEATHER_FRAG)){
+            fragmentTransaction
+                    .add(R.id.container, new WeatherFragment(), TAG_WEATHER_FRAG)
                     .commit();
         } else {
-            Fragment weatherFragment = getSupportFragmentManager().findFragmentById(R.id.container);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, weatherFragment)
+            fragmentTransaction
+                    .replace(R.id.container, fragmentManager.findFragmentByTag(TAG_WEATHER_FRAG))
                     .commit();
         }
     }

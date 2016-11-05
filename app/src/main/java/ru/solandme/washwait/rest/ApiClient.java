@@ -63,7 +63,7 @@ public class ApiClient {
                             .cacheControl(new CacheControl.Builder()
 //                                    .maxAge(1, TimeUnit.DAYS)
                                     .maxStale(1, TimeUnit.HOURS)
-                                    .minFresh(1, TimeUnit.HOURS)
+//                                    .minFresh(4, TimeUnit.HOURS)
                                     .build())
                             .url(request.url())
                             .build();

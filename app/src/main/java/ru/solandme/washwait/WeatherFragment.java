@@ -1,6 +1,5 @@
 package ru.solandme.washwait;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -26,12 +25,13 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.data.WashCar;
 import ru.solandme.washwait.POJO.CurrentWeather;
 import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
 
-public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
     private Typeface weatherFont;
@@ -44,7 +44,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView currentTemperatureField;
     private TextView weatherIcon;
     private TextView forecast;
-    private ProgressDialog progress;
 
     private String lat = "35";
     private String lon = "139";
@@ -92,8 +91,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
         weatherIcon.setTypeface(weatherFont);
 
-//        progress = new ProgressDialog(getActivity());
-
         setHasOptionsMenu(true);
         return rootView;
     }
@@ -123,27 +120,27 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     void getWeather() {
         cityCode = sharedPref.getString("city", defaultCityCode);
         units = sharedPref.getString("units", defaultUnits);
-//        progress.setMessage("Getting forecast ...");
+
         swipeRefreshLayout.setRefreshing(true);
-//        progress.show();
 
         final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
         Call<CurrentWeather> currentWeatherCall = apiService.getCurrentWeatherByCityName(cityCode, units, lang, appid);
+
         currentWeatherCall.enqueue(new Callback<CurrentWeather>() {
             @Override
             public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
-//                progress.dismiss();
+
                 swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
-                    updateUI(response.body());
+                    updateWeatherUI(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<CurrentWeather> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
-//                progress.dismiss();
+
                 swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -154,7 +151,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onResponse(Call<WeatherFiveDays> call, Response<WeatherFiveDays> response) {
                 if (response.isSuccessful()) {
-                    forecast.setText(createWashForecast(response));
+                    updateWashForecastUI(response.body());
                 }
             }
 
@@ -166,7 +163,18 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-    private void updateUI(CurrentWeather currentWeather) {
+    private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
+        WashCar washCar = new WashCar(weatherFiveDays);
+        int goodDay = washCar.getGoodDayForWashCar();
+        int firstDirtyDay = washCar.getFirstDirtyDay();
+
+        if(goodDay != 0){
+            forecast.setText(getResources().getString(R.string.not_wash) + ", так как ближайшие " + firstDirtyDay + " дня будет грязно!");
+        } else forecast.setText(getResources().getString(R.string.can_wash));
+
+    }
+
+    private void updateWeatherUI(CurrentWeather currentWeather) {
 
         String cityName = currentWeather.getName();
         Long dt = (long) currentWeather.getDt();
@@ -249,24 +257,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             case "13n":
                 weatherIcon.setText(R.string.wi_night_snow);
                 break;
-
         }
-    }
-
-    private String createWashForecast(Response<WeatherFiveDays> response) {
-
-        Log.e(TAG, "createWashForecast: "
-                + response.body().getList().get(0).getWeather().get(0).getMain()
-                + " " + response.body().getList().get(1).getWeather().get(0).getMain()
-                + " " + response.body().getList().get(2).getWeather().get(0).getMain());
-
-        if ((response.body().getList().get(0).getWeather().get(0).getId() < 700)
-                || (response.body().getList().get(1).getWeather().get(0).getId() < 700)
-                || (response.body().getList().get(2).getWeather().get(0).getId() < 700)) {
-            return getString(R.string.not_wash);
-        } else return getString(R.string.can_wash);
-
-
     }
 
     @Override

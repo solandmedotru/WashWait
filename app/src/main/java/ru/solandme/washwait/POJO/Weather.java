@@ -8,7 +8,7 @@ public class Weather {
 
     @SerializedName("id")
     @Expose
-    private long id;
+    private int id;
     @SerializedName("main")
     @Expose
     private String main;
@@ -24,7 +24,7 @@ public class Weather {
      * @return
      *     The id
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -33,7 +33,7 @@ public class Weather {
      * @param id
      *     The id
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
