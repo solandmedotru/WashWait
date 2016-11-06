@@ -16,4 +16,10 @@
         <item>Кельвины</item>
     </string-array>
     <string name="units_format_label">Единицы измерения</string>
+
+    <plurals name="daysCounter">
+        <item quantity="one">завтра</item>
+        <item quantity="other">через несколько дней</item>
+    </plurals>
+    <string name="zeroDay">сегодня</string>
 </resources>

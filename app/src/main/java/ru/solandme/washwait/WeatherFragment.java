@@ -34,6 +34,7 @@ import ru.solandme.washwait.rest.ApiInterface;
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
+    private static final int FORECAST_DISTANCE = 8;
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -164,14 +165,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
-        WashCar washCar = new WashCar(weatherFiveDays);
-        int goodDay = washCar.getGoodDayForWashCar();
-        int firstDirtyDay = washCar.getFirstDirtyDay();
-
-        if(goodDay != 0){
-            forecast.setText(getResources().getString(R.string.not_wash) + ", так как ближайшие " + firstDirtyDay + " дня будет грязно!");
-        } else forecast.setText(getResources().getString(R.string.can_wash));
-
+        String forecastText = new WashCar(weatherFiveDays, FORECAST_DISTANCE)
+                .getForecastText(getContext());
+        forecast.setText(forecastText);
     }
 
     private void updateWeatherUI(CurrentWeather currentWeather) {
@@ -213,49 +209,61 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         updatedField.setText(String.format("%s%s",
                 getString(R.string.last_update),
                 updatedOn));
-
+        Log.e(TAG, "updateWeatherUI: " + currentWeather.getWeather().get(0).getIcon() );
         switch (currentWeather.getWeather().get(0).getIcon()) {
             case "01d":
                 weatherIcon.setText(R.string.wi_day_sunny);
                 break;
-            case "02d":
-                weatherIcon.setText(R.string.wi_cloudy_gusts);
-                break;
-            case "03d":
-                weatherIcon.setText(R.string.wi_cloud_down);
-                break;
-            case "10d":
-                weatherIcon.setText(R.string.wi_day_rain_mix);
-                break;
-            case "11d":
-                weatherIcon.setText(R.string.wi_day_thunderstorm);
-                break;
-            case "13d":
-                weatherIcon.setText(R.string.wi_day_snow);
-                break;
             case "01n":
                 weatherIcon.setText(R.string.wi_night_clear);
+                break;
+            case "02d":
+                weatherIcon.setText(R.string.wi_day_cloudy);
+                break;
+            case "02n":
+                weatherIcon.setText(R.string.wi_night_cloudy);
+                break;
+            case "03d":
+                weatherIcon.setText(R.string.wi_cloud);
+                break;
+            case "03n":
+                weatherIcon.setText(R.string.wi_cloud);
                 break;
             case "04d":
                 weatherIcon.setText(R.string.wi_cloudy);
                 break;
             case "04n":
-                weatherIcon.setText(R.string.wi_night_cloudy);
+                weatherIcon.setText(R.string.wi_cloudy);
                 break;
-            case "02n":
-                weatherIcon.setText(R.string.wi_night_cloudy);
+            case "09d":
+                weatherIcon.setText(R.string.wi_day_showers);
                 break;
-            case "03n":
-                weatherIcon.setText(R.string.wi_night_cloudy_gusts);
+            case "09n":
+                weatherIcon.setText(R.string.wi_night_showers);
+                break;
+            case "10d":
+                weatherIcon.setText(R.string.wi_day_rain_mix);
                 break;
             case "10n":
-                weatherIcon.setText(R.string.wi_night_cloudy_gusts);
+                weatherIcon.setText(R.string.wi_night_rain_mix);
+                break;
+            case "11d":
+                weatherIcon.setText(R.string.wi_day_rain);
                 break;
             case "11n":
                 weatherIcon.setText(R.string.wi_night_rain);
                 break;
+            case "13d":
+                weatherIcon.setText(R.string.wi_day_snow);
+                break;
             case "13n":
                 weatherIcon.setText(R.string.wi_night_snow);
+                break;
+            case "50d":
+                weatherIcon.setText(R.string.wi_day_fog);
+                break;
+            case "50n":
+                weatherIcon.setText(R.string.wi_night_fog);
                 break;
         }
     }

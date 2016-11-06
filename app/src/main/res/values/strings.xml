@@ -148,4 +148,10 @@
         <item>Fahrenheit</item>
         <item>Kelvin</item>
     </string-array>
+
+    <plurals name="daysCounter">
+        <item quantity="one">tomorrow</item>
+        <item quantity="other">a few days</item>
+    </plurals>
+    <string name="zeroDay">today</string>
 </resources>
