@@ -236,7 +236,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         detailsField.setTypeface(weatherFont);
         currentTemperatureField.setTypeface(weatherFont);
         detailsField.setText(currentWeather.getWeather().get(0).getDescription().toUpperCase() +
-                "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%" );
+                "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%");
 
         String unitTemperature;
         switch (units) {
@@ -251,8 +251,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 break;
         }
 
-        currentTemperatureField.setText(String.format("%s %s %s",
-                getString(R.string.wi_thermometer),
+        currentTemperatureField.setText(String.format("%s%s",
                 String.format("%.1f", temp),
                 unitTemperature));
 
@@ -262,7 +261,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         updatedField.setText(String.format("%s%s",
                 getString(R.string.last_update),
                 updatedOn));
-        Log.e(TAG, "updateWeatherUI: " + currentWeather.getWeather().get(0).getIcon() );
+        Log.e(TAG, "updateWeatherUI: " + currentWeather.getWeather().get(0).getIcon());
 
         weatherIcon.setText(getIconFont(currentWeather.getWeather().get(0).getIcon()));
 
