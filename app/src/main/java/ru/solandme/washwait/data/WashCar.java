@@ -10,12 +10,12 @@ public class WashCar {
 
     private static final String TAG = "ru.solandme.washwait";
 
-    private int washDayNumber = -1;
-    private int firstDirtyDay = -1;
-    private int clearDaysCounter = 0;
-    private int daysCounter = 0;
+    private static int washDayNumber = -1;
+    private static int firstDirtyDay = -1;
+    private static int clearDaysCounter = 0;
+    private static int daysCounter = 0;
 
-    public WashCar(WeatherFiveDays weatherFiveDays, int FORECAST_DISTANCE) {
+    public static String getForecastText(Context context, WeatherFiveDays weatherFiveDays, int FORECAST_DISTANCE) {
 
         if (null != weatherFiveDays) {
             int size = weatherFiveDays.getList().size();
@@ -61,9 +61,8 @@ public class WashCar {
             }
             Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
         }
-    }
 
-    public String getForecastText(Context context) {
+
         String pluralsDay;
         if(firstDirtyDay == 0){
             pluralsDay = context.getResources().getString(R.string.zeroDay);

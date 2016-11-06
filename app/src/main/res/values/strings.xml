@@ -143,6 +143,7 @@
         <item>imperial</item>
         <item>standart</item>
     </string-array>
+
     <string-array name="unitsName">
         <item>Celsius</item>
         <item>Fahrenheit</item>

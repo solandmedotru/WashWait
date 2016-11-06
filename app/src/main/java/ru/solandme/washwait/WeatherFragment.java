@@ -131,7 +131,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         currentWeatherCall.enqueue(new Callback<CurrentWeather>() {
             @Override
             public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
-
                 swipeRefreshLayout.setRefreshing(false);
                 if (response.isSuccessful()) {
                     updateWeatherUI(response.body());
@@ -140,9 +139,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             @Override
             public void onFailure(Call<CurrentWeather> call, Throwable t) {
-                Log.e(TAG, "onError: " + t);
-
                 swipeRefreshLayout.setRefreshing(false);
+                Log.e(TAG, "onError: " + t);
                 Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
@@ -165,8 +163,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
-        String forecastText = new WashCar(weatherFiveDays, FORECAST_DISTANCE)
-                .getForecastText(getContext());
+        String forecastText = WashCar.getForecastText(getContext(), weatherFiveDays, FORECAST_DISTANCE);
         forecast.setText(forecastText);
     }
 
