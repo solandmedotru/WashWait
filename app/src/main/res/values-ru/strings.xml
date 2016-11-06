@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wash / Wait</string>
-    <string name="can_wash">Сегодня хороший день чтобы помыть машину</string>
+    <string name="can_wash">Сегодня хороший день чтобы помыть машину! Осадки не ожидаются %1$d дней</string>
     <string name="change_city">Сменить город</string>
-    <string name="not_wash">Лучше сегодня не мыть машину</string>
+    <string name="not_wash">Лучше не мыть машину, %1$s будет грязно! Осадки прекратятся %2$s</string>
     <string name="humidity">"Влажность: "</string>
     <string name="last_update">"Последнее обновление: "</string>
     <string name="pressure">"Давление: "</string>
@@ -22,4 +22,5 @@
         <item quantity="other">через несколько дней</item>
     </plurals>
     <string name="zeroDay">сегодня</string>
+
 </resources>

@@ -10,13 +10,12 @@ public class WashCar {
 
     private static final String TAG = "ru.solandme.washwait";
 
-    private static int washDayNumber = -1;
-    private static int firstDirtyDay = -1;
-    private static int clearDaysCounter = 0;
-    private static int daysCounter = 0;
 
     public static String getForecastText(Context context, WeatherFiveDays weatherFiveDays, int FORECAST_DISTANCE) {
-
+        int washDayNumber = -1;
+        int firstDirtyDay = -1;
+        int clearDaysCounter = 0;
+        int daysCounter = 0;
         if (null != weatherFiveDays) {
             int size = weatherFiveDays.getList().size();
             Forecast[] forecasts = new Forecast[size];
@@ -28,9 +27,8 @@ public class WashCar {
                 forecast.temperature = weatherFiveDays.getList().get(i).getMain().getTemp();
 
 
-                Log.e(TAG,
-                        weatherFiveDays.getList().get(i).getWeather().get(0).getMain()
-                                + weatherFiveDays.getList().get(i).getWeather().get(0).getId());
+                Log.e(TAG, weatherFiveDays.getList().get(i).getWeather().get(0).getMain()
+                        + weatherFiveDays.getList().get(i).getWeather().get(0).getId());
 
                 if ((null != weatherFiveDays.getList().get(i).getRain())) {
                     forecast.rainCounter = forecast.rainCounter + weatherFiveDays.getList().get(i).getRain().get3h();
@@ -44,11 +42,11 @@ public class WashCar {
             }
 
             for (int i = 0; i < size; i++) {
-                if (i == 0 || i == 7 || i == 15 || i == 23 || i == 31 || i == 39) daysCounter++;
+                if (i == 7 || i == 15 || i == 23 || i == 31 || i == 39) daysCounter++;
                 if (!forecasts[i].isDirty()) {
                     clearDaysCounter++;
                     if (clearDaysCounter == FORECAST_DISTANCE) {
-                        if(washDayNumber == -1) {
+                        if (washDayNumber == -1) {
                             washDayNumber = daysCounter - 1;
                         }
                     }
@@ -63,20 +61,21 @@ public class WashCar {
         }
 
 
-        String pluralsDay;
-        if(firstDirtyDay == 0){
-            pluralsDay = context.getResources().getString(R.string.zeroDay);
-        } else {
-            pluralsDay = context.getResources().getQuantityString(R.plurals.daysCounter, firstDirtyDay, firstDirtyDay);
+        switch (washDayNumber) {
+            case 0:
+                return context.getResources().getString(R.string.can_wash, daysCounter);
+            default:
+                return context.getResources().getString(R.string.not_wash, getPluralsDay(firstDirtyDay, context), getPluralsDay(washDayNumber, context));
         }
 
-        if(washDayNumber != 0){
-            return context.getResources().getString(R.string.not_wash)
-                    + ", так как "
-                    + pluralsDay
-                    + " будет грязно!\n"
-                    + "Ближайший день для мойки, "
-                    + context.getResources().getQuantityString(R.plurals.daysCounter, washDayNumber, washDayNumber);
-        } else return context.getResources().getString(R.string.can_wash);
+    }
+
+    private static String getPluralsDay(int day, Context context) {
+
+        if (day == 0) {
+            return context.getResources().getString(R.string.zeroDay);
+        } else {
+            return context.getResources().getQuantityString(R.plurals.daysCounter, day);
+        }
     }
 }
