@@ -15,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,13 +44,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView updatedField;
     private TextView detailsField;
     private TextView currentTemperatureField;
-    private TextView weatherIcon;
+    private ImageView weatherIcon;
     private TextView forecast;
 
-    private TextView forecastDay1;
-    private TextView forecastDay2;
-    private TextView forecastDay3;
-    private TextView forecastDay4;
+    private ImageView forecastDay1;
+    private ImageView forecastDay2;
+    private ImageView forecastDay3;
+    private ImageView forecastDay4;
 
     private TextView forecastDate1;
     private TextView forecastDate2;
@@ -98,23 +99,17 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
         forecast = (TextView) rootView.findViewById(R.id.forecast);
-
-        forecastDay1 = (TextView) rootView.findViewById(R.id.forecast_1);
-        forecastDay1.setTypeface(weatherFont);
-        forecastDay2 = (TextView) rootView.findViewById(R.id.forecast_2);
-        forecastDay2.setTypeface(weatherFont);
-        forecastDay3 = (TextView) rootView.findViewById(R.id.forecast_3);
-        forecastDay3.setTypeface(weatherFont);
-        forecastDay4 = (TextView) rootView.findViewById(R.id.forecast_4);
-        forecastDay4.setTypeface(weatherFont);
-
+        forecastDay1 = (ImageView) rootView.findViewById(R.id.forecast_1);
+        forecastDay2 = (ImageView) rootView.findViewById(R.id.forecast_2);
+        forecastDay3 = (ImageView) rootView.findViewById(R.id.forecast_3);
+        forecastDay4 = (ImageView) rootView.findViewById(R.id.forecast_4);
         forecastDate1 = (TextView) rootView.findViewById(R.id.date1);
         forecastDate2 = (TextView) rootView.findViewById(R.id.date2);
         forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
         forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
+        weatherIcon = (ImageView) rootView.findViewById(R.id.weather_icon);
 
-        weatherIcon = (TextView) rootView.findViewById(R.id.weather_icon);
-        weatherIcon.setTypeface(weatherFont);
+        detailsField.setTypeface(weatherFont);
 
         setHasOptionsMenu(true);
         return rootView;
@@ -188,19 +183,15 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void updateFiveDaysForecastUI(WeatherFiveDays body) {
-        String icon1 = body.getList().get(3).getWeather().get(0).getIcon();
-        String icon2 = body.getList().get(11).getWeather().get(0).getIcon();
-        String icon3 = body.getList().get(19).getWeather().get(0).getIcon();
-        String icon4 = body.getList().get(27).getWeather().get(0).getIcon();
+        String icon1 = body.getList().get(4).getWeather().get(0).getIcon();
+        String icon2 = body.getList().get(14).getWeather().get(0).getIcon();
+        String icon3 = body.getList().get(22).getWeather().get(0).getIcon();
+        String icon4 = body.getList().get(30).getWeather().get(0).getIcon();
 
-        Long data1 = body.getList().get(3).getDt();
-        Log.e(TAG, "onError: " + data1);
-        Long data2 = body.getList().get(11).getDt();
-        Log.e(TAG, "onError: " + data2);
-        Long data3 = body.getList().get(19).getDt();
-        Log.e(TAG, "onError: " + data3);
-        Long data4 = body.getList().get(27).getDt();
-        Log.e(TAG, "onError: " + data4);
+        Long data1 = body.getList().get(4).getDt();
+        Long data2 = body.getList().get(14).getDt();
+        Long data3 = body.getList().get(22).getDt();
+        Long data4 = body.getList().get(30).getDt();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
         String data11 = dateFormat.format(data1 * 1000);
@@ -208,10 +199,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String data31 = dateFormat.format(data3 * 1000);
         String data41 = dateFormat.format(data4 * 1000);
 
-        forecastDay1.setText(getIconFont(icon1));
-        forecastDay2.setText(getIconFont(icon2));
-        forecastDay3.setText(getIconFont(icon3));
-        forecastDay4.setText(getIconFont(icon4));
+        forecastDay1.setImageResource(getWeatherPicture(icon1));
+        forecastDay2.setImageResource(getWeatherPicture(icon2));
+        forecastDay3.setImageResource(getWeatherPicture(icon3));
+        forecastDay4.setImageResource(getWeatherPicture(icon4));
 
         forecastDate1.setText(data11);
         forecastDate2.setText(data21);
@@ -229,14 +220,12 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String cityName = currentWeather.getName();
         String country = currentWeather.getSys().getCountry();
         Long dt = (long) currentWeather.getDt();
-        Long humidity = currentWeather.getMain().getHumidity();
         double temp = currentWeather.getMain().getTemp();
 
         cityField.setText(cityName + ", " + country);
-        detailsField.setTypeface(weatherFont);
+
         currentTemperatureField.setTypeface(weatherFont);
-        detailsField.setText(currentWeather.getWeather().get(0).getDescription().toUpperCase() +
-                "\n" + getString(R.string.wi_humidity) + " " + getString(R.string.humidity) + humidity + "%");
+        detailsField.setText(currentWeather.getWeather().get(0).getDescription().toUpperCase());
 
         String unitTemperature;
         switch (units) {
@@ -251,7 +240,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 break;
         }
 
-        currentTemperatureField.setText(String.format("%s%s",
+        currentTemperatureField.setText(String.format("%s %s%s",
+                getResources().getString(R.string.wi_thermometer),
                 String.format("%.1f", temp),
                 unitTemperature));
 
@@ -263,8 +253,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 updatedOn));
         Log.e(TAG, "updateWeatherUI: " + currentWeather.getWeather().get(0).getIcon());
 
-        weatherIcon.setText(getIconFont(currentWeather.getWeather().get(0).getIcon()));
-
+        weatherIcon.setImageResource(getWeatherPicture(currentWeather.getWeather().get(0).getIcon()));
 
     }
 
@@ -275,47 +264,47 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    public int getIconFont(String icon) {
+    public int getWeatherPicture(String icon) {
 
         switch (icon) {
             case "01d":
-                return R.string.wi_day_sunny;
+                return R.mipmap.clear;
             case "01n":
-                return R.string.wi_night_clear;
+                return R.mipmap.clear_n;
             case "02d":
-                return R.string.wi_day_cloudy;
+                return R.mipmap.few_clouds_d;
             case "02n":
-                return R.string.wi_night_cloudy;
+                return R.mipmap.cloudy_n;
             case "03d":
-                return R.string.wi_cloud;
+                return R.mipmap.cloudy;
             case "03n":
-                return R.string.wi_cloud;
+                return R.mipmap.cloudy;
             case "04d":
-                return R.string.wi_cloudy;
+                return R.mipmap.cloudy;
             case "04n":
-                return R.string.wi_cloudy;
+                return R.mipmap.cloudy;
             case "09d":
-                return R.string.wi_day_showers;
+                return R.mipmap.shower_rain_d;
             case "09n":
-                return R.string.wi_night_showers;
+                return R.mipmap.shower_rain_n;
             case "10d":
-                return R.string.wi_day_rain_mix;
+                return R.mipmap.rain_d;
             case "10n":
-                return R.string.wi_night_rain_mix;
+                return R.mipmap.rain_n;
             case "11d":
-                return R.string.wi_day_rain;
+                return R.mipmap.thunderstorm;
             case "11n":
-                return R.string.wi_night_rain;
+                return R.mipmap.thunderstorm;
             case "13d":
-                return R.string.wi_day_snow;
+                return R.mipmap.snow;
             case "13n":
-                return R.string.wi_night_snow;
+                return R.mipmap.snow;
             case "50d":
-                return R.string.wi_day_fog;
+                return R.mipmap.fog;
             case "50n":
-                return R.string.wi_night_fog;
+                return R.mipmap.fog;
             default:
-                return R.string.wi_day_sunny;
+                return R.mipmap.few_clouds_d;
         }
     }
 }

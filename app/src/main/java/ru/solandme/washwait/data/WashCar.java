@@ -3,6 +3,9 @@ package ru.solandme.washwait.data;
 import android.content.Context;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.R;
 
@@ -16,6 +19,9 @@ public class WashCar {
         int firstDirtyDay = -1;
         int clearDaysCounter = 0;
         int daysCounter = 0;
+        Long dataWashCar = 0L;
+        Double dirtyCounter = 0.0;
+
         if (null != weatherFiveDays) {
             int size = weatherFiveDays.getList().size();
             Forecast[] forecasts = new Forecast[size];
@@ -48,34 +54,32 @@ public class WashCar {
                     if (clearDaysCounter == FORECAST_DISTANCE) {
                         if (washDayNumber == -1) {
                             washDayNumber = daysCounter - 1;
+                            dataWashCar = weatherFiveDays.getList().get(i).getDt();
                         }
                     }
                 } else {
-                    if (firstDirtyDay == -1) {
-                        firstDirtyDay = daysCounter - 1;
-                    }
+                    if(i < FORECAST_DISTANCE) dirtyCounter = dirtyCounter + forecasts[i].rainCounter + forecasts[i].snowCounter;
                     clearDaysCounter = 0;
                 }
             }
-            Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
+            Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay + " " + dirtyCounter);
         }
 
-
+        String dataToWashCar = new SimpleDateFormat("EEEE, dd", Locale.getDefault()).format(dataWashCar * 1000);
         switch (washDayNumber) {
             case 0:
-                return context.getResources().getString(R.string.can_wash, daysCounter);
+                return context.getResources().getString(R.string.can_wash);
+            case 1:
+                return context.getResources().getString(R.string.wash, dataToWashCar);
+            case 2:
+                return context.getResources().getString(R.string.wash, dataToWashCar);
+            case 3:
+                return context.getResources().getString(R.string.wash, dataToWashCar);
+            case 4:
+                return context.getResources().getString(R.string.wash, dataToWashCar);
             default:
-                return context.getResources().getString(R.string.not_wash, getPluralsDay(firstDirtyDay, context), getPluralsDay(washDayNumber, context));
+                return context.getResources().getString(R.string.not_wash);
         }
 
-    }
-
-    private static String getPluralsDay(int day, Context context) {
-
-        if (day == 0) {
-            return context.getResources().getString(R.string.zeroDay);
-        } else {
-            return context.getResources().getQuantityString(R.plurals.daysCounter, day);
-        }
     }
 }
