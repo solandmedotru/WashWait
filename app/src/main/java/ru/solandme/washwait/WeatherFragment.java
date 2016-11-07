@@ -15,6 +15,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +47,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView detailsField;
     private TextView currentTemperatureField;
     private ImageView weatherIcon;
-    private ImageView car;
+    private ImageView carImage;
+    private ImageView cityImage;
     private TextView forecast;
 
     private ImageView forecastDay1;
@@ -109,7 +112,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
         forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
         weatherIcon = (ImageView) rootView.findViewById(R.id.weather_icon);
-        car = (ImageView) rootView.findViewById(R.id.car_image);
+        carImage = (ImageView) rootView.findViewById(R.id.car_image);
+        cityImage = (ImageView) rootView.findViewById(R.id.city_image);
 
         detailsField.setTypeface(weatherFont);
 
@@ -216,7 +220,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String forecastText = WashCar.getForecastText(getContext(), weatherFiveDays, FORECAST_DISTANCE);
         forecast.setText(forecastText);
 
-        car.setImageResource(getCarPicture(WashCar.getDirtyCounter(weatherFiveDays)));
+        carImage.setImageResource(getCarPicture(WashCar.getDirtyCounter(weatherFiveDays)));
+        Animation moveFromLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_left);
+        carImage.startAnimation(moveFromLeft);
+        Animation moveFromRight = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_right);
+        cityImage.startAnimation(moveFromRight);
+
+
     }
 
     private void updateWeatherUI(CurrentWeather currentWeather) {
@@ -260,13 +270,12 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIcon.setImageResource(getWeatherPicture(currentWeather.getWeather().get(0).getIcon()));
 
 
-
     }
 
     private int getCarPicture(Double dirtyCounter) {
 
-        if(dirtyCounter <= 0.001) return R.mipmap.clean_car;
-        if(dirtyCounter > 0.001) return R.mipmap.clean_car;
+        if (dirtyCounter <= 0.001) return R.mipmap.clean_car;
+        if (dirtyCounter > 0.001) return R.mipmap.car5;
 
         return R.mipmap.car;
     }
