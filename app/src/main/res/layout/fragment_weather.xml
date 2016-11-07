@@ -50,15 +50,14 @@
                 android:id="@+id/city_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
                 android:scaleType="fitXY"
-                android:src="@mipmap/city" />
+                android:src="@mipmap/city3" />
 
             <ImageView
                 android:id="@+id/car_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="center"
+                android:scaleType="fitEnd"
                 android:src="@mipmap/car"
                 android:layout_gravity="center_horizontal|bottom" />
 
