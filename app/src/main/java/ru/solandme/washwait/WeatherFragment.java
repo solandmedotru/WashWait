@@ -45,6 +45,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView detailsField;
     private TextView currentTemperatureField;
     private ImageView weatherIcon;
+    private ImageView car;
     private TextView forecast;
 
     private ImageView forecastDay1;
@@ -108,6 +109,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
         forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
         weatherIcon = (ImageView) rootView.findViewById(R.id.weather_icon);
+        car = (ImageView) rootView.findViewById(R.id.car_image);
 
         detailsField.setTypeface(weatherFont);
 
@@ -213,6 +215,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
         String forecastText = WashCar.getForecastText(getContext(), weatherFiveDays, FORECAST_DISTANCE);
         forecast.setText(forecastText);
+
+        car.setImageResource(getCarPicture(WashCar.getDirtyCounter(weatherFiveDays)));
     }
 
     private void updateWeatherUI(CurrentWeather currentWeather) {
@@ -255,6 +259,16 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         weatherIcon.setImageResource(getWeatherPicture(currentWeather.getWeather().get(0).getIcon()));
 
+
+
+    }
+
+    private int getCarPicture(Double dirtyCounter) {
+
+        if(dirtyCounter <= 0.001) return R.mipmap.clean_car;
+        if(dirtyCounter > 0.001) return R.mipmap.clean_car;
+
+        return R.mipmap.car;
     }
 
     @Override

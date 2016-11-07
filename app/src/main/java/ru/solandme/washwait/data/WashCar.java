@@ -13,14 +13,13 @@ public class WashCar {
 
     private static final String TAG = "ru.solandme.washwait";
 
-
     public static String getForecastText(Context context, WeatherFiveDays weatherFiveDays, int FORECAST_DISTANCE) {
+
         int washDayNumber = -1;
         int firstDirtyDay = -1;
         int clearDaysCounter = 0;
         int daysCounter = 0;
         Long dataWashCar = 0L;
-        Double dirtyCounter = 0.0;
 
         if (null != weatherFiveDays) {
             int size = weatherFiveDays.getList().size();
@@ -58,11 +57,10 @@ public class WashCar {
                         }
                     }
                 } else {
-                    if(i < FORECAST_DISTANCE) dirtyCounter = dirtyCounter + forecasts[i].rainCounter + forecasts[i].snowCounter;
                     clearDaysCounter = 0;
                 }
             }
-            Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay + " " + dirtyCounter);
+            Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
         }
 
         String dataToWashCar = new SimpleDateFormat("EEEE, dd", Locale.getDefault()).format(dataWashCar * 1000);
@@ -80,6 +78,18 @@ public class WashCar {
             default:
                 return context.getResources().getString(R.string.not_wash);
         }
+
+    }
+
+    public static Double getDirtyCounter(WeatherFiveDays weatherFiveDays) {
+        Double rainCounter = 0.0, snowCounter = 0.0;
+        if ((null != weatherFiveDays.getList().get(0).getRain())) {
+            rainCounter = weatherFiveDays.getList().get(0).getRain().get3h();
+        }
+        if ((null != weatherFiveDays.getList().get(0).getSnow())) {
+            snowCounter = weatherFiveDays.getList().get(0).getSnow().get3h();
+        }
+        return rainCounter + snowCounter;
 
     }
 }
