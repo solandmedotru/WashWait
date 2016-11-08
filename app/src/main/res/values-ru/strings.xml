@@ -4,7 +4,7 @@
     <string name="can_wash">Сегодня хороший день чтобы помыть машину! Осадков не ожидается.</string>
     <string name="change_city">Сменить город</string>
     <string name="wash">Рекомендую помыть машину\n%1$s</string>
-    <string name="not_wash">Ближайшие несколько дней лучше не мыть машину.</string>
+    <string name="not_wash">Ближайшие две недели лучше не мыть машину.</string>
     <string name="humidity">"Влажность: "</string>
     <string name="last_update">"Последнее обновление: "</string>
     <string name="pressure">"Давление: "</string>

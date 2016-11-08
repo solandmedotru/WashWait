@@ -2,6 +2,9 @@ package ru.solandme.washwait.data;
 
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 import ru.solandme.washwait.POJO.BigWeatherForecast;
 
 public class WashHelper {
@@ -14,6 +17,8 @@ public class WashHelper {
     private long dataToWashCar = 0L;
 
     public WashHelper(BigWeatherForecast weather, int FORECAST_DISTANCE) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
+
         this.weather = weather;
         this.FORECAST_DISTANCE = FORECAST_DISTANCE;
 
@@ -26,6 +31,8 @@ public class WashHelper {
 
                 forecast.weatherIds = weather.getList().get(i).getWeather().get(0).getId();
                 forecast.temperature = weather.getList().get(i).getTemp().getDay();
+                forecast.date = dateFormat.format(weather.getList().get(i).getDt() * 1000).toUpperCase();
+                forecast.imageRes = weather.getList().get(i).getWeather().get(0).getIcon();
                 forecasts[i] = forecast;
             }
         }
@@ -44,7 +51,7 @@ public class WashHelper {
                 clearDaysCounter++;
                 if (clearDaysCounter == FORECAST_DISTANCE) {
                     if (washDayNumber == -1) {
-                        washDayNumber = daysCounter - i;
+                        washDayNumber = daysCounter - clearDaysCounter;
                         dataToWashCar = weather.getList().get(i).getDt();
                     }
                 }
@@ -68,5 +75,9 @@ public class WashHelper {
 
         Log.e(TAG, "dirtyCounter: " + (rainCounter + snowCounter));
         return rainCounter + snowCounter;
+    }
+
+    public Forecast[] getForecasts() {
+        return forecasts;
     }
 }

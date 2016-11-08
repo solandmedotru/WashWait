@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,6 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.POJO.BigWeatherForecast;
 import ru.solandme.washwait.POJO.List;
+import ru.solandme.washwait.data.Forecast;
 import ru.solandme.washwait.data.WashHelper;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
@@ -38,7 +41,7 @@ import ru.solandme.washwait.rest.ApiInterface;
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
-    private static final int FORECAST_DISTANCE = 2;
+    private static final int FORECAST_DISTANCE = 3;
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -79,6 +82,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private SharedPreferences sharedPref;
 
     WashHelper washHelper;
+    private RecyclerView mRecyclerView;
+    private MyRecyclerViewAdapter adapter;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -109,20 +114,27 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastMessage = (TextView) rootView.findViewById(R.id.forecast_message);
 
         weatherIconDay0 = (ImageView) rootView.findViewById(R.id.weather_icon_day0);
-        weatherIconDay1 = (ImageView) rootView.findViewById(R.id.weather_icon_day1);
-        weatherIconDay2 = (ImageView) rootView.findViewById(R.id.weather_icon_day2);
-        weatherIconDay3 = (ImageView) rootView.findViewById(R.id.weather_icon_day3);
-        weatherIconDay4 = (ImageView) rootView.findViewById(R.id.weather_icon_day4);
+//        weatherIconDay1 = (ImageView) rootView.findViewById(R.id.weather_icon_day1);
+//        weatherIconDay2 = (ImageView) rootView.findViewById(R.id.weather_icon_day2);
+//        weatherIconDay3 = (ImageView) rootView.findViewById(R.id.weather_icon_day3);
+//        weatherIconDay4 = (ImageView) rootView.findViewById(R.id.weather_icon_day4);
 
-        forecastDate1 = (TextView) rootView.findViewById(R.id.date1);
-        forecastDate2 = (TextView) rootView.findViewById(R.id.date2);
-        forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
-        forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
+//        forecastDate1 = (TextView) rootView.findViewById(R.id.date1);
+//        forecastDate2 = (TextView) rootView.findViewById(R.id.date2);
+//        forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
+//        forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
 
         carImage = (ImageView) rootView.findViewById(R.id.car_image);
         cityImage = (ImageView) rootView.findViewById(R.id.city_image);
 
         dirtyMeter = (ProgressBar) rootView.findViewById(R.id.dirty_meter);
+
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        mRecyclerView.setHasFixedSize(true);
+
+
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL, false));
+        // создаем адаптер
 
         detailsField.setTypeface(weatherFont);
 
@@ -169,7 +181,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
                     updateWeatherUI(response.body());
                     updateWashForecastUI(response.body());
-                    updateFiveDaysForecastUI(response.body());
+                    updateForecastUI(response.body());
                 }
             }
 
@@ -184,27 +196,33 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-    private void updateFiveDaysForecastUI(BigWeatherForecast body) {
-        List listDay1 = body.getList().get(1);
-        List listDay2 = body.getList().get(2);
-        List listDay3 = body.getList().get(3);
-        List listDay4 = body.getList().get(4);
+    private void updateForecastUI(BigWeatherForecast body) {
+//        List listDay1 = body.getList().get(1);
+//        List listDay2 = body.getList().get(2);
+//        List listDay3 = body.getList().get(3);
+//        List listDay4 = body.getList().get(4);
+//
+//
+//        String icon1 = listDay1.getWeather().get(0).getIcon();
+//        String icon2 = listDay2.getWeather().get(0).getIcon();
+//        String icon3 = listDay3.getWeather().get(0).getIcon();
+//        String icon4 = listDay4.getWeather().get(0).getIcon();
+//
+//        weatherIconDay1.setImageResource(getWeatherPicture(icon1));
+//        weatherIconDay2.setImageResource(getWeatherPicture(icon2));
+//        weatherIconDay3.setImageResource(getWeatherPicture(icon3));
+//        weatherIconDay4.setImageResource(getWeatherPicture(icon4));
+//
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
+//        forecastDate1.setText(dateFormat.format(listDay1.getDt() * 1000).toUpperCase());
+//        forecastDate2.setText(dateFormat.format(listDay2.getDt() * 1000).toUpperCase());
+//        forecastDate3.setText(dateFormat.format(listDay3.getDt() * 1000).toUpperCase());
+//        forecastDate4.setText(dateFormat.format(listDay4.getDt() * 1000).toUpperCase());
 
-        String icon1 = listDay1.getWeather().get(0).getIcon();
-        String icon2 = listDay2.getWeather().get(0).getIcon();
-        String icon3 = listDay3.getWeather().get(0).getIcon();
-        String icon4 = listDay4.getWeather().get(0).getIcon();
+        Forecast[] forecasts = washHelper.getForecasts();
+        adapter = new MyRecyclerViewAdapter(forecasts);
+        mRecyclerView.setAdapter(adapter);
 
-        weatherIconDay1.setImageResource(getWeatherPicture(icon1));
-        weatherIconDay2.setImageResource(getWeatherPicture(icon2));
-        weatherIconDay3.setImageResource(getWeatherPicture(icon3));
-        weatherIconDay4.setImageResource(getWeatherPicture(icon4));
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        forecastDate1.setText(dateFormat.format(listDay1.getDt() * 1000).toUpperCase());
-        forecastDate2.setText(dateFormat.format(listDay2.getDt() * 1000).toUpperCase());
-        forecastDate3.setText(dateFormat.format(listDay3.getDt() * 1000).toUpperCase());
-        forecastDate4.setText(dateFormat.format(listDay4.getDt() * 1000).toUpperCase());
     }
 
     private void updateWashForecastUI(BigWeatherForecast weather) {
@@ -215,8 +233,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastMessage.setText(forecastText);
 
         Double dirtyCounter = washHelper.getDirtyCounter()*100;
-        dirtyMeter.setMax(60);
-        dirtyMeter.setProgress(dirtyCounter.intValue()+10);
+        dirtyMeter.setMax(1000);
+        dirtyMeter.setProgress(dirtyCounter.intValue()+100);
 
         carImage.setImageResource(getCarPicture(dirtyCounter));
         Animation moveFromLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_left);
@@ -236,7 +254,27 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             case 3:
                 return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 4:
+            case 5:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 6:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 7:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 8:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 9:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 10:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 11:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 12:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 13:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 14:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 15:
                 return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             default:
                 return getResources().getString(R.string.not_wash);
@@ -289,10 +327,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private int getCarPicture(Double dirtyCounter) {
 
         if (dirtyCounter < 1) return R.mipmap.car1;
-        if (dirtyCounter >= 1 && dirtyCounter < 5) return R.mipmap.car2;
-        if (dirtyCounter >= 5 && dirtyCounter < 10) return R.mipmap.car3;
-        if (dirtyCounter >= 10 && dirtyCounter < 50) return R.mipmap.car4;
-        if (dirtyCounter >= 50) return R.mipmap.car5;
+        if (dirtyCounter >= 1 && dirtyCounter < 50) return R.mipmap.car2;
+        if (dirtyCounter >= 50 && dirtyCounter < 500) return R.mipmap.car3;
+        if (dirtyCounter >= 500 && dirtyCounter < 1000) return R.mipmap.car4;
+        if (dirtyCounter >= 1000) return R.mipmap.car5;
 
         return R.mipmap.car1;
     }
