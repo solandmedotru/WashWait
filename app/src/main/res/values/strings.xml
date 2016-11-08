@@ -129,7 +129,7 @@
     <string name="wi_celsius" translatable="false">&#xf03c;</string>
     <string name="wi_barometer" translatable="false">&#xf079;</string>
 
-    <string name="wash">We recommend you to wash the car on\n<b>%1$s</b></string>
+    <string name="wash">We recommend you to wash the car\n%1$s</string>
     <string name="not_wash">We recommend you to wait some day and save your money.</string>
     <string name="can_wash">A good day to wash your car!</string>
     <string name="last_update">"Last update: "</string>

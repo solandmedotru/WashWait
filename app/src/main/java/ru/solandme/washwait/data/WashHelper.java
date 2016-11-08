@@ -1,32 +1,31 @@
 package ru.solandme.washwait.data;
 
 import android.util.Log;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-import ru.solandme.washwait.POJO.WeatherFiveDays;
+
+import ru.solandme.washwait.POJO.BigWeatherForecast;
 
 public class WashHelper {
 
     private static final String TAG = "ru.solandme.washwait";
-    private WeatherFiveDays weatherFiveDays;
+    private BigWeatherForecast weather;
     private int FORECAST_DISTANCE;
-    Forecast[] forecasts;
-    int size;
-    String dataToWashCar;
+    private Forecast[] forecasts;
+    private int size;
+    private long dataToWashCar = 0L;
 
-    public WashHelper(WeatherFiveDays weatherFiveDays, int FORECAST_DISTANCE) {
-        this.weatherFiveDays = weatherFiveDays;
+    public WashHelper(BigWeatherForecast weather, int FORECAST_DISTANCE) {
+        this.weather = weather;
         this.FORECAST_DISTANCE = FORECAST_DISTANCE;
 
-        if (null != weatherFiveDays) {
-            size = weatherFiveDays.getList().size();
+        if (null != weather) {
+            size = weather.getList().size();
             forecasts = new Forecast[size];
 
             for (int i = 0; i < size; i++) {
                 Forecast forecast = new Forecast();
 
-                forecast.weatherIds = weatherFiveDays.getList().get(i).getWeather().get(0).getId();
-                forecast.temperature = weatherFiveDays.getList().get(i).getMain().getTemp();
+                forecast.weatherIds = weather.getList().get(i).getWeather().get(0).getId();
+                forecast.temperature = weather.getList().get(i).getTemp().getDay();
                 forecasts[i] = forecast;
             }
         }
@@ -38,16 +37,15 @@ public class WashHelper {
         int firstDirtyDay = -1;
         int clearDaysCounter = 0;
         int daysCounter = 0;
-        Long dataWashCar = 0L;
 
         for (int i = 0; i < size; i++) {
-            if (i == 7 || i == 15 || i == 23 || i == 31 || i == 39) daysCounter++;
+            daysCounter++;
             if (!forecasts[i].isDirty()) {
                 clearDaysCounter++;
                 if (clearDaysCounter == FORECAST_DISTANCE) {
                     if (washDayNumber == -1) {
-                        washDayNumber = daysCounter - 1;
-                        dataWashCar = weatherFiveDays.getList().get(i).getDt();
+                        washDayNumber = daysCounter - i;
+                        dataToWashCar = weather.getList().get(i).getDt();
                     }
                 }
             } else {
@@ -55,29 +53,19 @@ public class WashHelper {
             }
         }
         Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
-        dataToWashCar = new SimpleDateFormat("EEEE, dd", Locale.getDefault()).format(dataWashCar * 1000);
 
         return washDayNumber;
     }
 
-    public String getDataToWashCar() {
+    public Long getDataToWashCar() {
         return dataToWashCar;
     }
 
     public Double getDirtyCounter() {
         Double rainCounter = 0.0, snowCounter = 0.0;
-        if ((null != weatherFiveDays.getList().get(0).getRain())) {
-            for (int i = 0; i < 8; i++) {
-                rainCounter = rainCounter + weatherFiveDays.getList().get(i).getRain().get3h();
-            }
+            rainCounter = rainCounter + weather.getList().get(0).getRain();
+            snowCounter = snowCounter + weather.getList().get(0).getSnow();
 
-        }
-        if ((null != weatherFiveDays.getList().get(0).getSnow())) {
-            for (int i = 0; i < 8; i++) {
-                snowCounter = snowCounter + weatherFiveDays.getList().get(i).getSnow().get3h();
-            }
-
-        }
         Log.e(TAG, "dirtyCounter: " + (rainCounter + snowCounter));
         return rainCounter + snowCounter;
     }

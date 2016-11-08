@@ -4,11 +4,12 @@ package ru.solandme.washwait.POJO;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 public class City {
 
     @SerializedName("id")
     @Expose
-    private long id;
+    private int id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -20,17 +21,14 @@ public class City {
     private String country;
     @SerializedName("population")
     @Expose
-    private long population;
-    @SerializedName("sys")
-    @Expose
-    private Sys sys;
+    private int population;
 
     /**
      * 
      * @return
      *     The id
      */
-    public long getId() {
+    public int getId() {
         return id;
     }
 
@@ -39,7 +37,7 @@ public class City {
      * @param id
      *     The id
      */
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -102,7 +100,7 @@ public class City {
      * @return
      *     The population
      */
-    public long getPopulation() {
+    public int getPopulation() {
         return population;
     }
 
@@ -111,26 +109,8 @@ public class City {
      * @param population
      *     The population
      */
-    public void setPopulation(long population) {
+    public void setPopulation(int population) {
         this.population = population;
-    }
-
-    /**
-     * 
-     * @return
-     *     The sys
-     */
-    public Sys getSys() {
-        return sys;
-    }
-
-    /**
-     * 
-     * @param sys
-     *     The sys
-     */
-    public void setSys(Sys sys) {
-        this.sys = sys;
     }
 
 }

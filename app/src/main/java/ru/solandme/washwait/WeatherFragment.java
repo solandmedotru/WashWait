@@ -29,16 +29,16 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.POJO.BigWeatherForecast;
 import ru.solandme.washwait.POJO.List;
 import ru.solandme.washwait.data.WashHelper;
-import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
 
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
-    private static final int FORECAST_DISTANCE = 8;
+    private static final int FORECAST_DISTANCE = 2;
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -66,7 +66,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private String lat = "35";
     private String lon = "139";
-    private String cnt = "10";
+    private String cnt = "16";
 
     private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
@@ -159,10 +159,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
-        Call<WeatherFiveDays> weatherFiveDaysCall = apiService.getWeatherFiveDaysByCityName(cityCode, units, lang, appid);
-        weatherFiveDaysCall.enqueue(new Callback<WeatherFiveDays>() {
+        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCityName(cityCode, units, lang, cnt, appid);
+        weatherCall.enqueue(new Callback<BigWeatherForecast>() {
             @Override
-            public void onResponse(Call<WeatherFiveDays> call, Response<WeatherFiveDays> response) {
+            public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
                 if (response.isSuccessful()) {
 
                     swipeRefreshLayout.setRefreshing(false);
@@ -174,7 +174,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
 
             @Override
-            public void onFailure(Call<WeatherFiveDays> call, Throwable t) {
+            public void onFailure(Call<BigWeatherForecast> call, Throwable t) {
 
                 swipeRefreshLayout.setRefreshing(false);
 
@@ -184,11 +184,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-    private void updateFiveDaysForecastUI(WeatherFiveDays body) {
-        List listDay1 = body.getList().get(8);
-        List listDay2 = body.getList().get(16);
-        List listDay3 = body.getList().get(24);
-        List listDay4 = body.getList().get(32);
+    private void updateFiveDaysForecastUI(BigWeatherForecast body) {
+        List listDay1 = body.getList().get(1);
+        List listDay2 = body.getList().get(2);
+        List listDay3 = body.getList().get(3);
+        List listDay4 = body.getList().get(4);
 
         String icon1 = listDay1.getWeather().get(0).getIcon();
         String icon2 = listDay2.getWeather().get(0).getIcon();
@@ -201,15 +201,15 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIconDay4.setImageResource(getWeatherPicture(icon4));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        forecastDate1.setText(dateFormat.format(listDay1.getDt() * 1000));
-        forecastDate2.setText(dateFormat.format(listDay2.getDt() * 1000));
-        forecastDate3.setText(dateFormat.format(listDay3.getDt() * 1000));
-        forecastDate4.setText(dateFormat.format(listDay4.getDt() * 1000));
+        forecastDate1.setText(dateFormat.format(listDay1.getDt() * 1000).toUpperCase());
+        forecastDate2.setText(dateFormat.format(listDay2.getDt() * 1000).toUpperCase());
+        forecastDate3.setText(dateFormat.format(listDay3.getDt() * 1000).toUpperCase());
+        forecastDate4.setText(dateFormat.format(listDay4.getDt() * 1000).toUpperCase());
     }
 
-    private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
+    private void updateWashForecastUI(BigWeatherForecast weather) {
 
-        washHelper = new WashHelper(weatherFiveDays, FORECAST_DISTANCE);
+        washHelper = new WashHelper(weather, FORECAST_DISTANCE);
 
         String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
         forecastMessage.setText(forecastText);
@@ -225,29 +225,30 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         cityImage.startAnimation(moveFromRight);
     }
 
-    private String getTextForWashForecast(int washDayNumber, String dataToWash) {
+    private String getTextForWashForecast(int washDayNumber, long dataToWash) {
+        String dateToWashFormated = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
         switch (washDayNumber) {
             case 0:
                 return getResources().getString(R.string.can_wash);
             case 1:
-                return getResources().getString(R.string.wash, dataToWash);
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             case 2:
-                return getResources().getString(R.string.wash, dataToWash);
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             case 3:
-                return getResources().getString(R.string.wash, dataToWash);
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             case 4:
-                return getResources().getString(R.string.wash, dataToWash);
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             default:
                 return getResources().getString(R.string.not_wash);
         }
     }
 
-    private void updateWeatherUI(WeatherFiveDays currentWeather) {
+    private void updateWeatherUI(BigWeatherForecast currentWeather) {
 
         String cityName = currentWeather.getCity().getName();
         String country = currentWeather.getCity().getCountry();
-        Long dt = currentWeather.getList().get(0).getDt();
-        double temp = currentWeather.getList().get(0).getMain().getTemp();
+        long dt = currentWeather.getList().get(0).getDt();
+        double temp = currentWeather.getList().get(0).getTemp().getDay();
         String description = currentWeather.getList().get(0).getWeather().get(0).getDescription().toUpperCase();
         String iconString = currentWeather.getList().get(0).getWeather().get(0).getIcon();
 
@@ -283,8 +284,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         Log.e(TAG, "updateWeatherUI: " + iconString);
         weatherIconDay0.setImageResource(getWeatherPicture(iconString));
-
-
     }
 
     private int getCarPicture(Double dirtyCounter) {
