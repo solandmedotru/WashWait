@@ -46,15 +46,15 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView updatedField;
     private TextView detailsField;
     private TextView currentTemperatureField;
-    private ImageView weatherIcon;
+    private ImageView weatherIconDay0;
     private ImageView carImage;
     private ImageView cityImage;
-    private TextView forecast;
+    private TextView forecastMessage;
 
-    private ImageView forecastDay1;
-    private ImageView forecastDay2;
-    private ImageView forecastDay3;
-    private ImageView forecastDay4;
+    private ImageView weatherIconDay1;
+    private ImageView weatherIconDay2;
+    private ImageView weatherIconDay3;
+    private ImageView weatherIconDay4;
 
     private TextView forecastDate1;
     private TextView forecastDate2;
@@ -93,7 +93,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
@@ -103,20 +103,23 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         updatedField = (TextView) rootView.findViewById(R.id.updated_field);
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
-        forecast = (TextView) rootView.findViewById(R.id.forecast);
-        forecastDay1 = (ImageView) rootView.findViewById(R.id.forecast_1);
-        forecastDay2 = (ImageView) rootView.findViewById(R.id.forecast_2);
-        forecastDay3 = (ImageView) rootView.findViewById(R.id.forecast_3);
-        forecastDay4 = (ImageView) rootView.findViewById(R.id.forecast_4);
+        forecastMessage = (TextView) rootView.findViewById(R.id.forecast_message);
+
+        weatherIconDay0 = (ImageView) rootView.findViewById(R.id.weather_icon_day0);
+        weatherIconDay1 = (ImageView) rootView.findViewById(R.id.weather_icon_day1);
+        weatherIconDay2 = (ImageView) rootView.findViewById(R.id.weather_icon_day2);
+        weatherIconDay3 = (ImageView) rootView.findViewById(R.id.weather_icon_day3);
+        weatherIconDay4 = (ImageView) rootView.findViewById(R.id.weather_icon_day4);
+
         forecastDate1 = (TextView) rootView.findViewById(R.id.date1);
         forecastDate2 = (TextView) rootView.findViewById(R.id.date2);
         forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
         forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
-        weatherIcon = (ImageView) rootView.findViewById(R.id.weather_icon);
+
         carImage = (ImageView) rootView.findViewById(R.id.car_image);
         cityImage = (ImageView) rootView.findViewById(R.id.city_image);
 
-        dirtyMeter = (ProgressBar) rootView.findViewById(R.id.dirtyMeter);
+        dirtyMeter = (ProgressBar) rootView.findViewById(R.id.dirty_meter);
 
         detailsField.setTypeface(weatherFont);
 
@@ -179,21 +182,21 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void updateFiveDaysForecastUI(WeatherFiveDays body) {
-        String icon1 = body.getList().get(4).getWeather().get(0).getIcon();
-        String icon2 = body.getList().get(14).getWeather().get(0).getIcon();
-        String icon3 = body.getList().get(22).getWeather().get(0).getIcon();
-        String icon4 = body.getList().get(30).getWeather().get(0).getIcon();
+        String icon1 = body.getList().get(8).getWeather().get(0).getIcon();
+        String icon2 = body.getList().get(16).getWeather().get(0).getIcon();
+        String icon3 = body.getList().get(24).getWeather().get(0).getIcon();
+        String icon4 = body.getList().get(32).getWeather().get(0).getIcon();
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        String data11 = dateFormat.format(body.getList().get(4).getDt() * 1000);
-        String data21 = dateFormat.format(body.getList().get(14).getDt() * 1000);
-        String data31 = dateFormat.format(body.getList().get(22).getDt() * 1000);
-        String data41 = dateFormat.format(body.getList().get(30).getDt() * 1000);
+        String data11 = dateFormat.format(body.getList().get(8).getDt() * 1000);
+        String data21 = dateFormat.format(body.getList().get(16).getDt() * 1000);
+        String data31 = dateFormat.format(body.getList().get(24).getDt() * 1000);
+        String data41 = dateFormat.format(body.getList().get(32).getDt() * 1000);
 
-        forecastDay1.setImageResource(getWeatherPicture(icon1));
-        forecastDay2.setImageResource(getWeatherPicture(icon2));
-        forecastDay3.setImageResource(getWeatherPicture(icon3));
-        forecastDay4.setImageResource(getWeatherPicture(icon4));
+        weatherIconDay1.setImageResource(getWeatherPicture(icon1));
+        weatherIconDay2.setImageResource(getWeatherPicture(icon2));
+        weatherIconDay3.setImageResource(getWeatherPicture(icon3));
+        weatherIconDay4.setImageResource(getWeatherPicture(icon4));
 
         forecastDate1.setText(data11);
         forecastDate2.setText(data21);
@@ -203,10 +206,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
         String forecastText = WashCar.getForecastText(getContext(), weatherFiveDays, FORECAST_DISTANCE);
-        forecast.setText(forecastText);
+        forecastMessage.setText(forecastText);
 
         Double dirtyCounter = WashCar.getDirtyCounter(weatherFiveDays)*100;
-        dirtyMeter.setMax(400);
+        dirtyMeter.setMax(60);
         dirtyMeter.setProgress(dirtyCounter.intValue()+10);
 
         carImage.setImageResource(getCarPicture(dirtyCounter));
@@ -226,7 +229,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String iconString = currentWeather.getList().get(0).getWeather().get(0).getIcon();
 
         cityField.setText(cityName + ", " + country);
-
 
         currentTemperatureField.setTypeface(weatherFont);
         detailsField.setText(description);
@@ -257,7 +259,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 updatedOn));
 
         Log.e(TAG, "updateWeatherUI: " + iconString);
-        weatherIcon.setImageResource(getWeatherPicture(iconString));
+        weatherIconDay0.setImageResource(getWeatherPicture(iconString));
 
 
     }
@@ -265,10 +267,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private int getCarPicture(Double dirtyCounter) {
 
         if (dirtyCounter < 1) return R.mipmap.car1;
-        if (dirtyCounter >= 1 && dirtyCounter < 10) return R.mipmap.car2;
-        if (dirtyCounter >= 10 && dirtyCounter < 100) return R.mipmap.car3;
-        if (dirtyCounter >= 100 && dirtyCounter < 500) return R.mipmap.car4;
-        if (dirtyCounter >= 500) return R.mipmap.car5;
+        if (dirtyCounter >= 1 && dirtyCounter < 5) return R.mipmap.car2;
+        if (dirtyCounter >= 5 && dirtyCounter < 10) return R.mipmap.car3;
+        if (dirtyCounter >= 10 && dirtyCounter < 50) return R.mipmap.car4;
+        if (dirtyCounter >= 50) return R.mipmap.car5;
 
         return R.mipmap.car1;
     }

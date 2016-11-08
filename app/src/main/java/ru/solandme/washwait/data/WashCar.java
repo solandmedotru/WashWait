@@ -31,18 +31,17 @@ public class WashCar {
                 forecast.weatherIds = weatherFiveDays.getList().get(i).getWeather().get(0).getId();
                 forecast.temperature = weatherFiveDays.getList().get(i).getMain().getTemp();
 
-
-                Log.e(TAG, weatherFiveDays.getList().get(i).getWeather().get(0).getMain()
-                        + weatherFiveDays.getList().get(i).getWeather().get(0).getId());
-
-                if ((null != weatherFiveDays.getList().get(i).getRain())) {
-                    forecast.rainCounter = forecast.rainCounter + weatherFiveDays.getList().get(i).getRain().get3h();
-                    Log.e(TAG, "rain: " + String.valueOf(forecast.rainCounter));
-                }
-                if ((null != weatherFiveDays.getList().get(i).getSnow())) {
-                    forecast.snowCounter = forecast.snowCounter + weatherFiveDays.getList().get(i).getSnow().get3h();
-                    Log.e(TAG, "snow: " + String.valueOf(forecast.snowCounter) + " " + forecast.temperature);
-                }
+//                Log.e(TAG, weatherFiveDays.getList().get(i).getWeather().get(0).getMain()
+//                        + weatherFiveDays.getList().get(i).getWeather().get(0).getId());
+//
+//                if ((null != weatherFiveDays.getList().get(i).getRain())) {
+//                    forecast.rainCounter = forecast.rainCounter + weatherFiveDays.getList().get(i).getRain().get3h();
+//                    Log.e(TAG, "rain: " + String.valueOf(forecast.rainCounter));
+//                }
+//                if ((null != weatherFiveDays.getList().get(i).getSnow())) {
+//                    forecast.snowCounter = forecast.snowCounter + weatherFiveDays.getList().get(i).getSnow().get3h();
+//                    Log.e(TAG, "snow: " + String.valueOf(forecast.snowCounter) + " " + forecast.temperature);
+//                }
                 forecasts[i] = forecast;
             }
 
@@ -84,13 +83,18 @@ public class WashCar {
     public static Double getDirtyCounter(WeatherFiveDays weatherFiveDays) {
         Double rainCounter = 0.0, snowCounter = 0.0;
         if ((null != weatherFiveDays.getList().get(0).getRain())) {
-            rainCounter = weatherFiveDays.getList().get(0).getRain().get3h();
+            for (int i = 0; i < 8; i++) {
+                rainCounter = rainCounter + weatherFiveDays.getList().get(i).getRain().get3h();
+            }
+
         }
         if ((null != weatherFiveDays.getList().get(0).getSnow())) {
-            snowCounter = weatherFiveDays.getList().get(0).getSnow().get3h();
+            for (int i = 0; i < 8; i++) {
+                snowCounter = snowCounter + weatherFiveDays.getList().get(i).getSnow().get3h();
+            }
+
         }
         Log.e(TAG, "dirtyCounter: " + (rainCounter + snowCounter));
         return rainCounter + snowCounter;
-
     }
 }
