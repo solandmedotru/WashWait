@@ -29,7 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.data.WashCar;
-import ru.solandme.washwait.POJO.CurrentWeather;
 import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
@@ -82,7 +81,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
 
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -139,42 +137,26 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onResume() {
         super.onResume();
-
         getWeather();
     }
 
     void getWeather() {
+        swipeRefreshLayout.setRefreshing(true);
+
         cityCode = sharedPref.getString("city", defaultCityCode);
         units = sharedPref.getString("units", defaultUnits);
 
-        swipeRefreshLayout.setRefreshing(true);
-
         final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
-
-        Call<CurrentWeather> currentWeatherCall = apiService.getCurrentWeatherByCityName(cityCode, units, lang, appid);
-
-        currentWeatherCall.enqueue(new Callback<CurrentWeather>() {
-            @Override
-            public void onResponse(Call<CurrentWeather> call, Response<CurrentWeather> response) {
-                swipeRefreshLayout.setRefreshing(false);
-                if (response.isSuccessful()) {
-                    updateWeatherUI(response.body());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CurrentWeather> call, Throwable t) {
-                swipeRefreshLayout.setRefreshing(false);
-                Log.e(TAG, "onError: " + t);
-                Toast.makeText(getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
 
         Call<WeatherFiveDays> weatherFiveDaysCall = apiService.getWeatherFiveDaysByCityName(cityCode, units, lang, appid);
         weatherFiveDaysCall.enqueue(new Callback<WeatherFiveDays>() {
             @Override
             public void onResponse(Call<WeatherFiveDays> call, Response<WeatherFiveDays> response) {
                 if (response.isSuccessful()) {
+
+                    swipeRefreshLayout.setRefreshing(false);
+
+                    updateWeatherUI(response.body());
                     updateWashForecastUI(response.body());
                     updateFiveDaysForecastUI(response.body());
                 }
@@ -182,6 +164,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             @Override
             public void onFailure(Call<WeatherFiveDays> call, Throwable t) {
+
+                swipeRefreshLayout.setRefreshing(false);
+
                 Log.e(TAG, "onError: " + t);
                 Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
@@ -194,16 +179,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String icon3 = body.getList().get(22).getWeather().get(0).getIcon();
         String icon4 = body.getList().get(30).getWeather().get(0).getIcon();
 
-        Long data1 = body.getList().get(4).getDt();
-        Long data2 = body.getList().get(14).getDt();
-        Long data3 = body.getList().get(22).getDt();
-        Long data4 = body.getList().get(30).getDt();
-
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        String data11 = dateFormat.format(data1 * 1000);
-        String data21 = dateFormat.format(data2 * 1000);
-        String data31 = dateFormat.format(data3 * 1000);
-        String data41 = dateFormat.format(data4 * 1000);
+        String data11 = dateFormat.format(body.getList().get(4).getDt() * 1000);
+        String data21 = dateFormat.format(body.getList().get(14).getDt() * 1000);
+        String data31 = dateFormat.format(body.getList().get(22).getDt() * 1000);
+        String data41 = dateFormat.format(body.getList().get(30).getDt() * 1000);
 
         forecastDay1.setImageResource(getWeatherPicture(icon1));
         forecastDay2.setImageResource(getWeatherPicture(icon2));
@@ -225,21 +205,19 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_right);
         cityImage.startAnimation(moveFromRight);
-
-
     }
 
-    private void updateWeatherUI(CurrentWeather currentWeather) {
+    private void updateWeatherUI(WeatherFiveDays currentWeather) {
 
-        String cityName = currentWeather.getName();
-        String country = currentWeather.getSys().getCountry();
-        Long dt = (long) currentWeather.getDt();
-        double temp = currentWeather.getMain().getTemp();
+        String cityName = currentWeather.getCity().getName();
+        String country = currentWeather.getCity().getCountry();
+        Long dt = currentWeather.getList().get(0).getDt();
+        double temp = currentWeather.getList().get(0).getMain().getTemp();
 
         cityField.setText(cityName + ", " + country);
 
         currentTemperatureField.setTypeface(weatherFont);
-        detailsField.setText(currentWeather.getWeather().get(0).getDescription().toUpperCase());
+        detailsField.setText(currentWeather.getList().get(0).getWeather().get(0).getDescription().toUpperCase());
 
         String unitTemperature;
         switch (units) {
@@ -265,9 +243,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         updatedField.setText(String.format("%s%s",
                 getString(R.string.last_update),
                 updatedOn));
-        Log.e(TAG, "updateWeatherUI: " + currentWeather.getWeather().get(0).getIcon());
 
-        weatherIcon.setImageResource(getWeatherPicture(currentWeather.getWeather().get(0).getIcon()));
+        Log.e(TAG, "updateWeatherUI: " + currentWeather.getList().get(0).getWeather().get(0).getIcon());
+        weatherIcon.setImageResource(getWeatherPicture(currentWeather.getList().get(0).getWeather().get(0).getIcon()));
 
 
     }
@@ -285,9 +263,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onRefresh() {
-        swipeRefreshLayout.setRefreshing(true);
         getWeather();
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     public int getWeatherPicture(String icon) {
