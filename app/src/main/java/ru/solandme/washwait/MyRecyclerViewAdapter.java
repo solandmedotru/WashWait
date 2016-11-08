@@ -52,16 +52,57 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // Заменяет контент отдельного view (вызывается layout manager-ом)
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-
         holder.date1.setText(forecasts[position].getDate());
-//        holder.image1.setImageResource(forecasts[position].getImageRes());
-
+        holder.image1.setImageResource(getWeatherPicture(forecasts[position].getImageRes()));
     }
 
     // Возвращает размер данных (вызывается layout manager-ом)
     @Override
     public int getItemCount() {
         return forecasts.length;
+    }
+
+    public int getWeatherPicture(String icon) {
+
+        switch (icon) {
+            case "01d":
+                return R.mipmap.clear_d;
+            case "01n":
+                return R.mipmap.clear_n;
+            case "02d":
+                return R.mipmap.few_clouds_d;
+            case "02n":
+                return R.mipmap.few_clouds_n;
+            case "03d":
+                return R.mipmap.scattered_clouds;
+            case "03n":
+                return R.mipmap.scattered_clouds;
+            case "04d":
+                return R.mipmap.broken_clouds;
+            case "04n":
+                return R.mipmap.broken_clouds;
+            case "09d":
+                return R.mipmap.shower_rain_d;
+            case "09n":
+                return R.mipmap.shower_rain_n;
+            case "10d":
+                return R.mipmap.rain_d;
+            case "10n":
+                return R.mipmap.rain_n;
+            case "11d":
+                return R.mipmap.thunder_d;
+            case "11n":
+                return R.mipmap.thunder_n;
+            case "13d":
+                return R.mipmap.snow_d;
+            case "13n":
+                return R.mipmap.snow_n;
+            case "50d":
+                return R.mipmap.fog;
+            case "50n":
+                return R.mipmap.fog;
+            default:
+                return R.mipmap.few_clouds_d;
+        }
     }
 }
