@@ -29,7 +29,8 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.data.WashCar;
+import ru.solandme.washwait.POJO.List;
+import ru.solandme.washwait.data.WashHelper;
 import ru.solandme.washwait.POJO.WeatherFiveDays;
 import ru.solandme.washwait.rest.ApiClient;
 import ru.solandme.washwait.rest.ApiInterface;
@@ -76,6 +77,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private String cityCode;
     private String units;
     private SharedPreferences sharedPref;
+
+    WashHelper washHelper;
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -182,33 +185,36 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void updateFiveDaysForecastUI(WeatherFiveDays body) {
-        String icon1 = body.getList().get(8).getWeather().get(0).getIcon();
-        String icon2 = body.getList().get(16).getWeather().get(0).getIcon();
-        String icon3 = body.getList().get(24).getWeather().get(0).getIcon();
-        String icon4 = body.getList().get(32).getWeather().get(0).getIcon();
+        List listDay1 = body.getList().get(8);
+        List listDay2 = body.getList().get(16);
+        List listDay3 = body.getList().get(24);
+        List listDay4 = body.getList().get(32);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        String data11 = dateFormat.format(body.getList().get(8).getDt() * 1000);
-        String data21 = dateFormat.format(body.getList().get(16).getDt() * 1000);
-        String data31 = dateFormat.format(body.getList().get(24).getDt() * 1000);
-        String data41 = dateFormat.format(body.getList().get(32).getDt() * 1000);
+        String icon1 = listDay1.getWeather().get(0).getIcon();
+        String icon2 = listDay2.getWeather().get(0).getIcon();
+        String icon3 = listDay3.getWeather().get(0).getIcon();
+        String icon4 = listDay4.getWeather().get(0).getIcon();
 
         weatherIconDay1.setImageResource(getWeatherPicture(icon1));
         weatherIconDay2.setImageResource(getWeatherPicture(icon2));
         weatherIconDay3.setImageResource(getWeatherPicture(icon3));
         weatherIconDay4.setImageResource(getWeatherPicture(icon4));
 
-        forecastDate1.setText(data11);
-        forecastDate2.setText(data21);
-        forecastDate3.setText(data31);
-        forecastDate4.setText(data41);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
+        forecastDate1.setText(dateFormat.format(listDay1.getDt() * 1000));
+        forecastDate2.setText(dateFormat.format(listDay2.getDt() * 1000));
+        forecastDate3.setText(dateFormat.format(listDay3.getDt() * 1000));
+        forecastDate4.setText(dateFormat.format(listDay4.getDt() * 1000));
     }
 
     private void updateWashForecastUI(WeatherFiveDays weatherFiveDays) {
-        String forecastText = WashCar.getForecastText(getContext(), weatherFiveDays, FORECAST_DISTANCE);
+
+        washHelper = new WashHelper(weatherFiveDays, FORECAST_DISTANCE);
+
+        String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
         forecastMessage.setText(forecastText);
 
-        Double dirtyCounter = WashCar.getDirtyCounter(weatherFiveDays)*100;
+        Double dirtyCounter = washHelper.getDirtyCounter()*100;
         dirtyMeter.setMax(60);
         dirtyMeter.setProgress(dirtyCounter.intValue()+10);
 
@@ -217,6 +223,23 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_right);
         cityImage.startAnimation(moveFromRight);
+    }
+
+    private String getTextForWashForecast(int washDayNumber, String dataToWash) {
+        switch (washDayNumber) {
+            case 0:
+                return getResources().getString(R.string.can_wash);
+            case 1:
+                return getResources().getString(R.string.wash, dataToWash);
+            case 2:
+                return getResources().getString(R.string.wash, dataToWash);
+            case 3:
+                return getResources().getString(R.string.wash, dataToWash);
+            case 4:
+                return getResources().getString(R.string.wash, dataToWash);
+            default:
+                return getResources().getString(R.string.not_wash);
+        }
     }
 
     private void updateWeatherUI(WeatherFiveDays currentWeather) {
