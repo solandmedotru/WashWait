@@ -274,10 +274,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private int getCarPicture(Double dirtyCounter) {
 
-        if (dirtyCounter <= 0.001) return R.mipmap.clean_car;
-        if (dirtyCounter > 0.001) return R.mipmap.car5;
+        if (dirtyCounter < 0.001) return R.mipmap.car1;
+        if (dirtyCounter >= 0.001 && dirtyCounter < 0.01) return R.mipmap.car2;
+        if (dirtyCounter >= 0.01 && dirtyCounter < 0.1) return R.mipmap.car3;
+        if (dirtyCounter >= 0.1 && dirtyCounter < 2) return R.mipmap.car4;
+        if (dirtyCounter >= 2) return R.mipmap.car5;
 
-        return R.mipmap.car;
+        return R.mipmap.car1;
     }
 
     @Override
