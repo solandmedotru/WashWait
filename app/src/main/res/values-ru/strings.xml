@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Wash / Wait</string>
+    <string name="app_name">МетеоМойка</string>
     <string name="can_wash">Сегодня хороший день чтобы помыть машину! Осадков не ожидается.</string>
     <string name="change_city">Сменить город</string>
     <string name="wash">Рекомендую помыть машину в\n<b>%1$s</b></string>
@@ -23,5 +23,9 @@
         <item quantity="other">через несколько дней</item>
     </plurals>
     <string name="zeroDay">сегодня</string>
+    <string name="clear">чисто</string>
+    <string name="dirty">грязно</string>
+    <string name="normal">нормально</string>
+    <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
 
 </resources>

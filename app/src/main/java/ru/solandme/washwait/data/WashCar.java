@@ -89,6 +89,7 @@ public class WashCar {
         if ((null != weatherFiveDays.getList().get(0).getSnow())) {
             snowCounter = weatherFiveDays.getList().get(0).getSnow().get3h();
         }
+        Log.e(TAG, "dirtyCounter: " + (rainCounter + snowCounter));
         return rainCounter + snowCounter;
 
     }

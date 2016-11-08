@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView forecastDate2;
     private TextView forecastDate3;
     private TextView forecastDate4;
+
+    private ProgressBar dirtyMeter;
 
     private String lat = "35";
     private String lon = "139";
@@ -112,6 +115,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIcon = (ImageView) rootView.findViewById(R.id.weather_icon);
         carImage = (ImageView) rootView.findViewById(R.id.car_image);
         cityImage = (ImageView) rootView.findViewById(R.id.city_image);
+
+        dirtyMeter = (ProgressBar) rootView.findViewById(R.id.dirtyMeter);
 
         detailsField.setTypeface(weatherFont);
 
@@ -200,7 +205,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String forecastText = WashCar.getForecastText(getContext(), weatherFiveDays, FORECAST_DISTANCE);
         forecast.setText(forecastText);
 
-        carImage.setImageResource(getCarPicture(WashCar.getDirtyCounter(weatherFiveDays)));
+        Double dirtyCounter = WashCar.getDirtyCounter(weatherFiveDays)*100;
+        dirtyMeter.setMax(400);
+        dirtyMeter.setProgress(dirtyCounter.intValue()+10);
+
+        carImage.setImageResource(getCarPicture(dirtyCounter));
         Animation moveFromLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_left);
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_right);
@@ -213,11 +222,14 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String country = currentWeather.getCity().getCountry();
         Long dt = currentWeather.getList().get(0).getDt();
         double temp = currentWeather.getList().get(0).getMain().getTemp();
+        String description = currentWeather.getList().get(0).getWeather().get(0).getDescription().toUpperCase();
+        String iconString = currentWeather.getList().get(0).getWeather().get(0).getIcon();
 
         cityField.setText(cityName + ", " + country);
 
+
         currentTemperatureField.setTypeface(weatherFont);
-        detailsField.setText(currentWeather.getList().get(0).getWeather().get(0).getDescription().toUpperCase());
+        detailsField.setText(description);
 
         String unitTemperature;
         switch (units) {
@@ -244,19 +256,19 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 getString(R.string.last_update),
                 updatedOn));
 
-        Log.e(TAG, "updateWeatherUI: " + currentWeather.getList().get(0).getWeather().get(0).getIcon());
-        weatherIcon.setImageResource(getWeatherPicture(currentWeather.getList().get(0).getWeather().get(0).getIcon()));
+        Log.e(TAG, "updateWeatherUI: " + iconString);
+        weatherIcon.setImageResource(getWeatherPicture(iconString));
 
 
     }
 
     private int getCarPicture(Double dirtyCounter) {
 
-        if (dirtyCounter < 0.001) return R.mipmap.car1;
-        if (dirtyCounter >= 0.001 && dirtyCounter < 0.01) return R.mipmap.car2;
-        if (dirtyCounter >= 0.01 && dirtyCounter < 0.1) return R.mipmap.car3;
-        if (dirtyCounter >= 0.1 && dirtyCounter < 2) return R.mipmap.car4;
-        if (dirtyCounter >= 2) return R.mipmap.car5;
+        if (dirtyCounter < 1) return R.mipmap.car1;
+        if (dirtyCounter >= 1 && dirtyCounter < 10) return R.mipmap.car2;
+        if (dirtyCounter >= 10 && dirtyCounter < 100) return R.mipmap.car3;
+        if (dirtyCounter >= 100 && dirtyCounter < 500) return R.mipmap.car4;
+        if (dirtyCounter >= 500) return R.mipmap.car5;
 
         return R.mipmap.car1;
     }
@@ -270,21 +282,21 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         switch (icon) {
             case "01d":
-                return R.mipmap.clear;
+                return R.mipmap.clear_d;
             case "01n":
                 return R.mipmap.clear_n;
             case "02d":
                 return R.mipmap.few_clouds_d;
             case "02n":
-                return R.mipmap.cloudy_n;
+                return R.mipmap.few_clouds_n;
             case "03d":
-                return R.mipmap.cloudy;
+                return R.mipmap.scattered_clouds;
             case "03n":
-                return R.mipmap.cloudy;
+                return R.mipmap.scattered_clouds;
             case "04d":
-                return R.mipmap.cloudy;
+                return R.mipmap.broken_clouds;
             case "04n":
-                return R.mipmap.cloudy;
+                return R.mipmap.broken_clouds;
             case "09d":
                 return R.mipmap.shower_rain_d;
             case "09n":
@@ -294,13 +306,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             case "10n":
                 return R.mipmap.rain_n;
             case "11d":
-                return R.mipmap.thunderstorm;
+                return R.mipmap.thunder_d;
             case "11n":
-                return R.mipmap.thunderstorm;
+                return R.mipmap.thunder_n;
             case "13d":
-                return R.mipmap.snow;
+                return R.mipmap.snow_d;
             case "13n":
-                return R.mipmap.snow;
+                return R.mipmap.snow_n;
             case "50d":
                 return R.mipmap.fog;
             case "50n":

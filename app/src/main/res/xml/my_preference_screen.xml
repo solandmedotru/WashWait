@@ -5,7 +5,7 @@
         android:defaultValue="428000"
         android:selectAllOnFocus="true"
         android:singleLine="true"
-        android:title="City name or post index (ex. Moscow,RU)"
+        android:title="@string/city_name_settings"
         android:key="city" />
 
     <ListPreference

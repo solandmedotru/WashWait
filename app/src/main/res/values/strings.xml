@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Wash / Wait</string>
+    <string name="app_name">MeteoWash</string>
 
     <string name="change_city">Change city</string>
 
@@ -156,4 +156,8 @@
         <item quantity="other">a few days</item>
     </plurals>
     <string name="zeroDay">today</string>
+    <string name="clear">clear</string>
+    <string name="normal">normal</string>
+    <string name="dirty">dirty</string>
+    <string name="city_name_settings">City name or post index (ex. Moscow,RU)</string>
 </resources>

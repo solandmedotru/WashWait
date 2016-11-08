@@ -37,9 +37,52 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBackground" />
 
+        <ProgressBar
+            android:id="@+id/dirtyMeter"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_height="5dp"
+            android:progressBackgroundTint="@color/colorPrimaryDark"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/clear"
+                android:textColor="@color/textColor" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/normal"
+                android:textColor="@color/textColor" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/dirty"
+                android:textColor="@color/textColor" />
+        </LinearLayout>
+
+
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="3">
 
             <ImageView
                 android:id="@+id/city_image"
@@ -52,16 +95,16 @@
                 android:id="@+id/car_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:scaleType="fitEnd"
-                android:layout_gravity="center_horizontal|bottom" />
+                android:layout_gravity="center_horizontal|bottom"
+                android:scaleType="fitCenter" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="top"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_gravity="top"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -97,9 +140,9 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:scaleType="fitCenter"
                     android:layout_weight="1"
-                    android:src="@mipmap/few_clouds_d"/>
+                    android:scaleType="fitCenter"
+                    android:src="@mipmap/few_clouds_d" />
 
 
             </LinearLayout>
@@ -107,11 +150,12 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_height="0dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:background="@drawable/background_tabs">
+            android:layout_weight="1"
+            android:background="@drawable/background_tabs"
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -123,7 +167,9 @@
                 <ImageView
                     android:id="@+id/forecast_1"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/few_clouds_d" />
 
@@ -131,7 +177,7 @@
                     android:id="@+id/date1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center|bottom"
                     android:text="NOW"
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -148,7 +194,9 @@
                 <ImageView
                     android:id="@+id/forecast_2"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/few_clouds_d" />
 
@@ -156,7 +204,7 @@
                     android:id="@+id/date2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center|bottom"
                     android:text="NOW"
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -173,7 +221,9 @@
                 <ImageView
                     android:id="@+id/forecast_3"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/few_clouds_d" />
 
@@ -181,7 +231,7 @@
                     android:id="@+id/date3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center|bottom"
                     android:text="NOW"
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
@@ -198,7 +248,9 @@
                 <ImageView
                     android:id="@+id/forecast_4"
                     android:layout_width="wrap_content"
-                    android:layout_height="60dp"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/few_clouds_d" />
 
@@ -206,7 +258,7 @@
                     android:id="@+id/date4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_gravity="center|bottom"
                     android:text="NOW"
                     android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceLarge"
