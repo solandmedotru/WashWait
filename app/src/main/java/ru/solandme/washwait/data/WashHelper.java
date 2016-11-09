@@ -2,40 +2,47 @@ package ru.solandme.washwait.data;
 
 import android.util.Log;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.util.ArrayList;
 
 import ru.solandme.washwait.POJO.BigWeatherForecast;
+import ru.solandme.washwait.R;
 
 public class WashHelper {
 
     private static final String TAG = "ru.solandme.washwait";
     private BigWeatherForecast weather;
     private int FORECAST_DISTANCE;
-    private Forecast[] forecasts;
+    private ArrayList<Forecast> forecasts;
     private int size;
     private long dataToWashCar = 0L;
 
-    public WashHelper(BigWeatherForecast weather, int FORECAST_DISTANCE) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
 
+    public void generateForecast(BigWeatherForecast weather, ArrayList<Forecast> forecasts, int FORECAST_DISTANCE) {
+        this.forecasts = forecasts;
         this.weather = weather;
         this.FORECAST_DISTANCE = FORECAST_DISTANCE;
 
         if (null != weather) {
+            forecasts.clear();
             size = weather.getList().size();
-            forecasts = new Forecast[size];
 
             for (int i = 0; i < size; i++) {
                 Forecast forecast = new Forecast();
 
-                forecast.weatherIds = weather.getList().get(i).getWeather().get(0).getId();
-                forecast.temperature = weather.getList().get(i).getTemp().getDay();
-                forecast.date = dateFormat.format(weather.getList().get(i).getDt() * 1000).toUpperCase();
-                forecast.imageRes = weather.getList().get(i).getWeather().get(0).getIcon();
-                forecasts[i] = forecast;
+                forecast.setWeatherId(weather.getList().get(i).getWeather().get(0).getId());
+                forecast.setTemperature(weather.getList().get(i).getTemp().getDay());
+                forecast.setDate(weather.getList().get(i).getDt() * 1000);
+                forecast.setImageRes(getWeatherPicture(weather.getList().get(i).getWeather().get(0).getIcon()));
+                forecast.setCityName(weather.getCity().getName());
+                forecast.setCountry(weather.getCity().getCountry());
+                forecast.setDescription(weather.getList().get(i).getWeather().get(0).getDescription());
+                forecasts.add(forecast);
             }
         }
+    }
+
+    public void setForecasts(ArrayList<Forecast> forecasts) {
+        this.forecasts = forecasts;
     }
 
     public int getWashDayNumber() {
@@ -47,12 +54,12 @@ public class WashHelper {
 
         for (int i = 0; i < size; i++) {
             daysCounter++;
-            if (!forecasts[i].isDirty()) {
+            if (!forecasts.get(i).isDirty()) {
                 clearDaysCounter++;
                 if (clearDaysCounter == FORECAST_DISTANCE) {
                     if (washDayNumber == -1) {
                         washDayNumber = daysCounter - clearDaysCounter;
-                        dataToWashCar = weather.getList().get(i).getDt();
+                        dataToWashCar = forecasts.get(washDayNumber).getDate();
                     }
                 }
             } else {
@@ -70,14 +77,58 @@ public class WashHelper {
 
     public Double getDirtyCounter() {
         Double rainCounter = 0.0, snowCounter = 0.0;
-            rainCounter = rainCounter + weather.getList().get(0).getRain();
-            snowCounter = snowCounter + weather.getList().get(0).getSnow();
+        rainCounter = rainCounter + weather.getList().get(0).getRain();
+        snowCounter = snowCounter + weather.getList().get(0).getSnow();
 
-        Log.e(TAG, "dirtyCounter: " + (rainCounter + snowCounter));
-        return rainCounter + snowCounter;
+        Log.e(TAG, "dirtyCounter: " + (rainCounter + (snowCounter)) * 4);
+        return (rainCounter + (snowCounter)) * 4;
     }
 
-    public Forecast[] getForecasts() {
+    public ArrayList<Forecast> getForecasts() {
         return forecasts;
+    }
+
+    private int getWeatherPicture(String icon) {
+
+        switch (icon) {
+            case "01d":
+                return R.mipmap.clear_d;
+            case "01n":
+                return R.mipmap.clear_n;
+            case "02d":
+                return R.mipmap.few_clouds_d;
+            case "02n":
+                return R.mipmap.few_clouds_n;
+            case "03d":
+                return R.mipmap.scattered_clouds;
+            case "03n":
+                return R.mipmap.scattered_clouds;
+            case "04d":
+                return R.mipmap.broken_clouds;
+            case "04n":
+                return R.mipmap.broken_clouds;
+            case "09d":
+                return R.mipmap.shower_rain_d;
+            case "09n":
+                return R.mipmap.shower_rain_n;
+            case "10d":
+                return R.mipmap.rain_d;
+            case "10n":
+                return R.mipmap.rain_n;
+            case "11d":
+                return R.mipmap.thunder_d;
+            case "11n":
+                return R.mipmap.thunder_n;
+            case "13d":
+                return R.mipmap.snow_d;
+            case "13n":
+                return R.mipmap.snow_n;
+            case "50d":
+                return R.mipmap.fog;
+            case "50n":
+                return R.mipmap.fog;
+            default:
+                return R.mipmap.few_clouds_d;
+        }
     }
 }

@@ -23,9 +23,9 @@
         <item quantity="other">через несколько дней</item>
     </plurals>
     <string name="zeroDay">сегодня</string>
-    <string name="clear">чисто</string>
-    <string name="dirty">грязно</string>
-    <string name="normal">нормально</string>
+    <string name="dry">слабые осадки</string>
+    <string name="wet">сильные осадки</string>
+    <string name="normal">средние</string>
     <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
 
 </resources>

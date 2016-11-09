@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
@@ -32,7 +33,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.POJO.BigWeatherForecast;
-import ru.solandme.washwait.POJO.List;
 import ru.solandme.washwait.data.Forecast;
 import ru.solandme.washwait.data.WashHelper;
 import ru.solandme.washwait.rest.ApiClient;
@@ -55,16 +55,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ImageView cityImage;
     private TextView forecastMessage;
 
-    private ImageView weatherIconDay1;
-    private ImageView weatherIconDay2;
-    private ImageView weatherIconDay3;
-    private ImageView weatherIconDay4;
-
-    private TextView forecastDate1;
-    private TextView forecastDate2;
-    private TextView forecastDate3;
-    private TextView forecastDate4;
-
     private ProgressBar dirtyMeter;
 
     private String lat = "35";
@@ -81,9 +71,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private String units;
     private SharedPreferences sharedPref;
 
-    WashHelper washHelper;
-    private RecyclerView mRecyclerView;
+    private RecyclerView recyclerView;
     private MyRecyclerViewAdapter adapter;
+
+    WashHelper washHelper = new WashHelper();
+    ArrayList<Forecast> forecasts = new ArrayList<>();
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -114,27 +106,17 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastMessage = (TextView) rootView.findViewById(R.id.forecast_message);
 
         weatherIconDay0 = (ImageView) rootView.findViewById(R.id.weather_icon_day0);
-//        weatherIconDay1 = (ImageView) rootView.findViewById(R.id.weather_icon_day1);
-//        weatherIconDay2 = (ImageView) rootView.findViewById(R.id.weather_icon_day2);
-//        weatherIconDay3 = (ImageView) rootView.findViewById(R.id.weather_icon_day3);
-//        weatherIconDay4 = (ImageView) rootView.findViewById(R.id.weather_icon_day4);
-
-//        forecastDate1 = (TextView) rootView.findViewById(R.id.date1);
-//        forecastDate2 = (TextView) rootView.findViewById(R.id.date2);
-//        forecastDate3 = (TextView) rootView.findViewById(R.id.date3);
-//        forecastDate4 = (TextView) rootView.findViewById(R.id.date4);
 
         carImage = (ImageView) rootView.findViewById(R.id.car_image);
         cityImage = (ImageView) rootView.findViewById(R.id.city_image);
 
-        dirtyMeter = (ProgressBar) rootView.findViewById(R.id.dirty_meter);
+        dirtyMeter = (ProgressBar) rootView.findViewById(R.id.precipitation_meter);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
-        mRecyclerView.setHasFixedSize(true);
-
-
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL, false));
-        // создаем адаптер
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        adapter = new MyRecyclerViewAdapter(forecasts);
+        recyclerView.setAdapter(adapter);
 
         detailsField.setTypeface(weatherFont);
 
@@ -178,10 +160,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (response.isSuccessful()) {
 
                     swipeRefreshLayout.setRefreshing(false);
+                    washHelper.generateForecast(response.body(), forecasts, FORECAST_DISTANCE);
+                    forecasts = washHelper.getForecasts();
 
-                    updateWeatherUI(response.body());
-                    updateWashForecastUI(response.body());
-                    updateForecastUI(response.body());
+                    adapter.notifyDataSetChanged();
+
+                    updateWeatherUI();
+                    updateWashForecastUI();
                 }
             }
 
@@ -196,45 +181,14 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
     }
 
-    private void updateForecastUI(BigWeatherForecast body) {
-//        List listDay1 = body.getList().get(1);
-//        List listDay2 = body.getList().get(2);
-//        List listDay3 = body.getList().get(3);
-//        List listDay4 = body.getList().get(4);
-//
-//
-//        String icon1 = listDay1.getWeather().get(0).getIcon();
-//        String icon2 = listDay2.getWeather().get(0).getIcon();
-//        String icon3 = listDay3.getWeather().get(0).getIcon();
-//        String icon4 = listDay4.getWeather().get(0).getIcon();
-//
-//        weatherIconDay1.setImageResource(getWeatherPicture(icon1));
-//        weatherIconDay2.setImageResource(getWeatherPicture(icon2));
-//        weatherIconDay3.setImageResource(getWeatherPicture(icon3));
-//        weatherIconDay4.setImageResource(getWeatherPicture(icon4));
-//
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-//        forecastDate1.setText(dateFormat.format(listDay1.getDt() * 1000).toUpperCase());
-//        forecastDate2.setText(dateFormat.format(listDay2.getDt() * 1000).toUpperCase());
-//        forecastDate3.setText(dateFormat.format(listDay3.getDt() * 1000).toUpperCase());
-//        forecastDate4.setText(dateFormat.format(listDay4.getDt() * 1000).toUpperCase());
-
-        Forecast[] forecasts = washHelper.getForecasts();
-        adapter = new MyRecyclerViewAdapter(forecasts);
-        mRecyclerView.setAdapter(adapter);
-
-    }
-
-    private void updateWashForecastUI(BigWeatherForecast weather) {
-
-        washHelper = new WashHelper(weather, FORECAST_DISTANCE);
+    private void updateWashForecastUI() {
 
         String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
         forecastMessage.setText(forecastText);
 
-        Double dirtyCounter = washHelper.getDirtyCounter()*100;
-        dirtyMeter.setMax(1000);
-        dirtyMeter.setProgress(dirtyCounter.intValue()+100);
+        Double dirtyCounter = washHelper.getDirtyCounter();
+        dirtyMeter.setMax(10);
+        dirtyMeter.setProgress(dirtyCounter.intValue());
 
         carImage.setImageResource(getCarPicture(dirtyCounter));
         Animation moveFromLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_left);
@@ -244,7 +198,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private String getTextForWashForecast(int washDayNumber, long dataToWash) {
-        String dateToWashFormated = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
+        String dateToWashFormated = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash);
         switch (washDayNumber) {
             case 0:
                 return getResources().getString(R.string.can_wash);
@@ -281,14 +235,14 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
-    private void updateWeatherUI(BigWeatherForecast currentWeather) {
+    private void updateWeatherUI() {
 
-        String cityName = currentWeather.getCity().getName();
-        String country = currentWeather.getCity().getCountry();
-        long dt = currentWeather.getList().get(0).getDt();
-        double temp = currentWeather.getList().get(0).getTemp().getDay();
-        String description = currentWeather.getList().get(0).getWeather().get(0).getDescription().toUpperCase();
-        String iconString = currentWeather.getList().get(0).getWeather().get(0).getIcon();
+        String cityName = forecasts.get(0).getCityName();
+        String country = forecasts.get(0).getCountry();
+        long dt = forecasts.get(0).getDate();
+        double temp = forecasts.get(0).getTemperature();
+        String description = forecasts.get(0).getDescription().toUpperCase();
+        int icon = forecasts.get(0).getImageRes();
 
         cityField.setText(cityName + ", " + country);
 
@@ -310,27 +264,27 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         currentTemperatureField.setText(String.format("%s %s%s",
                 getResources().getString(R.string.wi_thermometer),
-                String.format("%.1f", temp),
+                String.format(Locale.getDefault(), "%.1f", temp),
                 unitTemperature));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
-        String updatedOn = dateFormat.format(new Date(dt * 1000));
+        String updatedOn = dateFormat.format(new Date(dt));
 
         updatedField.setText(String.format("%s%s",
                 getString(R.string.last_update),
                 updatedOn));
 
-        Log.e(TAG, "updateWeatherUI: " + iconString);
-        weatherIconDay0.setImageResource(getWeatherPicture(iconString));
+        Log.e(TAG, "updateWeatherUI: " + icon);
+        weatherIconDay0.setImageResource(icon);
     }
 
     private int getCarPicture(Double dirtyCounter) {
 
-        if (dirtyCounter < 1) return R.mipmap.car1;
-        if (dirtyCounter >= 1 && dirtyCounter < 50) return R.mipmap.car2;
-        if (dirtyCounter >= 50 && dirtyCounter < 500) return R.mipmap.car3;
-        if (dirtyCounter >= 500 && dirtyCounter < 1000) return R.mipmap.car4;
-        if (dirtyCounter >= 1000) return R.mipmap.car5;
+        if (dirtyCounter <= 0) return R.mipmap.car1;
+        if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car2;
+        if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car3;
+        if (dirtyCounter >= 15 && dirtyCounter < 50) return R.mipmap.car4;
+        if (dirtyCounter >= 50) return R.mipmap.car5;
 
         return R.mipmap.car1;
     }
@@ -340,47 +294,4 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getWeather();
     }
 
-    public int getWeatherPicture(String icon) {
-
-        switch (icon) {
-            case "01d":
-                return R.mipmap.clear_d;
-            case "01n":
-                return R.mipmap.clear_n;
-            case "02d":
-                return R.mipmap.few_clouds_d;
-            case "02n":
-                return R.mipmap.few_clouds_n;
-            case "03d":
-                return R.mipmap.scattered_clouds;
-            case "03n":
-                return R.mipmap.scattered_clouds;
-            case "04d":
-                return R.mipmap.broken_clouds;
-            case "04n":
-                return R.mipmap.broken_clouds;
-            case "09d":
-                return R.mipmap.shower_rain_d;
-            case "09n":
-                return R.mipmap.shower_rain_n;
-            case "10d":
-                return R.mipmap.rain_d;
-            case "10n":
-                return R.mipmap.rain_n;
-            case "11d":
-                return R.mipmap.thunder_d;
-            case "11n":
-                return R.mipmap.thunder_n;
-            case "13d":
-                return R.mipmap.snow_d;
-            case "13n":
-                return R.mipmap.snow_n;
-            case "50d":
-                return R.mipmap.fog;
-            case "50n":
-                return R.mipmap.fog;
-            default:
-                return R.mipmap.few_clouds_d;
-        }
-    }
 }

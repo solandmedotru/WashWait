@@ -2,23 +2,26 @@ package ru.solandme.washwait.data;
 
 public class Forecast {
 
-    int weatherIds;
-    double rainCounter;
-    double snowCounter;
-    double temperature;
-    String imageRes;
-    String date;
+    private int weatherId;
+    private double rainCounter;
+    private double snowCounter;
+    private double temperature;
+    private int imageRes;
+    private String cityName;
+    private String country;
+    private long date;
+    private String description;
 
     boolean isDirty() {
-        return weatherIds < 600 || weatherIds < 700 && temperature > -10;
+        return weatherId < 600 || weatherId < 700 && temperature > -10;
     }
 
-    public int getWeatherIds() {
-        return weatherIds;
+    public int getWeatherId() {
+        return weatherId;
     }
 
-    public void setWeatherIds(int weatherIds) {
-        this.weatherIds = weatherIds;
+    public void setWeatherId(int weatherId) {
+        this.weatherId = weatherId;
     }
 
     public double getRainCounter() {
@@ -45,19 +48,43 @@ public class Forecast {
         this.temperature = temperature;
     }
 
-    public String getImageRes() {
+    public int getImageRes() {
         return imageRes;
     }
 
-    public void setImageRes(String imageRes) {
+    public void setImageRes(int imageRes) {
         this.imageRes = imageRes;
     }
 
-    public String getDate() {
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(long date) {
         this.date = date;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
