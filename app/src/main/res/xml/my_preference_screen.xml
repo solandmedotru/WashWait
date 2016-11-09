@@ -14,5 +14,11 @@
         android:entries="@array/unitsName"
         android:entryValues="@array/units"
         android:key="units" />
+    <ListPreference
+        android:defaultValue="1"
+        android:title="@string/clear_period"
+        android:entries="@array/forecastLimit"
+        android:entryValues="@array/limit"
+        android:key="limit" />
 
 </PreferenceScreen>

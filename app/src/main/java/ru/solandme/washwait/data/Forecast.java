@@ -13,7 +13,7 @@ public class Forecast {
     private String description;
 
     boolean isDirty() {
-        return weatherId < 600 || weatherId < 700 && temperature > -10;
+        return weatherId < 600 || weatherId < 700 && temperature > -6;
     }
 
     public int getWeatherId() {

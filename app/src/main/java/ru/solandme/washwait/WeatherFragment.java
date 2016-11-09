@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -41,7 +42,6 @@ import ru.solandme.washwait.rest.ApiInterface;
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
-    private static final int FORECAST_DISTANCE = 3;
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -65,6 +65,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private String defaultCityCode = "428000";
     private String defaultUnits = "metric";
+    private String defaultLimit = "1";
+    private int forecastDistance;
 
     private String lang = Locale.getDefault().getLanguage();
     private String cityCode;
@@ -76,6 +78,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
+
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -139,10 +142,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return true;
     }
 
+
     @Override
     public void onResume() {
-        super.onResume();
         getWeather();
+        super.onResume();
     }
 
     void getWeather() {
@@ -150,6 +154,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         cityCode = sharedPref.getString("city", defaultCityCode);
         units = sharedPref.getString("units", defaultUnits);
+        forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
 
         final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
 
@@ -160,7 +165,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (response.isSuccessful()) {
 
                     swipeRefreshLayout.setRefreshing(false);
-                    washHelper.generateForecast(response.body(), forecasts, FORECAST_DISTANCE);
+                    washHelper.generateForecast(response.body(), forecasts, forecastDistance);
                     forecasts = washHelper.getForecasts();
 
                     adapter.notifyDataSetChanged();
@@ -186,8 +191,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
         forecastMessage.setText(forecastText);
 
-        Double dirtyCounter = washHelper.getDirtyCounter();
-        dirtyMeter.setMax(10);
+        Double dirtyCounter = washHelper.getDirtyCounter()*10;
+        dirtyMeter.setMax(30);
         dirtyMeter.setProgress(dirtyCounter.intValue());
 
         carImage.setImageResource(getCarPicture(dirtyCounter));
@@ -207,6 +212,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             case 2:
                 return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             case 3:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 4:
                 return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
             case 5:
                 return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
@@ -274,7 +281,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 getString(R.string.last_update),
                 updatedOn));
 
-        Log.e(TAG, "updateWeatherUI: " + icon);
         weatherIconDay0.setImageResource(icon);
     }
 

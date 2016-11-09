@@ -12,12 +12,6 @@
     <string name="settings">Настройки</string>
     <string name="units_format_label">Единицы измерения</string>
 
-    <string-array name="unitsName">
-        <item>Цельсии</item>
-        <item>Фаренгейты</item>
-        <item>Кельвины</item>
-    </string-array>
-
     <plurals name="daysCounter">
         <item quantity="one">завтра</item>
         <item quantity="other">через несколько дней</item>
@@ -27,5 +21,6 @@
     <string name="wet">сильные осадки</string>
     <string name="normal">средние</string>
     <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
+    <string name="clear_period">Период в днях</string>
 
 </resources>
