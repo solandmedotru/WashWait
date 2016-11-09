@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,6 +41,7 @@ import ru.solandme.washwait.rest.ApiInterface;
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
+    private static final String TAG_ABOUT = "about";
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -138,6 +138,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         switch (item.getItemId()) {
             case R.id.settings:
                 startActivity(new Intent(getActivity(), SettingsActivity.class));
+                break;
+            case R.id.about_app_menu_item:
+                new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
+                break;
         }
         return true;
     }
@@ -192,10 +196,10 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastMessage.setText(forecastText);
 
         Double dirtyCounter = washHelper.getDirtyCounter()*10;
-        dirtyMeter.setMax(30);
+        dirtyMeter.setMax(40);
         dirtyMeter.setProgress(dirtyCounter.intValue());
 
-        carImage.setImageResource(getCarPicture(dirtyCounter));
+        carImage.setImageResource(getCarPicture(dirtyCounter, forecasts.get(0).getTemperature()));
         Animation moveFromLeft = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_left);
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(getActivity(), R.anim.move_from_right);
@@ -284,8 +288,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIconDay0.setImageResource(icon);
     }
 
-    private int getCarPicture(Double dirtyCounter) {
+    private int getCarPicture(Double dirtyCounter, Double temp) {
 
+        if(temp > -10) return R.mipmap.car1;
         if (dirtyCounter <= 0) return R.mipmap.car1;
         if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car2;
         if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car3;

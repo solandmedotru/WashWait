@@ -23,10 +23,8 @@
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity" />
-
-        <activity android:name=".SplashActivity">
-
-        </activity>
+        <activity android:name=".SplashActivity"></activity>
+        <activity android:name=".AboutAppDialog"></activity>
     </application>
 
 </manifest>

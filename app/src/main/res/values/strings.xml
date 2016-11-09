@@ -25,4 +25,12 @@
     <string name="normal">middle wet</string>
     <string name="city_name_settings">City name or post index (ex. Moscow,RU)</string>
     <string name="clear_period">Clear period</string>
+    <string name="app_version" translatable="false">v0.0.1</string>
+    <string name="author">Author</string>
+    <string name="author_name">Solomin Andrey</string>
+    <string name="author_email" translatable="false">solomin.andrey@gmail.com</string>
+    <string name="designer">Designer</string>
+    <string name="designer_name" translatable="false">Anar Ibrahimli</string>
+    <string name="designer_email" translatable="false">anar9222@gmail.com</string>
+    <string name="about_app">About App</string>
 </resources>
