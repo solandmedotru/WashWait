@@ -6,12 +6,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.AutocompleteFilter;
-import com.google.android.gms.location.places.PlaceDetectionApi;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity implements WeatherFragment.OnForecastSelectedListener{
@@ -43,6 +38,7 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
         Intent intent = new Intent(this, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);
+        intent.putExtra("lang", Locale.getDefault().getLanguage().toLowerCase());
         startActivity(intent);
     }
 

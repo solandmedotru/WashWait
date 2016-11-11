@@ -117,7 +117,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         dirtyMeter = (ProgressBar) rootView.findViewById(R.id.precipitation_meter);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
+        recyclerView = (RecyclerView) rootView.findViewById(R.id.rwForecast);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         adapter = new MyRecyclerViewAdapter(forecasts, callback);
@@ -162,7 +162,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         units = sharedPref.getString("units", defaultUnits);
         forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
 
-        final ForecastApiService apiService = ForecastApiHelper.getClient(getContext()).create(ForecastApiService.class);
+        final ForecastApiService apiService = ForecastApiHelper.requestForecast(getContext()).create(ForecastApiService.class);
 
         Call<BigWeatherForecast> weatherCall = apiService.getForecastByCityName(cityCode, units, lang, cnt, appid);
         weatherCall.enqueue(new Callback<BigWeatherForecast>() {

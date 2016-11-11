@@ -24,7 +24,7 @@ public class ForecastApiHelper {
     private static Retrofit retrofit = null;
 
 
-    public static Retrofit getClient(Context context) {
+    public static Retrofit requestForecast(Context context) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)

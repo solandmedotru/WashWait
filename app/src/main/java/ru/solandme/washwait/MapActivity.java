@@ -1,23 +1,10 @@
 package ru.solandme.washwait;
 
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.GeoDataApi;
-import com.google.android.gms.location.places.PlaceFilter;
-import com.google.android.gms.location.places.PlaceLikelihood;
-import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,7 +13,6 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -45,8 +31,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
 
     private double myLat;
     private double myLon;
-    ArrayList<String> arrayList = new ArrayList<>();
-    ArrayAdapter adapter;
+    private String lang;
+
+
+    MyPlacesRVAdapter adapter;
+    RecyclerView carWashList;
 
     PlacesApiHelper mHelper;
     private LatLng mCurrentLatLng;
@@ -56,17 +45,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        ListView carWashList = (ListView) findViewById(R.id.car_wash_list);
+        carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
+        carWashList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
 
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
-
-        carWashList.setAdapter(adapter);
 
         mHelper = new PlacesApiHelper(this);
 
         Bundle bundle = getIntent().getExtras();
         myLat = bundle.getDouble("lat");
         myLon = bundle.getDouble("lon");
+        lang = bundle.getString("lang");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -80,7 +68,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
         mMap = googleMap;
 
         mCurrentLatLng = new LatLng(myLat, myLon);
-        mHelper.requestPlaces("car_wash", mCurrentLatLng, 10000, "ru", mResultCallback);
+        mHelper.requestPlaces("car_wash", mCurrentLatLng, 10000, lang, mResultCallback);
 
         mMap.clear();
         mMap.addMarker(new MarkerOptions()
@@ -93,12 +81,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
         @Override
         public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
             List<Result> results = response.body().getResults();
+            adapter = new MyPlacesRVAdapter(results, mCurrentLatLng);
+            carWashList.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
             for(Result result : results) {
                 Location location = result.getGeometry().getLocation();
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
                 String name = result.getName();
-                arrayList.add(name);
-                adapter.notifyDataSetChanged();
                 mMap.addMarker(new MarkerOptions().position(latLng).title(name));
             }
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 12));
@@ -109,4 +98,5 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
 
         }
     };
+
 }
