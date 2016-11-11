@@ -33,11 +33,11 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.POJO.BigWeatherForecast;
+import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.data.Forecast;
 import ru.solandme.washwait.data.WashHelper;
-import ru.solandme.washwait.rest.ApiClient;
-import ru.solandme.washwait.rest.ApiInterface;
+import ru.solandme.washwait.rest.ForecastApiHelper;
+import ru.solandme.washwait.rest.ForecastApiService;
 
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -162,7 +162,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         units = sharedPref.getString("units", defaultUnits);
         forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
 
-        final ApiInterface apiService = ApiClient.getClient(getContext()).create(ApiInterface.class);
+        final ForecastApiService apiService = ForecastApiHelper.getClient(getContext()).create(ForecastApiService.class);
 
         Call<BigWeatherForecast> weatherCall = apiService.getForecastByCityName(cityCode, units, lang, cnt, appid);
         weatherCall.enqueue(new Callback<BigWeatherForecast>() {

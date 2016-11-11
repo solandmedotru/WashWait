@@ -1,5 +1,5 @@
 
-package ru.solandme.washwait.POJO;
+package ru.solandme.washwait.forecast.POJO;
 
 import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
@@ -22,7 +22,7 @@ public class BigWeatherForecast {
     private int cnt;
     @SerializedName("list")
     @Expose
-    private java.util.List<ru.solandme.washwait.POJO.List> list = new ArrayList<ru.solandme.washwait.POJO.List>();
+    private java.util.List<ru.solandme.washwait.forecast.POJO.List> list = new ArrayList<ru.solandme.washwait.forecast.POJO.List>();
 
     /**
      * 
@@ -101,7 +101,7 @@ public class BigWeatherForecast {
      * @return
      *     The list
      */
-    public java.util.List<ru.solandme.washwait.POJO.List> getList() {
+    public java.util.List<ru.solandme.washwait.forecast.POJO.List> getList() {
         return list;
     }
 
@@ -110,7 +110,7 @@ public class BigWeatherForecast {
      * @param list
      *     The list
      */
-    public void setList(java.util.List<ru.solandme.washwait.POJO.List> list) {
+    public void setList(java.util.List<ru.solandme.washwait.forecast.POJO.List> list) {
         this.list = list;
     }
 

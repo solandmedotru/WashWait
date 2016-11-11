@@ -1,9 +1,22 @@
 package ru.solandme.washwait;
 
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.places.GeoDataApi;
+import com.google.android.gms.location.places.PlaceFilter;
+import com.google.android.gms.location.places.PlaceLikelihood;
+import com.google.android.gms.location.places.PlaceLikelihoodBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -13,40 +26,47 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import noman.googleplaces.NRPlaces;
-import noman.googleplaces.Place;
-import noman.googleplaces.PlaceType;
-import noman.googleplaces.PlacesException;
-import noman.googleplaces.PlacesListener;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.solandme.washwait.map.POJO.Location;
+import ru.solandme.washwait.map.POJO.PlacesResponse;
+import ru.solandme.washwait.map.POJO.Result;
+import ru.solandme.washwait.rest.PlacesApiHelper;
 
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, PlacesListener {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
 
+    private static final String TAG = "MapActivity";
     private GoogleMap mMap;
-    private GoogleApiClient mGoogleApiClient;
 
     private double myLat;
     private double myLon;
-    List<Place> places;
+    ArrayList<String> arrayList = new ArrayList<>();
+    ArrayAdapter adapter;
+
+    PlacesApiHelper mHelper;
+    private LatLng mCurrentLatLng;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        ListView carWashList = (ListView) findViewById(R.id.car_wash_list);
+
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, arrayList);
+
+        carWashList.setAdapter(adapter);
+
+        mHelper = new PlacesApiHelper(this);
+
         Bundle bundle = getIntent().getExtras();
         myLat = bundle.getDouble("lat");
         myLon = bundle.getDouble("lon");
-
-
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -59,45 +79,34 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        new NRPlaces.Builder()
-                .listener(this)
-                .key("AIzaSyDVkzWmncsH-7tkaIYl0SlRMPmL0NAkjOc")
-                .latlng(myLat, myLon)
-                .radius(5000)
-                .type(PlaceType.CAR_WASH)
-                .build()
-                .execute();
+        mCurrentLatLng = new LatLng(myLat, myLon);
+        mHelper.requestPlaces("car_wash", mCurrentLatLng, 10000, "ru", mResultCallback);
 
-        // Add a marker in Sydney and move the camera
-        LatLng myCoordinate = new LatLng(myLat, myLon);
-        mMap.addMarker(new MarkerOptions().position(myCoordinate).title("I am Here").icon(BitmapDescriptorFactory
+        mMap.clear();
+        mMap.addMarker(new MarkerOptions()
+                .position(mCurrentLatLng)
+                .title("I am Here").icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(myCoordinate));
-
     }
 
-    @Override
-    public void onPlacesFailure(PlacesException e) {
-
-    }
-
-    @Override
-    public void onPlacesStart() {
-
-    }
-
-    @Override
-    public void onPlacesSuccess(List<Place> places) {
-        this.places = places;
-    }
-
-    @Override
-    public void onPlacesFinished() {
-        for (int i = 0; i < places.size(); i++) {
-            double lat = places.get(i).getLatitude();
-            double lon = places.get(i).getLongitude();
-            LatLng myCoord = new LatLng(lat, lon);
-            mMap.addMarker(new MarkerOptions().position(myCoord).title(places.get(i).getName()));
+    private Callback<PlacesResponse> mResultCallback = new Callback<PlacesResponse>() {
+        @Override
+        public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
+            List<Result> results = response.body().getResults();
+            for(Result result : results) {
+                Location location = result.getGeometry().getLocation();
+                LatLng latLng = new LatLng(location.getLat(), location.getLng());
+                String name = result.getName();
+                arrayList.add(name);
+                adapter.notifyDataSetChanged();
+                mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 12));
         }
-    }
+
+        @Override
+        public void onFailure(Call<PlacesResponse> call, Throwable t) {
+
+        }
+    };
 }

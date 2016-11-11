@@ -4,7 +4,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import ru.solandme.washwait.POJO.BigWeatherForecast;
+import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.R;
 
 public class WashHelper {

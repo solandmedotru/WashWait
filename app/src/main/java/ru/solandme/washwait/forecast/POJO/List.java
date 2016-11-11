@@ -1,5 +1,5 @@
 
-package ru.solandme.washwait.POJO;
+package ru.solandme.washwait.forecast.POJO;
 
 import java.util.ArrayList;
 import com.google.gson.annotations.Expose;

@@ -3,9 +3,9 @@ package ru.solandme.washwait.rest;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import ru.solandme.washwait.POJO.BigWeatherForecast;
+import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 
-public interface ApiInterface {
+public interface ForecastApiService {
 
     @GET("forecast/daily")
     Call<BigWeatherForecast> getForecastByCityName(@Query("q") String cityName,
