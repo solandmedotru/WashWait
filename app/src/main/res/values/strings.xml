@@ -14,11 +14,6 @@
     <string name="error_from_response">Error!</string>
     <string name="units_format_label">Units format</string>
 
-
-    <plurals name="daysCounter">
-        <item quantity="one">tomorrow</item>
-        <item quantity="other">a few days</item>
-    </plurals>
     <string name="zeroDay">today</string>
     <string name="dry">small wet </string>
     <string name="wet">very wet</string>
@@ -33,4 +28,5 @@
     <string name="designer_name" translatable="false">Anar Ibrahimli</string>
     <string name="designer_email" translatable="false">anar9222@gmail.com</string>
     <string name="about_app">About App</string>
+    <string name="title_activity_map">Map</string>
 </resources>

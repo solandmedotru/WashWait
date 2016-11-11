@@ -11,6 +11,8 @@ public class Forecast {
     private String country;
     private long date;
     private String description;
+    private double lat;
+    private double lon;
 
     boolean isDirty() {
         return weatherId < 600 || weatherId < 700 && temperature > -10;
@@ -86,5 +88,21 @@ public class Forecast {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
     }
 }

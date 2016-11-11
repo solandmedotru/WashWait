@@ -1,5 +1,6 @@
 package ru.solandme.washwait;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -78,6 +79,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
+    OnForecastSelectedListener callback;
 
 
     public WeatherFragment() {
@@ -118,7 +120,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-        adapter = new MyRecyclerViewAdapter(forecasts);
+        adapter = new MyRecyclerViewAdapter(forecasts, callback);
         recyclerView.setAdapter(adapter);
 
         detailsField.setTypeface(weatherFont);
@@ -290,7 +292,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
-        if(temp > -10) return R.mipmap.car1;
+//        if(temp > -10) return R.mipmap.car1;
         if (dirtyCounter <= 0) return R.mipmap.car1;
         if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car2;
         if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car3;
@@ -305,4 +307,18 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getWeather();
     }
 
+    public interface OnForecastSelectedListener {
+        void onForecastItemSelected(int position, double lat, double lon);
+    }
+
+    @Override
+    public void onAttach(Context activity) {
+        super.onAttach(activity);
+        try {
+            callback = (OnForecastSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnForecastSelectedListener");
+        }
+    }
 }

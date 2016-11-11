@@ -36,6 +36,8 @@ public class WashHelper {
                 forecast.setCityName(weather.getCity().getName());
                 forecast.setCountry(weather.getCity().getCountry());
                 forecast.setDescription(weather.getList().get(i).getWeather().get(0).getDescription());
+                forecast.setLat(weather.getCity().getCoord().getLat());
+                forecast.setLon(weather.getCity().getCoord().getLon());
                 forecasts.add(forecast);
             }
         }

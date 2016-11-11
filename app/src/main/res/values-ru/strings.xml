@@ -12,10 +12,6 @@
     <string name="settings">Настройки</string>
     <string name="units_format_label">Единицы измерения</string>
 
-    <plurals name="daysCounter">
-        <item quantity="one">завтра</item>
-        <item quantity="other">через несколько дней</item>
-    </plurals>
     <string name="zeroDay">сегодня</string>
     <string name="dry">слабые осадки</string>
     <string name="wet">сильные осадки</string>
@@ -23,9 +19,7 @@
     <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
     <string name="clear_period">Период в днях</string>
     <string name="about_app">О приложении</string>
-    <string name="app_version"></string>
     <string name="author">Автор приложения</string>
-    <string name="author_email"></string>
     <string name="designer">Дизайнер</string>
     <string name="author_name">Соломин Андрей</string>
 
