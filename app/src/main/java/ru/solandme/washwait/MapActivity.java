@@ -93,7 +93,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         mMap.addMarker(new MarkerOptions()
                 .position(mCurrentLatLng)
                 .title("I am Here").icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                        .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
     }
 
     private Callback<PlacesResponse> mResultCallback = new Callback<PlacesResponse>() {

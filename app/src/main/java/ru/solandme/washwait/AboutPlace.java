@@ -78,7 +78,7 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
         Picasso.with(getContext()).load(
                 "https://maps.googleapis.com/maps/api/place/photo?maxwidth=2000&photoreference=" +
                         args.getString("photoRef") + "&key=AIzaSyDVkzWmncsH-7tkaIYl0SlRMPmL0NAkjOc"
-        ).placeholder(R.mipmap.city)
+        ).placeholder(R.mipmap.city3)
                 .into(placePhoto);
 
         return layout;
