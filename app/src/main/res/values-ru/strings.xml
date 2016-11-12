@@ -22,5 +22,10 @@
     <string name="author">Автор приложения</string>
     <string name="designer">Дизайнер</string>
     <string name="author_name">Соломин Андрей</string>
+    <string name="address">Адрес:</string>
+    <string name="close">Закрыть</string>
+    <string name="make_call">Позвонить</string>
+    <string name="phone">Телефон:</string>
+    <string name="title_activity_map">Карта</string>
 
 </resources>

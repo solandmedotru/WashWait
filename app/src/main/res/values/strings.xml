@@ -29,4 +29,8 @@
     <string name="designer_email" translatable="false">anar9222@gmail.com</string>
     <string name="about_app">About App</string>
     <string name="title_activity_map">Map</string>
+    <string name="make_call">Make call</string>
+    <string name="close">Close</string>
+    <string name="phone">Phone:</string>
+    <string name="address">Address:</string>
 </resources>
