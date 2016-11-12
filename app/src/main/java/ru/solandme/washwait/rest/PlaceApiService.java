@@ -15,7 +15,7 @@ import ru.solandme.washwait.map.POJO.PlacesResponse;
  * &key=YOUR_API_KEY
  */
 public interface PlaceApiService {
-    @GET("/maps/api/place/search/json")
+    @GET("/maps/api/place/nearbysearch/json")
     Call<PlacesResponse> requestPlaces(@Query("types") String types,
                                        @Query("location") String location,
                                        @Query("radius") String radius,

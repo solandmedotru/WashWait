@@ -8,14 +8,17 @@ import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
 import java.util.List;
 import ru.solandme.washwait.map.POJO.Result;
 
 
 public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.ViewHolder>{
 
-    private List<Result> results;
+    private List<Result> results = new ArrayList<>();
     private LatLng mCurrentLatLng;
+    private OnPlaceSelectedListener listener;
+
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView placeName;
@@ -38,16 +41,16 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         }
     }
 
-    MyPlacesRVAdapter(List<Result> results, LatLng mCurrentLatLng) {
+    MyPlacesRVAdapter(List<Result> results, LatLng mCurrentLatLng, OnPlaceSelectedListener listener) {
         this.results = results;
         this.mCurrentLatLng = mCurrentLatLng;
+        this.listener = listener;
     }
 
     @Override
     public MyPlacesRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.place_row, parent, false);
-
         return new ViewHolder(v);
     }
 
@@ -57,25 +60,25 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         holder.placeName.setText(results.get(position).getName());
         holder.placeRating.setText(String.valueOf(results.get(position).getRating()));
         holder.placeVicinity.setText(results.get(position).getVicinity());
-        holder.placeDistance.setText(getDistance(position));
+//        holder.placeDistance.setText(getDistance(position));
 
         holder.placesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                listener.onPlaceItemSelected(holder.getAdapterPosition(), results.get(holder.getAdapterPosition()));
             }
         });
     }
 
-    private String getDistance(int position) {
-        double lat = mCurrentLatLng.latitude;
-        double lon = mCurrentLatLng.longitude;
-        double lat1 = results.get(position).getGeometry().getLocation().getLat();
-        double lon1 = results.get(position).getGeometry().getLocation().getLng();
-
-        return String.valueOf(Math.sqrt((lat - lat1)*(lat - lat1) + (lon - lon1)+(lon - lon1)) + "km");
-
-    }
+//    private String getDistance(int position) {
+//        double lat = mCurrentLatLng.latitude;
+//        double lon = mCurrentLatLng.longitude;
+//        double lat1 = results.get(position).getGeometry().getLocation().getLat();
+//        double lon1 = results.get(position).getGeometry().getLocation().getLng();
+//
+//        return String.valueOf(Math.sqrt((lat - lat1)*(lat - lat1) + (lon - lon1)+(lon - lon1)) + "km");
+//
+//    }
 
     @Override
     public int getItemCount() {
@@ -84,6 +87,11 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         } else {
             return results.size();
         }
+    }
+
+
+    public interface OnPlaceSelectedListener {
+        public void onPlaceItemSelected(int position, Result result);
     }
 
 }
