@@ -9,17 +9,17 @@ public class Coord {
 
     @SerializedName("lon")
     @Expose
-    private double lon;
+    private float lon;
     @SerializedName("lat")
     @Expose
-    private double lat;
+    private float lat;
 
     /**
      * 
      * @return
      *     The lon
      */
-    public double getLon() {
+    public float getLon() {
         return lon;
     }
 
@@ -28,7 +28,7 @@ public class Coord {
      * @param lon
      *     The lon
      */
-    public void setLon(double lon) {
+    public void setLon(float lon) {
         this.lon = lon;
     }
 
@@ -37,7 +37,7 @@ public class Coord {
      * @return
      *     The lat
      */
-    public double getLat() {
+    public float getLat() {
         return lat;
     }
 
@@ -46,7 +46,7 @@ public class Coord {
      * @param lat
      *     The lat
      */
-    public void setLat(double lat) {
+    public void setLat(float lat) {
         this.lat = lat;
     }
 

@@ -9,17 +9,17 @@ public class Location {
 
     @SerializedName("lat")
     @Expose
-    private double lat;
+    private float lat;
     @SerializedName("lng")
     @Expose
-    private double lng;
+    private float lng;
 
     /**
      * 
      * @return
      *     The lat
      */
-    public double getLat() {
+    public float getLat() {
         return lat;
     }
 
@@ -28,7 +28,7 @@ public class Location {
      * @param lat
      *     The lat
      */
-    public void setLat(double lat) {
+    public void setLat(float lat) {
         this.lat = lat;
     }
 
@@ -37,7 +37,7 @@ public class Location {
      * @return
      *     The lng
      */
-    public double getLng() {
+    public float getLng() {
         return lng;
     }
 
@@ -46,7 +46,7 @@ public class Location {
      * @param lng
      *     The lng
      */
-    public void setLng(double lng) {
+    public void setLng(float lng) {
         this.lng = lng;
     }
 

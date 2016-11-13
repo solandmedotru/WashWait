@@ -36,8 +36,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
 
-    private double currentLat;
-    private double currentLon;
+    private float currentLat;
+    private float currentLon;
     private LatLng currentLatLng;
     private String lang;
 
@@ -59,8 +59,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 .build();
 
         Bundle bundle = getIntent().getExtras();
-        currentLat = bundle.getDouble("lat");
-        currentLon = bundle.getDouble("lon");
+        currentLat = bundle.getFloat("lat");
+        currentLon = bundle.getFloat("lon");
         lang = bundle.getString("lang");
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);

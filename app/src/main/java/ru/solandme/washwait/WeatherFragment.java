@@ -1,6 +1,5 @@
 package ru.solandme.washwait;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
@@ -33,9 +32,9 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.data.Forecast;
 import ru.solandme.washwait.data.WashHelper;
+import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
 
@@ -58,9 +57,9 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private ProgressBar dirtyMeter;
 
-    private String lat = "35";
-    private String lon = "139";
-    private String cnt = "16";
+    private float lat;
+    private float lon;
+    private static final String CNT = "16";
 
     private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
@@ -74,12 +73,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private String units;
     private SharedPreferences sharedPref;
 
-    private RecyclerView recyclerView;
-    private MyRecyclerViewAdapter adapter;
+    private RecyclerView forecastRecyclerView;
+    private MyForecastRVAdapter adapter;
 
     WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
-    OnForecastSelectedListener callback;
 
 
     public WeatherFragment() {
@@ -89,9 +87,11 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+
+        lat = sharedPref.getFloat("lat", 64);
+        lon = sharedPref.getFloat("lon", 47);
     }
 
 
@@ -117,13 +117,24 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         dirtyMeter = (ProgressBar) rootView.findViewById(R.id.precipitation_meter);
 
-        recyclerView = (RecyclerView) rootView.findViewById(R.id.rwForecast);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-        adapter = new MyRecyclerViewAdapter(forecasts, callback);
-        recyclerView.setAdapter(adapter);
+        forecastRecyclerView = (RecyclerView) rootView.findViewById(R.id.rwForecast);
+        forecastRecyclerView.setHasFixedSize(true);
+        forecastRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        adapter = new MyForecastRVAdapter(forecasts);
+        forecastRecyclerView.setAdapter(adapter);
 
         detailsField.setTypeface(weatherFont);
+
+        forecastMessage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MapActivity.class);
+                intent.putExtra("lat", lat);
+                intent.putExtra("lon", lon);
+                intent.putExtra("lang", Locale.getDefault().getLanguage().toLowerCase());
+                startActivity(intent);
+            }
+        });
 
         setHasOptionsMenu(true);
         return rootView;
@@ -148,7 +159,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         return true;
     }
 
-
     @Override
     public void onResume() {
         getWeather();
@@ -164,7 +174,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getContext()).create(ForecastApiService.class);
 
-        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCityName(cityCode, units, lang, cnt, appid);
+        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCityName(cityCode, units, lang, CNT, appid);
         weatherCall.enqueue(new Callback<BigWeatherForecast>() {
             @Override
             public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
@@ -173,6 +183,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     swipeRefreshLayout.setRefreshing(false);
                     washHelper.generateForecast(response.body(), forecasts, forecastDistance);
                     forecasts = washHelper.getForecasts();
+
+                    lat = forecasts.get(0).getLat();
+                    lon = forecasts.get(0).getLon();
+                    sharedPref.edit()
+                            .putFloat("lat", lat)
+                            .putFloat("lon", lon)
+                            .apply();
 
                     adapter.notifyDataSetChanged();
 
@@ -307,18 +324,4 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         getWeather();
     }
 
-    public interface OnForecastSelectedListener {
-        void onForecastItemSelected(int position, double lat, double lon);
-    }
-
-    @Override
-    public void onAttach(Context activity) {
-        super.onAttach(activity);
-        try {
-            callback = (OnForecastSelectedListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnForecastSelectedListener");
-        }
-    }
 }

@@ -1,15 +1,11 @@
 package ru.solandme.washwait;
 
-import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
-import java.util.Locale;
-
-
-public class MainActivity extends AppCompatActivity implements WeatherFragment.OnForecastSelectedListener{
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG_WEATHER_FRAG = "WeatherFragment";
 
@@ -31,15 +27,4 @@ public class MainActivity extends AppCompatActivity implements WeatherFragment.O
                     .commit();
         }
     }
-
-
-    @Override
-    public void onForecastItemSelected(int position, double lat, double lon) {
-        Intent intent = new Intent(this, MapActivity.class);
-        intent.putExtra("lat", lat);
-        intent.putExtra("lon", lon);
-        intent.putExtra("lang", Locale.getDefault().getLanguage().toLowerCase());
-        startActivity(intent);
-    }
-
 }

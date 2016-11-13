@@ -13,31 +13,27 @@ import java.util.Locale;
 
 import ru.solandme.washwait.data.Forecast;
 
-class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
     private ArrayList<Forecast> forecasts;
-    private WeatherFragment.OnForecastSelectedListener callback;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView date1;
         ImageView image1;
-        View container;
 
         ViewHolder(View v) {
             super(v);
             date1 = (TextView) v.findViewById(R.id.date);
             image1 = (ImageView) v.findViewById(R.id.weather_icon_day);
-            container = v.findViewById(R.id.container_days_forecast);
         }
     }
 
-    MyRecyclerViewAdapter(ArrayList<Forecast> forecasts, WeatherFragment.OnForecastSelectedListener callback) {
+    MyForecastRVAdapter(ArrayList<Forecast> forecasts) {
         this.forecasts = forecasts;
-        this.callback = callback;
     }
 
     @Override
-    public MyRecyclerViewAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyForecastRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.forecast_row, parent, false);
 
@@ -49,20 +45,10 @@ class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.V
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
         holder.date1.setText(dateFormat.format(forecasts.get(position).getDate()));
         holder.image1.setImageResource(forecasts.get(position).getImageRes());
-
-        holder.container.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                callback.onForecastItemSelected(holder.getAdapterPosition(), forecasts.get(0).getLat(), forecasts.get(0).getLon());
-            }
-        });
     }
 
     @Override
     public int getItemCount() {
         return forecasts.size();
     }
-
-
-
 }
