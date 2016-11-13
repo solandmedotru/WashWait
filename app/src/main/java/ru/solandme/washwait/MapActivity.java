@@ -1,13 +1,31 @@
 package ru.solandme.washwait;
 
+
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
@@ -17,6 +35,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.List;
@@ -24,17 +43,25 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.map.POJO.Location;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, MyPlacesRVAdapter.OnPlaceSelectedListener {
+public class MapActivity extends FragmentActivity implements
+        OnMapReadyCallback,
+        MyPlacesRVAdapter.OnPlaceSelectedListener,
+        ConnectionCallbacks,
+        OnConnectionFailedListener,
+        LocationListener {
 
     private static final String TAG = "MapActivity";
     private static final String TAG_ABOUT_PLACE = "AboutPlace";
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
+
+    LocationRequest mLocationRequest;
+    Location mLastLocation;
+    Marker mCurrLocationMarker;
 
     private float currentLat;
     private float currentLon;
@@ -52,15 +79,15 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        googleApiClient = new GoogleApiClient
-                .Builder(this)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkLocationPermission();
+        }
 
         Bundle bundle = getIntent().getExtras();
         currentLat = bundle.getFloat("lat");
         currentLon = bundle.getFloat("lon");
+
+        currentLatLng = new LatLng(currentLat, currentLon);
         lang = bundle.getString("lang");
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
@@ -75,20 +102,46 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        currentLatLng = new LatLng(currentLat, currentLon);
+        //Initialize Google Play Services
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                buildGoogleApiClient();
+                map.setMyLocationEnabled(true);
+            }
+        } else {
+            buildGoogleApiClient();
+            map.setMyLocationEnabled(true);
+        }
+
+        LocationManager location_manager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+        boolean networkLocationEnabled = location_manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        boolean gpsLocationEnabled = location_manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        //TODO добавить условие. если GPS отключен
+        if (!networkLocationEnabled && !gpsLocationEnabled)
+            requestPlacesToCurrentLocation(currentLatLng);
+
+    }
+
+    private void requestPlacesToCurrentLocation(LatLng currentLatLng) {
+        map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+        map.animateCamera(CameraUpdateFactory.zoomTo(12));
         placesHelper = new PlacesApiHelper(this);
         placesHelper.requestPlaces("car_wash", currentLatLng, 10000, lang, placesResponseCallback);
-
-        addCurrentLocationMarker();
     }
 
-    private void addCurrentLocationMarker() {
-        map.clear();
-        map.addMarker(new MarkerOptions()
-                .position(currentLatLng)
-                .title(getString(R.string.i_am_here)).icon(BitmapDescriptorFactory
-                        .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+    protected synchronized void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+        googleApiClient.connect();
     }
+
 
     private Callback<PlacesResponse> placesResponseCallback = new Callback<PlacesResponse>() {
         @Override
@@ -97,15 +150,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             results = response.body().getResults();
 
             for (Result result : results) {
-                Location location = result.getGeometry().getLocation();
+                ru.solandme.washwait.map.POJO.Location location = result.getGeometry().getLocation();
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
                 map.addMarker(new MarkerOptions()
                         .position(latLng)
                         .snippet(result.getVicinity())
                         .title(result.getName()));
             }
-
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
 
             adapter = new MyPlacesRVAdapter(results, currentLatLng, MapActivity.this);
             carWashList.setAdapter(adapter);
@@ -163,14 +214,117 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        googleApiClient.connect();
+    protected void onPause() {
+        super.onPause();
+        if (googleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        }
     }
+
 
     @Override
     protected void onStop() {
         googleApiClient.disconnect();
         super.onStop();
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, mLocationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
+
+    @Override
+    public void onLocationChanged(android.location.Location location) {
+        map.clear();
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+
+        //Place current location marker
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        mCurrLocationMarker = map.addMarker(markerOptions);
+
+        currentLatLng = latLng;
+        requestPlacesToCurrentLocation(currentLatLng);
+        //stop location updates
+        if (map != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+        }
+    }
+
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        if (googleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        map.setMyLocationEnabled(true);
+                    }
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    requestPlacesToCurrentLocation(currentLatLng);
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
     }
 }

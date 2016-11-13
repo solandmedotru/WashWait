@@ -79,7 +79,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private String lang = Locale.getDefault().getLanguage();
     private String units;
     private String city;
-    private String country;
     private SharedPreferences sharedPref;
 
     private RecyclerView forecastRecyclerView;
@@ -145,6 +144,12 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 intent.putExtra("lon", lon);
                 intent.putExtra("lang", Locale.getDefault().getLanguage().toLowerCase());
                 startActivity(intent);
+            }
+        });
+        cityField.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                chooseCity();
             }
         });
 
@@ -253,13 +258,12 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void updateWeatherUI() {
 
-        country = forecasts.get(0).getCountry();
         long dt = forecasts.get(0).getDate();
         double temp = forecasts.get(0).getTemperature();
         String description = forecasts.get(0).getDescription().toUpperCase();
         int icon = forecasts.get(0).getImageRes();
 
-        cityField.setText(city + ", " + country);
+        cityField.setText(city);
 
         currentTemperatureField.setTypeface(weatherFont);
         detailsField.setText(description);
@@ -341,17 +345,21 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
                 break;
             case R.id.choose_location_action:
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
+                chooseCity();
                 break;
         }
         return true;
+    }
+
+    private void chooseCity() {
+        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+        try {
+            startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
 
 }
