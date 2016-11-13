@@ -34,4 +34,7 @@
     <string name="phone">Phone:</string>
     <string name="address">Address:</string>
     <string name="i_am_here">I am Here</string>
+    <string name="pref_city_key" translatable="false">city</string>
+    <string name="pref_units_key" translatable="false">units</string>
+    <string name="pref_limit_key" translatable="false">limit</string>
 </resources>
