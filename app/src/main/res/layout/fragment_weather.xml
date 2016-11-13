@@ -35,22 +35,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBackground" />
 
-        <TextView
-            android:id="@+id/action_wash"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/background"
-            android:padding="16dp"
-            android:text="WASH CAR"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/colorBackground" />
-
-
-        <FrameLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3">
@@ -66,10 +51,27 @@
                 android:id="@+id/car_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
+                android:layout_alignParentBottom="true"
+                android:layout_centerInParent="true"
                 android:scaleType="fitCenter" />
 
+            <TextView
+                android:id="@+id/action_wash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="6dp"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="5dp"
+                android:layout_centerInParent="true"
+                android:padding="16dp"
+                android:text="@string/wash_car"
+                android:textAlignment="center"
+                android:background="@drawable/background"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/colorBackground" />
+
             <LinearLayout
+                android:id="@+id/qqqq"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -88,7 +90,6 @@
                         android:id="@+id/details_field"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="ПАСМУРНО"
                         android:textAlignment="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/textColor" />
@@ -115,7 +116,7 @@
                     android:src="@mipmap/few_clouds_d" />
 
             </LinearLayout>
-        </FrameLayout>
+        </RelativeLayout>
 
         <ProgressBar
             android:id="@+id/precipitation_meter"
