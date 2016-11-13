@@ -27,5 +27,6 @@
     <string name="make_call">Позвонить</string>
     <string name="phone">Телефон:</string>
     <string name="title_activity_map">Карта</string>
+    <string name="i_am_here">Я здесь!</string>
 
 </resources>

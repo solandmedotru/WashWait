@@ -1,6 +1,5 @@
 package ru.solandme.washwait;
 
-
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,69 +29,68 @@ import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 
-
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback, MyPlacesRVAdapter.OnPlaceSelectedListener {
 
     private static final String TAG = "MapActivity";
     private static final String TAG_ABOUT_PLACE = "AboutPlace";
-    private GoogleMap mMap;
+    private GoogleMap map;
+    private GoogleApiClient googleApiClient;
 
-    private double myLat;
-    private double myLon;
+    private double currentLat;
+    private double currentLon;
+    private LatLng currentLatLng;
     private String lang;
 
     MyPlacesRVAdapter adapter;
     RecyclerView carWashList;
     List<Result> results;
 
-    PlacesApiHelper mHelper;
-    private LatLng mCurrentLatLng;
-
-    private GoogleApiClient mGoogleApiClient;
+    PlacesApiHelper placesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        mGoogleApiClient = new GoogleApiClient
+        googleApiClient = new GoogleApiClient
                 .Builder(this)
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .build();
 
+        Bundle bundle = getIntent().getExtras();
+        currentLat = bundle.getDouble("lat");
+        currentLon = bundle.getDouble("lon");
+        lang = bundle.getString("lang");
+
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
         carWashList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
-
-        mHelper = new PlacesApiHelper(this);
-
-        Bundle bundle = getIntent().getExtras();
-        myLat = bundle.getDouble("lat");
-        myLon = bundle.getDouble("lon");
-        lang = bundle.getString("lang");
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+        map = googleMap;
 
-        mCurrentLatLng = new LatLng(myLat, myLon);
-        mHelper.requestPlaces("car_wash", mCurrentLatLng, 10000, lang, mResultCallback);
+        currentLatLng = new LatLng(currentLat, currentLon);
+        placesHelper = new PlacesApiHelper(this);
+        placesHelper.requestPlaces("car_wash", currentLatLng, 10000, lang, placesResponseCallback);
 
-        mMap.clear();
-        mMap.addMarker(new MarkerOptions()
-                .position(mCurrentLatLng)
-                .title("I am Here").icon(BitmapDescriptorFactory
+        addCurrentLocationMarker();
+    }
+
+    private void addCurrentLocationMarker() {
+        map.clear();
+        map.addMarker(new MarkerOptions()
+                .position(currentLatLng)
+                .title(getString(R.string.i_am_here)).icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
     }
 
-    private Callback<PlacesResponse> mResultCallback = new Callback<PlacesResponse>() {
+    private Callback<PlacesResponse> placesResponseCallback = new Callback<PlacesResponse>() {
         @Override
         public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
             results = response.body().getResults();
@@ -101,11 +99,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 Location location = result.getGeometry().getLocation();
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
                 String name = result.getName();
-                mMap.addMarker(new MarkerOptions().position(latLng).title(name));
+                map.addMarker(new MarkerOptions().position(latLng).title(name));
             }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mCurrentLatLng, 12));
 
-            adapter = new MyPlacesRVAdapter(results, mCurrentLatLng, MapActivity.this);
+            map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
+
+            adapter = new MyPlacesRVAdapter(results, currentLatLng, MapActivity.this);
             carWashList.setAdapter(adapter);
         }
 
@@ -117,7 +116,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
     @Override
     public void onPlaceItemSelected(final int position, final Result result) {
-        Places.GeoDataApi.getPlaceById(mGoogleApiClient, result.getPlaceId())
+        Places.GeoDataApi.getPlaceById(googleApiClient, result.getPlaceId())
                 .setResultCallback(new ResultCallback<PlaceBuffer>() {
                     @Override
                     public void onResult(PlaceBuffer places) {
@@ -164,12 +163,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     @Override
     protected void onStart() {
         super.onStart();
-        mGoogleApiClient.connect();
+        googleApiClient.connect();
     }
 
     @Override
     protected void onStop() {
-        mGoogleApiClient.disconnect();
+        googleApiClient.disconnect();
         super.onStop();
     }
 }
