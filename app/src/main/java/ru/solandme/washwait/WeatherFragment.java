@@ -62,6 +62,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private ImageView carImage;
     private ImageView cityImage;
     private TextView forecastMessage;
+    private TextView actionWash;
 
     private ProgressBar dirtyMeter;
 
@@ -71,13 +72,14 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
-    private String defaultCityCode = "428000";
     private String defaultUnits = "metric";
     private String defaultLimit = "1";
     private int forecastDistance;
 
     private String lang = Locale.getDefault().getLanguage();
     private String units;
+    private String city;
+    private String country;
     private SharedPreferences sharedPref;
 
     private RecyclerView forecastRecyclerView;
@@ -116,6 +118,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         detailsField = (TextView) rootView.findViewById(R.id.details_field);
         currentTemperatureField = (TextView) rootView.findViewById(R.id.current_temperature_field);
         forecastMessage = (TextView) rootView.findViewById(R.id.forecast_message);
+        actionWash = (TextView) rootView.findViewById(R.id.action_wash);
+
 
         weatherIconDay0 = (ImageView) rootView.findViewById(R.id.weather_icon_day0);
 
@@ -127,12 +131,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         forecastRecyclerView = (RecyclerView) rootView.findViewById(R.id.rwForecast);
         forecastRecyclerView.setHasFixedSize(true);
         forecastRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+
         adapter = new MyForecastRVAdapter(forecasts);
         forecastRecyclerView.setAdapter(adapter);
 
         detailsField.setTypeface(weatherFont);
 
-        forecastMessage.setOnClickListener(new View.OnClickListener() {
+        actionWash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), MapActivity.class);
@@ -148,50 +153,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                startActivity(new Intent(getActivity(), SettingsActivity.class));
-                break;
-            case R.id.about_app_menu_item:
-                new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
-                break;
-            case R.id.choose_location_action:
-
-                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
-                try {
-                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
-                } catch (GooglePlayServicesRepairableException e) {
-                    e.printStackTrace();
-                } catch (GooglePlayServicesNotAvailableException e) {
-                    e.printStackTrace();
-                }
-                break;
-        }
-        return true;
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, getContext());
-                lat = (float) place.getLatLng().latitude;
-                lon = (float) place.getLatLng().longitude;
-                sharedPref.edit()
-                        .putFloat("lat", lat)
-                        .putFloat("lon", lon)
-                        .apply();
-            }
-        }
-    }
-
-    @Override
     public void onResume() {
         getWeather();
         super.onResume();
@@ -202,6 +163,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         units = sharedPref.getString("units", defaultUnits);
         forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
+        city = sharedPref.getString("city", "Выберите город");
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getContext()).create(ForecastApiService.class);
 
@@ -214,13 +176,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     swipeRefreshLayout.setRefreshing(false);
                     washHelper.generateForecast(response.body(), forecasts, forecastDistance);
                     forecasts = washHelper.getForecasts();
-
-                    lat = forecasts.get(0).getLat();
-                    lon = forecasts.get(0).getLon();
-                    sharedPref.edit()
-                            .putFloat("lat", lat)
-                            .putFloat("lon", lon)
-                            .apply();
 
                     adapter.notifyDataSetChanged();
 
@@ -298,14 +253,13 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void updateWeatherUI() {
 
-        String cityName = forecasts.get(0).getCityName();
-        String country = forecasts.get(0).getCountry();
+        country = forecasts.get(0).getCountry();
         long dt = forecasts.get(0).getDate();
         double temp = forecasts.get(0).getTemperature();
         String description = forecasts.get(0).getDescription().toUpperCase();
         int icon = forecasts.get(0).getImageRes();
 
-        cityField.setText(cityName + ", " + country);
+        cityField.setText(city + ", " + country);
 
         currentTemperatureField.setTypeface(weatherFont);
         detailsField.setText(description);
@@ -338,6 +292,22 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIconDay0.setImageResource(icon);
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, getContext());
+                lat = (float) place.getLatLng().latitude;
+                lon = (float) place.getLatLng().longitude;
+                city = place.getName().toString();
+                sharedPref.edit()
+                        .putFloat("lat", lat)
+                        .putFloat("lon", lon)
+                        .putString("city", city)
+                        .apply();
+            }
+        }
+    }
+
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
 //        if(temp > -10) return R.mipmap.car1;
@@ -353,6 +323,35 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onRefresh() {
         getWeather();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                startActivity(new Intent(getActivity(), SettingsActivity.class));
+                break;
+            case R.id.about_app_menu_item:
+                new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
+                break;
+            case R.id.choose_location_action:
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+        return true;
     }
 
 }

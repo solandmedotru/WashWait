@@ -35,6 +35,19 @@
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBackground" />
 
+        <TextView
+            android:id="@+id/action_wash"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/background"
+            android:padding="16dp"
+            android:text="WASH CAR"
+            android:textAlignment="center"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/colorBackground" />
 
 
         <FrameLayout
