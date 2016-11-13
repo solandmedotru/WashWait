@@ -22,7 +22,6 @@ public class SettingsActivity extends PreferenceActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.my_preference_screen);
 
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_city_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_limit_key)));
 

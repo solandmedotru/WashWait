@@ -24,6 +24,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,10 +43,13 @@ import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
 
+import static android.app.Activity.RESULT_OK;
+
 public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
+    private static final int PLACE_PICKER_REQUEST = 1;
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -69,7 +77,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private int forecastDistance;
 
     private String lang = Locale.getDefault().getLanguage();
-    private String cityCode;
     private String units;
     private SharedPreferences sharedPref;
 
@@ -155,8 +162,33 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
             case R.id.about_app_menu_item:
                 new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
                 break;
+            case R.id.choose_location_action:
+
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+                try {
+                    startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+                break;
         }
         return true;
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, getContext());
+                lat = (float) place.getLatLng().latitude;
+                lon = (float) place.getLatLng().longitude;
+                sharedPref.edit()
+                        .putFloat("lat", lat)
+                        .putFloat("lon", lon)
+                        .apply();
+            }
+        }
     }
 
     @Override
@@ -168,13 +200,12 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     void getWeather() {
         swipeRefreshLayout.setRefreshing(true);
 
-        cityCode = sharedPref.getString("city", defaultCityCode);
         units = sharedPref.getString("units", defaultUnits);
         forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getContext()).create(ForecastApiService.class);
 
-        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCityName(cityCode, units, lang, CNT, appid);
+        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, appid);
         weatherCall.enqueue(new Callback<BigWeatherForecast>() {
             @Override
             public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
