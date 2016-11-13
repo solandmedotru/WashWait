@@ -10,6 +10,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import ru.solandme.washwait.map.POJO.Result;
 
 
@@ -60,7 +61,6 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         holder.placeName.setText(results.get(position).getName());
         holder.placeRating.setText(String.valueOf(results.get(position).getRating()));
         holder.placeVicinity.setText(results.get(position).getVicinity());
-//        holder.placeDistance.setText(getDistance(position));
 
         holder.placesContainer.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,15 +70,6 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         });
     }
 
-//    private String getDistance(int position) {
-//        double lat = mCurrentLatLng.latitude;
-//        double lon = mCurrentLatLng.longitude;
-//        double lat1 = results.get(position).getGeometry().getLocation().getLat();
-//        double lon1 = results.get(position).getGeometry().getLocation().getLng();
-//
-//        return String.valueOf(Math.sqrt((lat - lat1)*(lat - lat1) + (lon - lon1)+(lon - lon1)) + "km");
-//
-//    }
 
     @Override
     public int getItemCount() {
@@ -90,8 +81,8 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
     }
 
 
-    public interface OnPlaceSelectedListener {
-        public void onPlaceItemSelected(int position, Result result);
+    interface OnPlaceSelectedListener {
+        void onPlaceItemSelected(int position, Result result);
     }
 
 }

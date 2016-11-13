@@ -1,7 +1,7 @@
 package ru.solandme.washwait;
 
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -93,13 +93,16 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private Callback<PlacesResponse> placesResponseCallback = new Callback<PlacesResponse>() {
         @Override
         public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
+
             results = response.body().getResults();
 
             for (Result result : results) {
                 Location location = result.getGeometry().getLocation();
                 LatLng latLng = new LatLng(location.getLat(), location.getLng());
-                String name = result.getName();
-                map.addMarker(new MarkerOptions().position(latLng).title(name));
+                map.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .snippet(result.getVicinity())
+                        .title(result.getName()));
             }
 
             map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 12));
@@ -131,22 +134,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                             args.putString("address", myPlace.getAddress().toString());
                             args.putFloat("rating", myPlace.getRating());
 
-                            if(myPlace.getWebsiteUri() != null) args.putString("webUrl", myPlace.getWebsiteUri().toString());
+                            if (myPlace.getWebsiteUri() != null)
+                                args.putString("webUrl", myPlace.getWebsiteUri().toString());
 
 
-                            if(result.getPhotos().size() > 0){
+                            if (result.getPhotos().size() > 0) {
                                 args.putString("photoRef", result.getPhotos().get(0).getPhotoReference());
                             }
-                            if(result.getOpeningHours() != null){
-                                String open;
+                            if (result.getOpeningHours() != null) {
+                                String open = "";
                                 for (int i = 0; i < result.getOpeningHours().getWeekdayText().size(); i++) {
-                                    open = result.getOpeningHours().getWeekdayText().get(i).toString();
+                                    open = open + "\n" + result.getOpeningHours().getWeekdayText().get(i).toString();
                                     args.putString("openHours", open);
 
                                 }
                             }
-
-
 
                             AboutPlace aboutPlaceDialog = new AboutPlace();
                             aboutPlaceDialog.setArguments(args);

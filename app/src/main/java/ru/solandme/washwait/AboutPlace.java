@@ -1,49 +1,59 @@
 package ru.solandme.washwait;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.PlacePhotoMetadataBuffer;
-import com.google.android.gms.location.places.PlacePhotoMetadataResult;
-import com.google.android.gms.location.places.PlacePhotoResult;
 import com.google.android.gms.location.places.Places;
 import com.squareup.picasso.Picasso;
 
 public class AboutPlace extends DialogFragment implements View.OnClickListener {
     private static final String TAG = "AboutPlaceDialog";
-    TextView placeName;
-    TextView placePhoneNumber;
-    TextView placeAddress;
-    TextView placeDescription;
-    ImageView placePhoto;
-    ImageView placeRating;
-
     private GoogleApiClient mGoogleApiClient;
-
     Bundle args;
+
+    TextView nameAboutPlace;
+    TextView phoneAboutPlace;
+    TextView addressAboutPlace;
+    TextView descriptionAboutPlace;
+    ImageView photoAboutPlace;
+    ImageView ratingAboutPlace;
+
+    private String openHours;
+    private String placeName;
+    private String placePhone;
+    private String placeAddress;
+    private String photoRef;
+    private String webUrl;
+    private float placeRating;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.PlaceDialog);
+
         args = getArguments();
+        openHours = args.getString("openHours");
+        placeName = args.getString("name");
+        placePhone = args.getString("phone");
+        placeAddress = args.getString("address");
+        photoRef = args.getString("photoRef");
+        webUrl = args.getString("webUrl");
+        placeRating = args.getFloat("rating");
 
         mGoogleApiClient = new GoogleApiClient
                 .Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .build();
-
     }
 
     @Override
@@ -51,35 +61,40 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
 
         View layout = inflater.inflate(R.layout.about_place_dialog, container, false);
 
-        layout.findViewById(R.id.btnCancelPlace).setOnClickListener(this);
-        layout.findViewById(R.id.btnMakeCallPlace).setOnClickListener(this);
+        photoAboutPlace = (ImageView) layout.findViewById(R.id.place_photo);
+        ratingAboutPlace = (ImageView) layout.findViewById(R.id.rating);
+        nameAboutPlace = (TextView) layout.findViewById(R.id.place_name);
+        phoneAboutPlace = (TextView) layout.findViewById(R.id.place_phone);
+        addressAboutPlace = (TextView) layout.findViewById(R.id.place_address);
+        descriptionAboutPlace = (TextView) layout.findViewById(R.id.place_description);
 
+        Button btnCancel = (Button) layout.findViewById(R.id.btnCancelPlace);
+        btnCancel.setOnClickListener(this);
+        Button btnMakeCall = (Button) layout.findViewById(R.id.btnMakeCallPlace);
+        btnMakeCall.setOnClickListener(this);
 
-        placePhoto = (ImageView) layout.findViewById(R.id.place_photo);
-        placeRating = (ImageView) layout.findViewById(R.id.rating);
-
-        placeName = (TextView) layout.findViewById(R.id.place_name);
-        placePhoneNumber = (TextView) layout.findViewById(R.id.place_phone);
-        placeAddress = (TextView) layout.findViewById(R.id.place_address);
-        placeDescription = (TextView) layout.findViewById(R.id.place_description);
-
-
-        placeName.setText(args.getString("name"));
-        placePhoneNumber.setText(args.getString("phone"));
-        placeAddress.setText(args.getString("address"));
-        placeDescription.setText(args.getString("openHours") + "\n" + args.getString("webUrl"));
-
-        if (args.getFloat("rating") == 0) {
-            placeRating.setImageResource(R.drawable.ic_star);
+        nameAboutPlace.setText(placeName);
+        phoneAboutPlace.setText(placePhone);
+        if (phoneAboutPlace.getText().equals("") || phoneAboutPlace.getText().equals("null")) {
+            btnMakeCall.setVisibility(View.GONE);
         }
 
-//        placePhotosAsync();
+        addressAboutPlace.setText(placeAddress);
+
+        if (openHours == null) openHours = "";
+        if (webUrl == null) webUrl = "";
+        descriptionAboutPlace.setText(openHours + "\n" + webUrl);
+
+        if (placeRating == 0) {
+            ratingAboutPlace.setImageResource(R.drawable.ic_star);
+        }
 
         Picasso.with(getContext()).load(
-                "https://maps.googleapis.com/maps/api/place/photo?maxwidth=2000&photoreference=" +
-                        args.getString("photoRef") + "&key=AIzaSyDVkzWmncsH-7tkaIYl0SlRMPmL0NAkjOc"
-        ).placeholder(R.mipmap.city3)
-                .into(placePhoto);
+                "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference="
+                        + photoRef + "&key="
+                        + getResources().getString(R.string.google_maps_key))
+                .placeholder(R.mipmap.city3).fit()
+                .into(photoAboutPlace);
 
         return layout;
     }
@@ -90,53 +105,12 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
             case R.id.btnCancelPlace:
                 break;
             case R.id.btnMakeCallPlace:
-                Toast.makeText(getActivity(), "MACKING CALL to" + args.getString("phone"), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
+                startActivity(intent);
                 break;
         }
         dismiss();
-    }
-
-    private ResultCallback<PlacePhotoResult> mDisplayPhotoResultCallback
-            = new ResultCallback<PlacePhotoResult>() {
-        @Override
-        public void onResult(PlacePhotoResult placePhotoResult) {
-            if (!placePhotoResult.getStatus().isSuccess()) {
-                return;
-            }
-            Log.e(TAG, "onResult: " + placePhotoResult.toString());
-            placePhoto.setImageBitmap(placePhotoResult.getBitmap());
-        }
-    };
-
-    /**
-     * Load a bitmap from the photos API asynchronously
-     * by using buffers and result callbacks.
-     */
-    private void placePhotosAsync() {
-        String placeId = args.getString("placeId");
-
-        Log.e(TAG, "placePhotosAsync: " + args.getString("placeId"));
-        Places.GeoDataApi.getPlacePhotos(mGoogleApiClient, placeId)
-                .setResultCallback(new ResultCallback<PlacePhotoMetadataResult>() {
-                    @Override
-                    public void onResult(PlacePhotoMetadataResult photos) {
-                        if (!photos.getStatus().isSuccess()) {
-                            Log.e(TAG, "onResult Error ");
-                            return;
-                        }
-
-
-                        PlacePhotoMetadataBuffer photoMetadataBuffer = photos.getPhotoMetadata();
-                        if (photoMetadataBuffer.getCount() > 0) {
-                            Log.e(TAG, "onResult OK ");
-                            photoMetadataBuffer.get(0)
-                                    .getScaledPhoto(mGoogleApiClient, placePhoto.getWidth(),
-                                            placePhoto.getHeight())
-                                    .setResultCallback(mDisplayPhotoResultCallback);
-                        }
-                        photoMetadataBuffer.release();
-                    }
-                });
     }
 
     @Override
