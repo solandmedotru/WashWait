@@ -50,6 +50,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
     private static final int PLACE_PICKER_REQUEST = 1;
+
     private Typeface weatherFont;
 
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -74,6 +75,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private String defaultUnits = "metric";
     private String defaultLimit = "1";
+    private float defaultLat = 64.10F;
+    private float defaultLon = 47.34F;
     private int forecastDistance;
 
     private String lang = Locale.getDefault().getLanguage();
@@ -87,6 +90,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
 
+    PlacePicker.IntentBuilder builder;
+
 
     public WeatherFragment() {
         // Required empty public constructor
@@ -98,8 +103,8 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/weather.ttf");
         sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        lat = sharedPref.getFloat("lat", 64);
-        lon = sharedPref.getFloat("lon", 47);
+        lat = sharedPref.getFloat("lat", defaultLat);
+        lon = sharedPref.getFloat("lon", defaultLon);
     }
 
 
@@ -205,7 +210,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
         forecastMessage.setText(forecastText);
 
-        Double dirtyCounter = washHelper.getDirtyCounter()*10;
+        Double dirtyCounter = washHelper.getDirtyCounter() * 10;
         dirtyMeter.setMax(40);
         dirtyMeter.setProgress(dirtyCounter.intValue());
 
@@ -296,22 +301,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         weatherIconDay0.setImageResource(icon);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, getContext());
-                lat = (float) place.getLatLng().latitude;
-                lon = (float) place.getLatLng().longitude;
-                city = place.getName().toString();
-                sharedPref.edit()
-                        .putFloat("lat", lat)
-                        .putFloat("lon", lon)
-                        .putString("city", city)
-                        .apply();
-            }
-        }
-    }
-
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
 //        if(temp > -10) return R.mipmap.car1;
@@ -345,6 +334,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
                 break;
             case R.id.choose_location_action:
+                builder = new PlacePicker.IntentBuilder();
                 chooseCity();
                 break;
         }
@@ -352,13 +342,26 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void chooseCity() {
-        PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
         try {
             startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException e) {
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, getContext());
+                lat = (float) place.getLatLng().latitude;
+                lon = (float) place.getLatLng().longitude;
+                city = place.getName().toString();
+                sharedPref.edit()
+                        .putFloat("lat", lat)
+                        .putFloat("lon", lon)
+                        .putString("city", city)
+                        .apply();
+            }
         }
     }
 

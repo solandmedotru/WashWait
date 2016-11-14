@@ -5,15 +5,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 
-/**
- * URL Sample:
- * https://maps.googleapis.com/maps/api/place/search/json
- * ?types=cafe
- * &location=37.787930,-122.4074990
- * &radius=5000
- * &sensor=false
- * &key=YOUR_API_KEY
- */
 public interface PlaceApiService {
     @GET("/maps/api/place/nearbysearch/json")
     Call<PlacesResponse> requestPlaces(@Query("types") String types,

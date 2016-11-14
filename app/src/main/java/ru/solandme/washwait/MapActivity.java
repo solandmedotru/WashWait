@@ -56,6 +56,7 @@ public class MapActivity extends FragmentActivity implements
 
     private static final String TAG = "MapActivity";
     private static final String TAG_ABOUT_PLACE = "AboutPlace";
+    private static final int MA_PERMISSIONS_REQUEST_LOCATION = 99;
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
 
@@ -63,8 +64,6 @@ public class MapActivity extends FragmentActivity implements
     Location mLastLocation;
     Marker mCurrLocationMarker;
 
-    private float currentLat;
-    private float currentLon;
     private LatLng currentLatLng;
     private String lang;
 
@@ -84,10 +83,7 @@ public class MapActivity extends FragmentActivity implements
         }
 
         Bundle bundle = getIntent().getExtras();
-        currentLat = bundle.getFloat("lat");
-        currentLon = bundle.getFloat("lon");
-
-        currentLatLng = new LatLng(currentLat, currentLon);
+        currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
         lang = bundle.getString("lang");
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
@@ -96,6 +92,17 @@ public class MapActivity extends FragmentActivity implements
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .build();
+        googleApiClient.connect();
     }
 
     @Override
@@ -118,30 +125,23 @@ public class MapActivity extends FragmentActivity implements
         LocationManager location_manager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         boolean networkLocationEnabled = location_manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
         boolean gpsLocationEnabled = location_manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        //TODO добавить условие. если GPS отключен
+
         if (!networkLocationEnabled && !gpsLocationEnabled)
             requestPlacesToCurrentLocation(currentLatLng);
 
+        moveCameraToLocation(currentLatLng);
+    }
+
+
+    private void moveCameraToLocation(LatLng currentLatLng) {
+        map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
+        map.animateCamera(CameraUpdateFactory.zoomTo(12));
     }
 
     private void requestPlacesToCurrentLocation(LatLng currentLatLng) {
-        map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(12));
         placesHelper = new PlacesApiHelper(this);
         placesHelper.requestPlaces("car_wash", currentLatLng, 10000, lang, placesResponseCallback);
     }
-
-    protected synchronized void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-        googleApiClient.connect();
-    }
-
 
     private Callback<PlacesResponse> placesResponseCallback = new Callback<PlacesResponse>() {
         @Override
@@ -158,13 +158,13 @@ public class MapActivity extends FragmentActivity implements
                         .title(result.getName()));
             }
 
-            adapter = new MyPlacesRVAdapter(results, currentLatLng, MapActivity.this);
+            adapter = new MyPlacesRVAdapter(results, MapActivity.this);
             carWashList.setAdapter(adapter);
+            moveCameraToLocation(currentLatLng);
         }
 
         @Override
         public void onFailure(Call<PlacesResponse> call, Throwable t) {
-
         }
     };
 
@@ -188,10 +188,10 @@ public class MapActivity extends FragmentActivity implements
                             if (myPlace.getWebsiteUri() != null)
                                 args.putString("webUrl", myPlace.getWebsiteUri().toString());
 
-
                             if (result.getPhotos().size() > 0) {
                                 args.putString("photoRef", result.getPhotos().get(0).getPhotoReference());
                             }
+
                             if (result.getOpeningHours() != null) {
                                 String open = "";
                                 for (int i = 0; i < result.getOpeningHours().getWeekdayText().size(); i++) {
@@ -214,18 +214,69 @@ public class MapActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        if (googleApiClient != null) {
+    public void onLocationChanged(android.location.Location location) {
+        map.clear();
+        mLastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+
+        //Place current location marker
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title(getString(R.string.current_position));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        mCurrLocationMarker = map.addMarker(markerOptions);
+
+        currentLatLng = latLng;
+        requestPlacesToCurrentLocation(currentLatLng);
+        //stop location updates
+        if (map != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }
     }
 
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MA_PERMISSIONS_REQUEST_LOCATION);
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MA_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            return true;
+        }
+    }
 
     @Override
-    protected void onStop() {
-        googleApiClient.disconnect();
-        super.onStop();
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MA_PERMISSIONS_REQUEST_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        if (googleApiClient == null) {
+                            buildGoogleApiClient();
+                        }
+                        map.setMyLocationEnabled(true);
+                    }
+                } else {
+                    Toast.makeText(this, R.string.permission_danied, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
     }
 
     @Override
@@ -250,81 +301,10 @@ public class MapActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onLocationChanged(android.location.Location location) {
-        map.clear();
-        mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-
-        //Place current location marker
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = map.addMarker(markerOptions);
-
-        currentLatLng = latLng;
-        requestPlacesToCurrentLocation(currentLatLng);
-        //stop location updates
-        if (map != null) {
+    protected void onPause() {
+        super.onPause();
+        if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
-        }
-    }
-
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // location-related task you need to do.
-                    if (ContextCompat.checkSelfPermission(this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        if (googleApiClient == null) {
-                            buildGoogleApiClient();
-                        }
-                        map.setMyLocationEnabled(true);
-                    }
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
-                    requestPlacesToCurrentLocation(currentLatLng);
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 }

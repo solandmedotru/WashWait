@@ -59,14 +59,13 @@
                 android:id="@+id/action_wash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="6dp"
-                android:layout_marginStart="6dp"
-                android:layout_marginTop="5dp"
+                android:layout_above="@+id/car_image"
                 android:layout_centerInParent="true"
+                android:layout_margin="16dp"
+                android:background="@drawable/background"
                 android:padding="16dp"
                 android:text="@string/wash_car"
                 android:textAlignment="center"
-                android:background="@drawable/background"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/colorBackground" />
 

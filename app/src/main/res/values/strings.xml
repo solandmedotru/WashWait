@@ -38,5 +38,7 @@
     <string name="pref_units_key" translatable="false">units</string>
     <string name="pref_limit_key" translatable="false">limit</string>
     <string name="choose_location">Choose Location</string>
-    <string name="wash_car">WASH CAR</string>
+    <string name="wash_car">Wash car</string>
+    <string name="permission_danied">permission denied</string>
+    <string name="current_position">Current Position</string>
 </resources>

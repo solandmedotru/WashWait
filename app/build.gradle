@@ -33,9 +33,11 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta3'
-    compile 'com.android.support:design:25.0.0'
-    compile 'com.google.android.gms:play-services:9.8.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.google.android.gms:play-services-base:9.8.0'
     compile 'com.google.android.gms:play-services-location:9.8.0'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.google.android.gms:play-services-places:9.8.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }

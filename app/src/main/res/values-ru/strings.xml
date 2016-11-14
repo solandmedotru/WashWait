@@ -28,5 +28,8 @@
     <string name="phone">Телефон:</string>
     <string name="title_activity_map">Карта</string>
     <string name="i_am_here">Я здесь!</string>
-
+    <string name="choose_location">Выбрать город</string>
+    <string name="wash_car">Мыть машину</string>
+    <string name="current_position">Вы здесь</string>
+    <string name="permission_danied">Разрешение не получено! Часть функций не будет работать.</string>
 </resources>

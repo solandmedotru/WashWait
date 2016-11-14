@@ -18,28 +18,8 @@ public class Forecast {
         return weatherId < 600 || weatherId < 700 && temperature > -10;
     }
 
-    public int getWeatherId() {
-        return weatherId;
-    }
-
     public void setWeatherId(int weatherId) {
         this.weatherId = weatherId;
-    }
-
-    public double getRainCounter() {
-        return rainCounter;
-    }
-
-    public void setRainCounter(double rainCounter) {
-        this.rainCounter = rainCounter;
-    }
-
-    public double getSnowCounter() {
-        return snowCounter;
-    }
-
-    public void setSnowCounter(double snowCounter) {
-        this.snowCounter = snowCounter;
     }
 
     public double getTemperature() {
@@ -58,17 +38,10 @@ public class Forecast {
         this.imageRes = imageRes;
     }
 
-    public String getCityName() {
-        return cityName;
-    }
-
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
 
-    public String getCountry() {
-        return country;
-    }
 
     public void setCountry(String country) {
         this.country = country;
@@ -90,16 +63,8 @@ public class Forecast {
         this.description = description;
     }
 
-    public float getLat() {
-        return lat;
-    }
-
     public void setLat(float lat) {
         this.lat = lat;
-    }
-
-    public float getLon() {
-        return lon;
     }
 
     public void setLon(float lon) {
