@@ -20,11 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlacePicker;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -44,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
     private static final int PLACE_PICKER_REQUEST = 1;
+    private static final int REQUEST_CODE_AUTOCOMPLETE = 2;
 
     private Typeface weatherFont;
 
@@ -84,8 +80,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
 
-    PlacePicker.IntentBuilder builder;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +88,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         weatherFont = Typeface.createFromAsset(this.getAssets(), "fonts/weather.ttf");
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-
-        lat = sharedPref.getFloat("lat", defaultLat);
-        lon = sharedPref.getFloat("lon", defaultLon);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorBackground);
@@ -146,6 +137,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onResume() {
+        lat = sharedPref.getFloat("lat", defaultLat);
+        lon = sharedPref.getFloat("lon", defaultLon);
         getWeather();
         super.onResume();
     }
@@ -317,28 +310,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void chooseCity() {
-        builder = new PlacePicker.IntentBuilder();
-        try {
-            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
-        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PLACE_PICKER_REQUEST) {
-            if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(data, this);
-                lat = (float) place.getLatLng().latitude;
-                lon = (float) place.getLatLng().longitude;
-                city = place.getName().toString();
-                sharedPref.edit()
-                        .putFloat("lat", lat)
-                        .putFloat("lon", lon)
-                        .putString("city", city)
-                        .apply();
-            }
-        }
+        startActivity(new Intent(this, ChooseCityActivity.class));
     }
 
     @Override
