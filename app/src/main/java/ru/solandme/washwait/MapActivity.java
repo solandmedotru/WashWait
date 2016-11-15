@@ -41,6 +41,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
 import ru.solandme.washwait.rest.PlacesApiHelper;

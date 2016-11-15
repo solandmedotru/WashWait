@@ -32,7 +32,6 @@
         <activity
             android:name=".SettingsActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".SplashActivity" />
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map">

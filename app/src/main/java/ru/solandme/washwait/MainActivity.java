@@ -28,6 +28,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.data.Forecast;
 import ru.solandme.washwait.data.WashHelper;
 import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
@@ -38,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
-    private static final int PLACE_PICKER_REQUEST = 1;
-    private static final int REQUEST_CODE_AUTOCOMPLETE = 2;
 
     private Typeface weatherFont;
 

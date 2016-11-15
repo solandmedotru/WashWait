@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,9 +11,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.data.Forecast;
 
-class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
+public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
     private ArrayList<Forecast> forecasts;
 
@@ -28,7 +29,7 @@ class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewH
         }
     }
 
-    MyForecastRVAdapter(ArrayList<Forecast> forecasts) {
+    public MyForecastRVAdapter(ArrayList<Forecast> forecasts) {
         this.forecasts = forecasts;
     }
 

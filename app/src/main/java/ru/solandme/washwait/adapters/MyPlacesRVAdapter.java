@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.map.POJO.Result;
 
 
@@ -37,7 +38,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         }
     }
 
-    MyPlacesRVAdapter(List<Result> results, OnPlaceSelectedListener listener) {
+    public MyPlacesRVAdapter(List<Result> results, OnPlaceSelectedListener listener) {
         this.results = results;
         this.listener = listener;
     }
@@ -75,7 +76,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
     }
 
 
-    interface OnPlaceSelectedListener {
+    public interface OnPlaceSelectedListener {
         void onPlaceItemSelected(int position, Result result);
     }
 

@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package ru.solandme.washwait;
+package ru.solandme.washwait.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
