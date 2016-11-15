@@ -115,6 +115,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
         View rootView = inflater.inflate(R.layout.fragment_weather, container, false);
 
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorBackground);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         cityField = (TextView) rootView.findViewById(R.id.city_field);
@@ -334,7 +335,6 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 new AboutAppDialog().show(getChildFragmentManager(), TAG_ABOUT);
                 break;
             case R.id.choose_location_action:
-                builder = new PlacePicker.IntentBuilder();
                 chooseCity();
                 break;
         }
@@ -342,6 +342,7 @@ public class WeatherFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void chooseCity() {
+        builder = new PlacePicker.IntentBuilder();
         try {
             startActivityForResult(builder.build(getActivity()), PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {

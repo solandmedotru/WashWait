@@ -2,10 +2,8 @@ package ru.solandme.washwait;
 
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -57,6 +55,8 @@ public class MapActivity extends FragmentActivity implements
     private static final String TAG = "MapActivity";
     private static final String TAG_ABOUT_PLACE = "AboutPlace";
     private static final int MA_PERMISSIONS_REQUEST_LOCATION = 99;
+    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private long FASTEST_INTERVAL = 2000; /* 2 sec */
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
 
@@ -72,19 +72,20 @@ public class MapActivity extends FragmentActivity implements
     List<Result> results;
 
     PlacesApiHelper placesHelper;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        bundle = getIntent().getExtras();
+        currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
+        lang = bundle.getString("lang");
+
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             checkLocationPermission();
         }
-
-        Bundle bundle = getIntent().getExtras();
-        currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
-        lang = bundle.getString("lang");
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
         carWashList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
@@ -122,14 +123,7 @@ public class MapActivity extends FragmentActivity implements
             map.setMyLocationEnabled(true);
         }
 
-        LocationManager location_manager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
-        boolean networkLocationEnabled = location_manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-        boolean gpsLocationEnabled = location_manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-
-        if (!networkLocationEnabled && !gpsLocationEnabled)
-            requestPlacesToCurrentLocation(currentLatLng);
-
-        moveCameraToLocation(currentLatLng);
+        requestPlacesToCurrentLocation(currentLatLng);
     }
 
 
@@ -215,7 +209,6 @@ public class MapActivity extends FragmentActivity implements
 
     @Override
     public void onLocationChanged(android.location.Location location) {
-        map.clear();
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
@@ -226,7 +219,7 @@ public class MapActivity extends FragmentActivity implements
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latLng);
         markerOptions.title(getString(R.string.current_position));
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET));
         mCurrLocationMarker = map.addMarker(markerOptions);
 
         currentLatLng = latLng;
@@ -282,8 +275,8 @@ public class MapActivity extends FragmentActivity implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -294,6 +287,11 @@ public class MapActivity extends FragmentActivity implements
 
     @Override
     public void onConnectionSuspended(int i) {
+        if (i == CAUSE_SERVICE_DISCONNECTED) {
+            Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+        } else if (i == CAUSE_NETWORK_LOST) {
+            Toast.makeText(this, "Network lost. Please re-connect.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -302,9 +300,18 @@ public class MapActivity extends FragmentActivity implements
 
     @Override
     protected void onPause() {
-        super.onPause();
         if (googleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        // only stop if it's connected, otherwise we crash
+        if (googleApiClient != null) {
+            googleApiClient.disconnect();
+        }
+        super.onStop();
     }
 }
