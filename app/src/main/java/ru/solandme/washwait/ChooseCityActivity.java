@@ -257,7 +257,8 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
 
-        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
             LocationServices.FusedLocationApi.requestLocationUpdates(locationClient, mLocationRequest, this);
         }
     }
@@ -274,6 +275,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         sharedPref.edit()
                 .putFloat("lat", lat)
                 .putFloat("lon", lon)
+                .putString("city", lat + " " + lon)
                 .apply();
         if (locationClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
