@@ -34,6 +34,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
+import java.util.Locale;
+
 import ru.solandme.washwait.adapters.PlaceAutocompleteAdapter;
 
 public class ChooseCityActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
@@ -275,7 +277,11 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         sharedPref.edit()
                 .putFloat("lat", lat)
                 .putFloat("lon", lon)
-                .putString("city", lat + " " + lon)
+                .putString("city",
+                        getString(R.string.latitude)
+                                + String.format(Locale.getDefault(), "%.4f", lat)
+                                + getString(R.string.longitude)
+                                + String.format(Locale.getDefault(), "%.4f", lon))
                 .apply();
         if (locationClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);

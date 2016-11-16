@@ -32,4 +32,6 @@
     <string name="wash_car">Мыть машину</string>
     <string name="current_position">Вы здесь</string>
     <string name="permission_danied">Разрешение не получено! Часть функций не будет работать.</string>
+    <string name="latitude">"Широта: "</string>
+    <string name="longitude">" Долгота: "</string>
 </resources>

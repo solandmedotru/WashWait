@@ -41,4 +41,6 @@
     <string name="wash_car">Wash car</string>
     <string name="permission_danied">permission denied</string>
     <string name="current_position">Current Position</string>
+    <string name="latitude">"Lat: "</string>
+    <string name="longitude">" Lon: "</string>
 </resources>
