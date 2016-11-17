@@ -45,9 +45,21 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
 
     @Override
     public MyPlacesRVAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
+        final View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.place_row, parent, false);
-        return new ViewHolder(v);
+
+        final MyPlacesRVAdapter.ViewHolder h = new MyPlacesRVAdapter.ViewHolder(v) {
+        };
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int adapterPosition = h.getAdapterPosition();
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    listener.onPlaceItemSelected(adapterPosition, results.get(adapterPosition));
+                }
+            }
+        });
+        return h;
     }
 
     @Override
@@ -57,12 +69,12 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         holder.placeRating.setText(String.valueOf(results.get(position).getRating()));
         holder.placeVicinity.setText(results.get(position).getVicinity());
 
-        holder.placesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onPlaceItemSelected(holder.getAdapterPosition(), results.get(holder.getAdapterPosition()));
-            }
-        });
+//        holder.placesContainer.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                listener.onPlaceItemSelected(holder.getAdapterPosition(), results.get(holder.getAdapterPosition()));
+//            }
+//        });
     }
 
 

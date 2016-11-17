@@ -15,7 +15,8 @@
             android:id="@+id/place_name"
             android:layout_width="0dp"
             android:text="Wash car"
-            style="@android:style/TextAppearance.Medium"
+            android:textColor="@color/textColor"
+            style="@android:style/TextAppearance.Large"
             android:layout_height="wrap_content"
             android:layout_weight="3" />
 
@@ -25,12 +26,16 @@
             android:layout_gravity="center"
             android:text="3.0"
             android:gravity="end"
+            android:textColor="@color/textColor"
+            style="@android:style/TextAppearance.Medium"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
     </LinearLayout>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/colorGrey"
+        style="@android:style/TextAppearance.Medium"
         android:id="@+id/place_vicinity"/>
 
 </LinearLayout>

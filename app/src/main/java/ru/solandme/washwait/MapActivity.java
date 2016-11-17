@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -89,7 +90,11 @@ public class MapActivity extends FragmentActivity implements
         }
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
-        carWashList.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
+        carWashList.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration dividerItemDecoration =
+                new DividerItemDecoration(carWashList.getContext(), linearLayoutManager.getOrientation());
+        carWashList.addItemDecoration(dividerItemDecoration);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);

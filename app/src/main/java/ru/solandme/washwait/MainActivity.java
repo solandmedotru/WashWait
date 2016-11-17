@@ -147,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         units = sharedPref.getString("units", defaultUnits);
         forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
-        city = sharedPref.getString("city", "Выберите город");
+        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
