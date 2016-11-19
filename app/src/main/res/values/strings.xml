@@ -48,6 +48,6 @@
     <string name="enter_location">Search location...</string>
     <string name="example_city">Example, London</string>
     <string name="example_zip">Example, 43140</string>
-    <string name="find_your_location">Find with GPS</string>
+    <string name="find_your_location">location with GPS or Network</string>
     <string name="zip_or_index">Enter Zip or Postcode</string>
 </resources>

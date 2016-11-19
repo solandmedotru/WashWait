@@ -277,7 +277,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
-//        if(temp > -10) return R.mipmap.car1;
+        if (temp > -15 && dirtyCounter > 0) return R.mipmap.car1;
         if (dirtyCounter <= 0) return R.mipmap.car1;
         if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car2;
         if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car3;
