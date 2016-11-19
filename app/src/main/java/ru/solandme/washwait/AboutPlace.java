@@ -85,8 +85,25 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
         if (webUrl == null) webUrl = "";
         descriptionAboutPlace.setText(openHours + "\n" + webUrl);
 
-        if (placeRating == 0) {
-            ratingAboutPlace.setImageResource(R.drawable.ic_star);
+        switch ((int) placeRating) {
+            case 0:
+                ratingAboutPlace.setImageResource(R.mipmap.rating0);
+                break;
+            case 1:
+                ratingAboutPlace.setImageResource(R.mipmap.rating1);
+                break;
+            case 2:
+                ratingAboutPlace.setImageResource(R.mipmap.rating2);
+                break;
+            case 3:
+                ratingAboutPlace.setImageResource(R.mipmap.rating3);
+                break;
+            case 4:
+                ratingAboutPlace.setImageResource(R.mipmap.rating4);
+                break;
+            case 5:
+                ratingAboutPlace.setImageResource(R.mipmap.medal);
+                break;
         }
 
         Picasso.with(getContext()).load(

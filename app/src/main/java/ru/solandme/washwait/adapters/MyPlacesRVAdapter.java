@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import ru.solandme.washwait.R;
 import ru.solandme.washwait.map.POJO.Result;
 
 
-public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.ViewHolder>{
+public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.ViewHolder> {
 
     private List<Result> results = new ArrayList<>();
     private OnPlaceSelectedListener listener;
@@ -21,7 +22,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView placeName;
-        TextView placeRating;
+        ImageView placeRating;
         TextView placeVicinity;
 
         View placesContainer;
@@ -30,7 +31,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         ViewHolder(View v) {
             super(v);
             placeName = (TextView) v.findViewById(R.id.place_name);
-            placeRating = (TextView) v.findViewById(R.id.place_rating);
+            placeRating = (ImageView) v.findViewById(R.id.place_rating);
             placeVicinity = (TextView) v.findViewById(R.id.place_vicinity);
 
             placesContainer = v.findViewById(R.id.places_container);
@@ -66,7 +67,28 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.placeName.setText(results.get(position).getName());
-        holder.placeRating.setText(String.valueOf(results.get(position).getRating()));
+
+        switch ((int) results.get(position).getRating()) {
+            case 0:
+                holder.placeRating.setImageResource(R.mipmap.rating0);
+                break;
+            case 1:
+                holder.placeRating.setImageResource(R.mipmap.rating1);
+                break;
+            case 2:
+                holder.placeRating.setImageResource(R.mipmap.rating2);
+                break;
+            case 3:
+                holder.placeRating.setImageResource(R.mipmap.rating3);
+                break;
+            case 4:
+                holder.placeRating.setImageResource(R.mipmap.rating4);
+                break;
+            case 5:
+                holder.placeRating.setImageResource(R.mipmap.medal);
+                break;
+        }
+
         holder.placeVicinity.setText(results.get(position).getVicinity());
 
 //        holder.placesContainer.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +102,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
 
     @Override
     public int getItemCount() {
-        if(null == results){
+        if (null == results) {
             return 0;
         } else {
             return results.size();
