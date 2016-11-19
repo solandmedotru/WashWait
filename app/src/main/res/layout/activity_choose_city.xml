@@ -21,9 +21,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textSize="24sp"
+                android:textSize="20sp"
                 android:layout_weight="10"
-                android:hint="Поиск местоположения"
+                android:hint="@string/enter_location"
                 android:maxLines="1"
                 android:textColor="@color/textColor"
                 android:textColorHint="@color/textColor" />
@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Введите город"
+                    android:text="@string/enter_city"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/textColor" />
 
@@ -77,7 +77,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Например, Москва"
+                    android:text="@string/example_city"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/textColor" />
             </LinearLayout>
@@ -109,7 +109,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Введите ZIP\nили почтовый индекс"
+                    android:text="@string/zip_or_index"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/textColor" />
 
@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Например, 101000"
+                    android:text="@string/example_zip"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/textColor" />
             </LinearLayout>
@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Нажмите, чтобы найти"
+                    android:text="@string/click_to_find"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:textColor="@color/textColor" />
 
@@ -156,7 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
-                    android:text="Где бы вы нибыли"
+                    android:text="@string/find_your_location"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/textColor" />
             </LinearLayout>

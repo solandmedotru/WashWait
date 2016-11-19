@@ -39,7 +39,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="ru.solandme.washwait.MainActivity" />
         </activity>
-        <activity android:name=".ChooseCityActivity"></activity>
+        <activity android:name=".ChooseCityActivity" />
     </application>
 
 </manifest>

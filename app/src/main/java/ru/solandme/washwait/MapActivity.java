@@ -1,6 +1,5 @@
 package ru.solandme.washwait;
 
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -57,8 +56,8 @@ public class MapActivity extends FragmentActivity implements
     private static final String TAG = "MapActivity";
     private static final String TAG_ABOUT_PLACE = "AboutPlace";
     private static final int MA_PERMISSIONS_REQUEST_LOCATION = 99;
-    private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private long FASTEST_INTERVAL = 2000; /* 2 sec */
+    private static final long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
+    private static final long FASTEST_INTERVAL = 2000; /* 2 sec */
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
 

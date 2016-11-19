@@ -34,4 +34,11 @@
     <string name="permission_danied">Разрешение не получено! Часть функций не будет работать.</string>
     <string name="latitude">"Широта: "</string>
     <string name="longitude">" Долгота: "</string>
+    <string name="enter_location">Поиск местоположения</string>
+    <string name="enter_city">Введите город</string>
+    <string name="example_city">Например, Москва</string>
+    <string name="zip_or_index">Введите ZIP\nили почтовый индекс</string>
+    <string name="example_zip">Например, 101000</string>
+    <string name="click_to_find">Нажмите, чтобы найти</string>
+    <string name="find_your_location">Где бы вы нибыли</string>
 </resources>

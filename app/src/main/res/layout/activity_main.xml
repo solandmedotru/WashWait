@@ -32,7 +32,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/background"
-            android:padding="16dp"
+            android:padding="10dp"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@color/colorBackground" />
@@ -65,7 +65,7 @@
                 android:layout_centerInParent="true"
                 android:layout_margin="16dp"
                 android:background="@drawable/background"
-                android:padding="16dp"
+                android:padding="10dp"
                 android:text="@string/wash_car"
                 android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"

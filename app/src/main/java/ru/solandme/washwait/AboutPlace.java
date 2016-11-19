@@ -86,9 +86,6 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
         descriptionAboutPlace.setText(openHours + "\n" + webUrl);
 
         switch ((int) placeRating) {
-            case 0:
-                ratingAboutPlace.setImageResource(R.mipmap.rating0);
-                break;
             case 1:
                 ratingAboutPlace.setImageResource(R.mipmap.rating1);
                 break;
@@ -103,6 +100,9 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
                 break;
             case 5:
                 ratingAboutPlace.setImageResource(R.mipmap.medal);
+                break;
+            default:
+                ratingAboutPlace.setImageResource(R.mipmap.rating0);
                 break;
         }
 
