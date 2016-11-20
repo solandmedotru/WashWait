@@ -40,5 +40,5 @@
     <string name="zip_or_index">Введите ZIP\nили почтовый индекс</string>
     <string name="example_zip">Например, 101000</string>
     <string name="click_to_find">Нажмите, чтобы найти</string>
-    <string name="find_your_location">Где бы вы нибыли</string>
+    <string name="find_your_location">Где бы вы ни были</string>
 </resources>

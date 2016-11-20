@@ -1,22 +1,22 @@
 <resources>
     <string name="app_name">MeteoWash</string>
 
-    <string name="change_city">Change city</string>
-    <string name="wash">We recommend you to wash the car\n%1$s</string>
-    <string name="not_wash">We recommend you to wait two weeks and save your money.</string>
-    <string name="can_wash">A good day to wash your car!</string>
+    <string name="change_city">To change a city</string>
+    <string name="wash">I recommend to wash the car on\n%1$s</string>
+    <string name="not_wash">It is better not to wash a car during following two weeks.</string>
+    <string name="can_wash">Today is a good day to wash the car! Precipitation is not being expected.</string>
     <string name="last_update">"Last update: "</string>
     <string name="humidity">"Humidity: "</string>
     <string name="pressure">"Pressure: "</string>
     <string name="settings">Settings</string>
     <string name="error_from_response">Error!</string>
-    <string name="units_format_label">Units format</string>
+    <string name="units_format_label">Units of measurement</string>
 
     <string name="zeroDay">today</string>
-    <string name="dry">small wet </string>
-    <string name="wet">very wet</string>
-    <string name="normal">middle wet</string>
-    <string name="city_name_settings">City name or post index (ex. Moscow,RU)</string>
+    <string name="dry">weak</string>
+    <string name="wet">high</string>
+    <string name="normal">moderate</string>
+    <string name="city_name_settings">City or postal code (ex. Moscow)</string>
     <string name="clear_period">Clear period</string>
     <string name="app_version" translatable="false">v0.0.1</string>
     <string name="author">Author</string>
@@ -25,27 +25,27 @@
     <string name="designer">Designer</string>
     <string name="designer_name" translatable="false">Anar Ibrahimli</string>
     <string name="designer_email" translatable="false">anar9222@gmail.com</string>
-    <string name="about_app">About App</string>
+    <string name="about_app">About Application</string>
     <string name="title_activity_map">Map</string>
-    <string name="make_call">Make call</string>
+    <string name="make_call">Call</string>
     <string name="close">Close</string>
     <string name="phone">Phone:</string>
     <string name="address">Address:</string>
-    <string name="i_am_here">I am Here</string>
+    <string name="i_am_here">I am here</string>
     <string name="pref_city_key" translatable="false">city</string>
     <string name="pref_units_key" translatable="false">units</string>
     <string name="pref_limit_key" translatable="false">limit</string>
-    <string name="choose_location">Choose Location</string>
-    <string name="wash_car">Wash car</string>
-    <string name="permission_danied">permission denied</string>
+    <string name="choose_location">To Choose Location</string>
+    <string name="wash_car">To Wash a car</string>
+    <string name="permission_danied">Permission denied. Part of the functions will not work</string>
     <string name="current_position">Current Position</string>
     <string name="latitude">"Lat: "</string>
     <string name="longitude">" Lon: "</string>
-    <string name="click_to_find">Click to find</string>
-    <string name="enter_city">Enter city</string>
+    <string name="click_to_find">Press to find</string>
+    <string name="enter_city">Fill in the city</string>
     <string name="enter_location">Search location...</string>
-    <string name="example_city">Example, London</string>
-    <string name="example_zip">Example, 43140</string>
-    <string name="find_your_location">location with GPS or Network</string>
-    <string name="zip_or_index">Enter Zip or Postcode</string>
+    <string name="example_city">For Example, London</string>
+    <string name="example_zip">For Example, 43140</string>
+    <string name="find_your_location">your location</string>
+    <string name="zip_or_index">Fill in Zip or Postal code</string>
 </resources>
