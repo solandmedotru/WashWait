@@ -5,7 +5,11 @@
 ![minSdkVersion](https://img.shields.io/badge/minSdkVersion-16-yellow.svg?style=true)
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
-![MainScreen](https://drive.google.com/open?id=0B_MGBDRp_I4cakstcS1fdVRKdkU)
+![MainScreen](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665150.png)
+![FindLocation](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665154.png)
+![PlaceAutocomplete](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665174.png)
+![Map](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665191.png)
+![AboutPlace](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665197.png)
 
 This sample is available
 
