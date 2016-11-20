@@ -5,11 +5,11 @@
 ![minSdkVersion](https://img.shields.io/badge/minSdkVersion-16-yellow.svg?style=true)
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
-![MainScreen](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665150.png)
-![FindLocation](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665154.png)
-![PlaceAutocomplete](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665174.png)
-![Map](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665191.png)
-![AboutPlace](https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665197.png)
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665150.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665154.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665174.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665191.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665197.png" width="200">
 
 This sample is available
 
