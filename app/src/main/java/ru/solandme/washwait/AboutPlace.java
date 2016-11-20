@@ -3,22 +3,16 @@ package ru.solandme.washwait;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.squareup.picasso.Picasso;
 
-public class AboutPlace extends DialogFragment implements View.OnClickListener {
+public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "AboutPlaceDialog";
-    private GoogleApiClient mGoogleApiClient;
-    Bundle args;
 
     TextView nameAboutPlace;
     TextView phoneAboutPlace;
@@ -38,9 +32,9 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setStyle(DialogFragment.STYLE_NORMAL, R.style.PlaceDialog);
+        setContentView(R.layout.about_place_dialog);
 
-        args = getArguments();
+        Bundle args = getIntent().getExtras();
         openHours = args.getString("openHours");
         placeName = args.getString("name");
         placePhone = args.getString("phone");
@@ -49,28 +43,16 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
         webUrl = args.getString("webUrl");
         placeRating = args.getFloat("rating");
 
-        mGoogleApiClient = new GoogleApiClient
-                .Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-    }
+        photoAboutPlace = (ImageView) findViewById(R.id.place_photo);
+        ratingAboutPlace = (ImageView) findViewById(R.id.rating);
+        nameAboutPlace = (TextView) findViewById(R.id.place_name);
+        phoneAboutPlace = (TextView) findViewById(R.id.place_phone);
+        addressAboutPlace = (TextView) findViewById(R.id.place_address);
+        descriptionAboutPlace = (TextView) findViewById(R.id.place_description);
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        View layout = inflater.inflate(R.layout.about_place_dialog, container, false);
-
-        photoAboutPlace = (ImageView) layout.findViewById(R.id.place_photo);
-        ratingAboutPlace = (ImageView) layout.findViewById(R.id.rating);
-        nameAboutPlace = (TextView) layout.findViewById(R.id.place_name);
-        phoneAboutPlace = (TextView) layout.findViewById(R.id.place_phone);
-        addressAboutPlace = (TextView) layout.findViewById(R.id.place_address);
-        descriptionAboutPlace = (TextView) layout.findViewById(R.id.place_description);
-
-        Button btnCancel = (Button) layout.findViewById(R.id.btnCancelPlace);
+        Button btnCancel = (Button) findViewById(R.id.btnCancelPlace);
         btnCancel.setOnClickListener(this);
-        Button btnMakeCall = (Button) layout.findViewById(R.id.btnMakeCallPlace);
+        Button btnMakeCall = (Button) findViewById(R.id.btnMakeCallPlace);
         btnMakeCall.setOnClickListener(this);
 
         nameAboutPlace.setText(placeName);
@@ -106,14 +88,13 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
                 break;
         }
 
-        Picasso.with(getContext()).load(
+        Picasso.with(this).load(
                 "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference="
                         + photoRef + "&key="
                         + getResources().getString(R.string.google_maps_key))
                 .placeholder(R.mipmap.city3).fit()
                 .into(photoAboutPlace);
 
-        return layout;
     }
 
     @Override
@@ -127,18 +108,6 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
         }
-        dismiss();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mGoogleApiClient.connect();
-    }
-
-    @Override
-    public void onStop() {
-        mGoogleApiClient.disconnect();
-        super.onStop();
+        finish();
     }
 }

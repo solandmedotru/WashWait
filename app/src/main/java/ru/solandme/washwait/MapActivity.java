@@ -1,6 +1,7 @@
 package ru.solandme.washwait;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -54,7 +55,6 @@ public class MapActivity extends FragmentActivity implements
         LocationListener {
 
     private static final String TAG = "MapActivity";
-    private static final String TAG_ABOUT_PLACE = "AboutPlace";
     private static final int MA_PERMISSIONS_REQUEST_LOCATION = 99;
     private static final long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private static final long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -177,32 +177,29 @@ public class MapActivity extends FragmentActivity implements
                             final Place myPlace = places.get(0);
                             Log.i(TAG, "Place found: " + myPlace.getName());
 
-                            Bundle args = new Bundle();
-                            args.putString("name", myPlace.getName().toString());
-                            args.putString("phone", myPlace.getPhoneNumber().toString());
-                            args.putString("placeId", myPlace.getId());
-                            args.putString("address", myPlace.getAddress().toString());
-                            args.putFloat("rating", myPlace.getRating());
+                            Intent intent = new Intent(MapActivity.this, AboutPlace.class);
+                            intent.putExtra("name", myPlace.getName().toString());
+                            intent.putExtra("phone", myPlace.getPhoneNumber().toString());
+                            intent.putExtra("placeId", myPlace.getId());
+                            intent.putExtra("address", myPlace.getAddress().toString());
+                            intent.putExtra("rating", myPlace.getRating());
 
                             if (myPlace.getWebsiteUri() != null)
-                                args.putString("webUrl", myPlace.getWebsiteUri().toString());
+                                intent.putExtra("webUrl", myPlace.getWebsiteUri().toString());
 
                             if (result.getPhotos().size() > 0) {
-                                args.putString("photoRef", result.getPhotos().get(0).getPhotoReference());
+                                intent.putExtra("photoRef", result.getPhotos().get(0).getPhotoReference());
                             }
 
                             if (result.getOpeningHours() != null) {
                                 String open = "";
                                 for (int i = 0; i < result.getOpeningHours().getWeekdayText().size(); i++) {
                                     open = open + "\n" + result.getOpeningHours().getWeekdayText().get(i).toString();
-                                    args.putString("openHours", open);
+                                    intent.putExtra("openHours", open);
 
                                 }
                             }
-
-                            AboutPlace aboutPlaceDialog = new AboutPlace();
-                            aboutPlaceDialog.setArguments(args);
-                            aboutPlaceDialog.show(getSupportFragmentManager(), TAG_ABOUT_PLACE);
+                            startActivity(intent);
                         } else {
                             Log.e(TAG, "Place not found");
                         }
@@ -312,11 +309,11 @@ public class MapActivity extends FragmentActivity implements
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         // only stop if it's connected, otherwise we crash
         if (googleApiClient != null) {
             googleApiClient.disconnect();
         }
-        super.onStop();
+        super.onDestroy();
     }
 }

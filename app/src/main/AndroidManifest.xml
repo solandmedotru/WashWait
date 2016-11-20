@@ -40,6 +40,7 @@
                 android:value="ru.solandme.washwait.MainActivity" />
         </activity>
         <activity android:name=".ChooseCityActivity" />
+        <activity android:name=".AboutPlace" />
     </application>
 
 </manifest>
