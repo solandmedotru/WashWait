@@ -13,13 +13,13 @@
 
     <ImageView
         android:id="@+id/rating"
-        android:layout_width="56dp"
-        android:layout_height="56dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="180dp"
         android:src="@drawable/ic_rating5" />
 
     <GridLayout

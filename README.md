@@ -5,6 +5,8 @@
 ![minSdkVersion](https://img.shields.io/badge/minSdkVersion-16-yellow.svg?style=true)
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
+![MainScreen](https://drive.google.com/open?id=0B_MGBDRp_I4cakstcS1fdVRKdkU)
+
 This sample is available
 
 [![Get it on Google Play](https://play.google.com/intl/en_us/badges/images/badge_new.png)](https://play.google.com/store/apps/details?id=ru.solandme.remindmeabout)
