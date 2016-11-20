@@ -69,23 +69,23 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         holder.placeName.setText(results.get(position).getName());
 
         switch ((int) results.get(position).getRating()) {
-            case 0:
-                holder.placeRating.setImageResource(R.mipmap.rating0);
-                break;
             case 1:
-                holder.placeRating.setImageResource(R.mipmap.rating1);
+                holder.placeRating.setImageResource(R.drawable.ic_rating1);
                 break;
             case 2:
-                holder.placeRating.setImageResource(R.mipmap.rating2);
+                holder.placeRating.setImageResource(R.drawable.ic_rating2);
                 break;
             case 3:
-                holder.placeRating.setImageResource(R.mipmap.rating3);
+                holder.placeRating.setImageResource(R.drawable.ic_rating3);
                 break;
             case 4:
-                holder.placeRating.setImageResource(R.mipmap.rating4);
+                holder.placeRating.setImageResource(R.drawable.ic_rating4);
                 break;
             case 5:
-                holder.placeRating.setImageResource(R.mipmap.medal);
+                holder.placeRating.setImageResource(R.drawable.ic_rating5);
+                break;
+            default:
+                holder.placeRating.setImageResource(R.drawable.ic_rating0);
                 break;
         }
 

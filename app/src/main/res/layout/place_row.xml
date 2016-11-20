@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
+        android:layout_weight="9"
         android:orientation="vertical">
 
         <TextView
@@ -39,10 +39,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:scaleType="fitCenter"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_weight="1"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/rating5" />
+        android:src="@drawable/ic_rating5" />
 
 </LinearLayout>

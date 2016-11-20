@@ -57,19 +57,13 @@
                 android:layout_centerInParent="true"
                 android:scaleType="fitCenter" />
 
-            <TextView
+            <ImageView
                 android:id="@+id/action_wash"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/car_image"
+                android:layout_alignBottom="@+id/car_image"
                 android:layout_centerInParent="true"
-                android:layout_margin="16dp"
-                android:background="@drawable/background"
-                android:padding="10dp"
-                android:text="@string/wash_car"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/colorBackground" />
+                android:src="@drawable/ic_cleaner" />
 
             <LinearLayout
                 android:id="@+id/qqqq"
@@ -85,6 +79,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
+                    android:gravity="center"
                     android:orientation="vertical">
 
                     <TextView
@@ -97,13 +92,15 @@
 
                     <TextView
                         android:id="@+id/current_temperature_field"
-                        android:layout_width="match_parent"
+                        android:drawableStart="@drawable/ic_thermometer"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="-10C"
                         android:textAlignment="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/textColor"
-                        android:textSize="25sp" />
+                        android:textSize="25sp"
+                        android:drawableLeft="@drawable/ic_thermometer" />
 
                 </LinearLayout>
 

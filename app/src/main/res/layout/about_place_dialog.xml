@@ -25,9 +25,9 @@
         tools:layout_editor_absoluteX="0dp" />
 
     <ImageView
-        android:src="@drawable/ic_star"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:src="@drawable/ic_rating4"
+        android:layout_width="66dp"
+        android:layout_height="66dp"
         app:layout_editor_absoluteX="359dp"
         app:layout_editor_absoluteY="104dp"
         android:id="@+id/rating"

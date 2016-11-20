@@ -2,7 +2,6 @@ package ru.solandme.washwait;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -40,8 +39,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
 
-    private Typeface weatherFont;
-
     private SwipeRefreshLayout swipeRefreshLayout;
 
     private TextView cityField;
@@ -52,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ImageView carImage;
     private ImageView cityImage;
     private TextView forecastMessage;
-    private TextView actionWash;
+    private ImageView actionWash;
 
     private ProgressBar dirtyMeter;
 
@@ -85,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weatherFont = Typeface.createFromAsset(this.getAssets(), "fonts/weather.ttf");
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
@@ -97,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         detailsField = (TextView) findViewById(R.id.details_field);
         currentTemperatureField = (TextView) findViewById(R.id.current_temperature_field);
         forecastMessage = (TextView) findViewById(R.id.forecast_message);
-        actionWash = (TextView) findViewById(R.id.action_wash);
+        actionWash = (ImageView) findViewById(R.id.action_wash);
 
 
         weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
@@ -113,8 +109,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         adapter = new MyForecastRVAdapter(forecasts);
         forecastRecyclerView.setAdapter(adapter);
-
-        detailsField.setTypeface(weatherFont);
 
         actionWash.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,24 +238,22 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         cityField.setText(city);
 
-        currentTemperatureField.setTypeface(weatherFont);
         detailsField.setText(description);
 
         String unitTemperature;
         switch (units) {
             case "metric":
-                unitTemperature = String.format("%sC", getString(R.string.wi_degrees));
+                unitTemperature = String.format("%sC", "\u00b0");
                 break;
             case "imperial":
-                unitTemperature = String.format("%sF", getString(R.string.wi_degrees));
+                unitTemperature = String.format("%sF", "\u00b0");
                 break;
             default:
-                unitTemperature = String.format("%sK", getString(R.string.wi_degrees));
+                unitTemperature = String.format("%sK", "\u00b0");
                 break;
         }
 
-        currentTemperatureField.setText(String.format("%s %s%s",
-                getResources().getString(R.string.wi_thermometer),
+        currentTemperatureField.setText(String.format("%s%s",
                 String.format(Locale.getDefault(), "%.1f", temp),
                 unitTemperature));
 
@@ -277,7 +269,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
-        if (temp > -15 && dirtyCounter > 0) return R.mipmap.car1;
+        if (temp < -15) return R.mipmap.car1;
         if (dirtyCounter <= 0) return R.mipmap.car1;
         if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car2;
         if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car3;

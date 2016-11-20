@@ -2,8 +2,6 @@
     <string name="app_name">MeteoWash</string>
 
     <string name="change_city">Change city</string>
-    <string name="wi_degrees" translatable="false">&#xf042;</string>
-    <string name="wi_thermometer" translatable="false">&#xf055;</string>
     <string name="wash">We recommend you to wash the car\n%1$s</string>
     <string name="not_wash">We recommend you to wait two weeks and save your money.</string>
     <string name="can_wash">A good day to wash your car!</string>

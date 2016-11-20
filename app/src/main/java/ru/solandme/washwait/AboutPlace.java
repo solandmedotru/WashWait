@@ -87,22 +87,22 @@ public class AboutPlace extends DialogFragment implements View.OnClickListener {
 
         switch ((int) placeRating) {
             case 1:
-                ratingAboutPlace.setImageResource(R.mipmap.rating1);
+                ratingAboutPlace.setImageResource(R.drawable.ic_rating1);
                 break;
             case 2:
-                ratingAboutPlace.setImageResource(R.mipmap.rating2);
+                ratingAboutPlace.setImageResource(R.drawable.ic_rating2);
                 break;
             case 3:
-                ratingAboutPlace.setImageResource(R.mipmap.rating3);
+                ratingAboutPlace.setImageResource(R.drawable.ic_rating3);
                 break;
             case 4:
-                ratingAboutPlace.setImageResource(R.mipmap.rating4);
+                ratingAboutPlace.setImageResource(R.drawable.ic_rating4);
                 break;
             case 5:
-                ratingAboutPlace.setImageResource(R.mipmap.medal);
+                ratingAboutPlace.setImageResource(R.drawable.ic_rating5);
                 break;
             default:
-                ratingAboutPlace.setImageResource(R.mipmap.rating0);
+                ratingAboutPlace.setImageResource(R.drawable.ic_rating0);
                 break;
         }
 
