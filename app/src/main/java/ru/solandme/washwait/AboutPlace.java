@@ -92,7 +92,7 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
                 "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference="
                         + photoRef + "&key="
                         + getResources().getString(R.string.google_maps_key))
-                .placeholder(R.mipmap.city3).fit()
+                .placeholder(R.mipmap.city6).fit()
                 .into(photoAboutPlace);
 
     }

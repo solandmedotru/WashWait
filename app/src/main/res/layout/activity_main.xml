@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@mipmap/city3" />
+                android:src="@mipmap/city6" />
 
             <ImageView
                 android:id="@+id/car_image"
@@ -56,14 +56,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerInParent="true"
                 android:scaleType="fitCenter" />
-
-            <ImageView
-                android:id="@+id/action_wash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/car_image"
-                android:layout_centerInParent="true"
-                android:src="@drawable/ic_cleaner" />
 
             <LinearLayout
                 android:id="@+id/qqqq"
@@ -92,15 +84,15 @@
 
                     <TextView
                         android:id="@+id/current_temperature_field"
-                        android:drawableStart="@drawable/ic_thermometer"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_thermometer"
+                        android:drawableStart="@drawable/ic_thermometer"
                         android:text="-10C"
                         android:textAlignment="center"
                         android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textColor="@color/textColor"
-                        android:textSize="25sp"
-                        android:drawableLeft="@drawable/ic_thermometer" />
+                        android:textSize="25sp" />
 
                 </LinearLayout>
 
@@ -114,6 +106,19 @@
                     android:src="@mipmap/few_clouds_d" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/action_wash"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableBottom="@drawable/ic_cleaner"
+                android:src="@drawable/ic_cleaner"
+                android:text="МЫТЬ МАШИНУ"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/textColor"
+                android:layout_below="@+id/qqqq"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10dp" />
         </RelativeLayout>
 
         <ProgressBar
