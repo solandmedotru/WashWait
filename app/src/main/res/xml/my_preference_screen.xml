@@ -8,7 +8,7 @@
         android:key="@string/pref_units_key"
         android:title="@string/units_format_label" />
     <ListPreference
-        android:defaultValue="1"
+        android:defaultValue="2"
         android:entries="@array/forecastLimit"
         android:entryValues="@array/limit"
         android:key="@string/pref_limit_key"

@@ -252,6 +252,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         }
     }
 
+
     @Override
     public void onConnected(Bundle bundle) {
         mLocationRequest = new LocationRequest();

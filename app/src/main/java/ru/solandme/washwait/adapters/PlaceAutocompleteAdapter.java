@@ -18,6 +18,7 @@ package ru.solandme.washwait.adapters;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Handler;
 import android.text.style.CharacterStyle;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -218,9 +219,18 @@ public class PlaceAutocompleteAdapter
             // Confirm that the query completed successfully, otherwise return null
             final Status status = autocompletePredictions.getStatus();
             if (!status.isSuccess()) {
-                Toast.makeText(getContext(), "Error contacting API: " + status.toString(),
-                        Toast.LENGTH_SHORT).show();
+                final Toast toast = Toast.makeText(getContext().getApplicationContext(), "Error contacting API: " + status.toString(),
+                        Toast.LENGTH_SHORT);
+                toast.show();
                 autocompletePredictions.release();
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        toast.cancel();
+                    }
+                }, 2000);
                 return null;
             }
 

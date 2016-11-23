@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">МетеоМойка</string>
-    <string name="can_wash">Сегодня хороший день чтобы помыть машину! Осадков не ожидается.</string>
+    <string name="can_wash">Сегодня хороший день чтобы помыть машину!</string>
     <string name="change_city">Сменить город</string>
     <string name="wash">Рекомендую помыть машину\n%1$s</string>
     <string name="not_wash">Ближайшие две недели лучше не мыть машину.</string>

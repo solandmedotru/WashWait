@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
     private String defaultUnits = "metric";
-    private String defaultLimit = "1";
+    private String defaultLimit = "2";
     private float defaultLat = 64.10F;
     private float defaultLon = 47.34F;
     private int forecastDistance;

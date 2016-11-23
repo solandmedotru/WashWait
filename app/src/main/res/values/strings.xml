@@ -4,7 +4,7 @@
     <string name="change_city">To change a city</string>
     <string name="wash">I recommend to wash the car on\n%1$s</string>
     <string name="not_wash">It is better not to wash a car during following two weeks.</string>
-    <string name="can_wash">Today is a good day to wash the car! Precipitation is not being expected.</string>
+    <string name="can_wash">Today is a good day to wash the car!</string>
     <string name="last_update">"Last update: "</string>
     <string name="humidity">"Humidity: "</string>
     <string name="pressure">"Pressure: "</string>
