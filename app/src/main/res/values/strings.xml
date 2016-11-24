@@ -36,14 +36,14 @@
     <string name="pref_units_key" translatable="false">units</string>
     <string name="pref_limit_key" translatable="false">limit</string>
     <string name="choose_location">To Choose Location</string>
-    <string name="wash_car">To Wash a car</string>
+    <string name="wash_car">CAR WASH</string>
     <string name="permission_danied">Permission denied. Part of the functions will not work</string>
     <string name="current_position">Current Position</string>
     <string name="latitude">"Lat: "</string>
     <string name="longitude">" Lon: "</string>
     <string name="click_to_find">Press to find</string>
     <string name="enter_city">Fill in the city</string>
-    <string name="enter_location">Search location...</string>
+    <string name="enter_location">Search location…</string>
     <string name="example_city">For Example, London</string>
     <string name="example_zip">For Example, 43140</string>
     <string name="find_your_location">your location</string>

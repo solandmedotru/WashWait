@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
                 android:drawableBottom="@drawable/ic_cleaner"
                 android:src="@drawable/ic_cleaner"
-                android:text="МЫТЬ МАШИНУ"
+                android:text="@string/wash_car"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@color/textColor"
                 android:layout_below="@+id/qqqq"
