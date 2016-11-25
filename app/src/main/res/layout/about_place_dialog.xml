@@ -1,31 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/place"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/place_photo"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="fitXY"
-        android:src="@mipmap/city5" />
+        android:layout_height="0dp"
+        android:layout_weight="2">
 
-    <ImageView
-        android:id="@+id/rating"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="180dp"
-        android:src="@drawable/ic_rating5" />
+        <ImageView
+            android:id="@+id/place_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@mipmap/city5" />
+
+        <ImageView
+            android:id="@+id/rating"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_rating5" />
+
+    </RelativeLayout>
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/place_photo"
+        android:layout_height="0dp"
+        android:layout_weight="3"
         android:padding="16dp"
         android:useDefaultMargins="true">
 
@@ -54,9 +63,9 @@
         <TextView
             android:id="@+id/place_phone"
             android:layout_width="0dp"
-            android:layout_gravity="fill_horizontal"
             android:layout_height="wrap_content"
             android:layout_column="1"
+            android:layout_gravity="fill_horizontal"
             android:layout_row="1"
             android:text="+7 999 9999999"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -85,7 +94,7 @@
         <TextView
             android:id="@+id/place_description"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="wrap_content"
             android:layout_column="0"
             android:layout_columnSpan="2"
             android:layout_row="3"
@@ -93,29 +102,35 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </GridLayout>
 
-    <Button
-        android:id="@+id/btnMakeCallPlace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:background="@color/colorAccent"
-        android:padding="10dp"
-        android:text="@string/make_call"
-        android:textColor="@color/textColor" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:padding="16dp"
+        android:layout_weight="1"
+        android:gravity="bottom|end"
+        android:orientation="horizontal">
 
-    <Button
-        android:id="@+id/btnCancelPlace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="16dp"
-        android:layout_toLeftOf="@+id/btnMakeCallPlace"
-        android:layout_toStartOf="@+id/btnMakeCallPlace"
-        android:background="@color/colorBackground"
-        android:padding="10dp"
-        android:text="@string/close"
-        android:textColor="@color/textColor" />
-</RelativeLayout>
+        <Button
+            android:id="@+id/btnCancelPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@color/colorBackground"
+            android:padding="10dp"
+            android:text="@string/close"
+            android:textColor="@color/textColor" />
+
+        <Button
+            android:id="@+id/btnMakeCallPlace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@color/colorAccent"
+            android:padding="10dp"
+            android:text="@string/make_call"
+            android:textColor="@color/textColor" />
+
+    </LinearLayout>
+</LinearLayout>

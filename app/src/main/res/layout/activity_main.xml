@@ -20,9 +20,10 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:layout_weight="1"
             android:text="Moskow, RU"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/textColor" />
+            android:textColor="@color/textColor"
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/forecast_message"
@@ -31,138 +32,177 @@
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="5dp"
+            android:layout_weight="1"
             android:background="@drawable/background"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textColor="@color/colorBackground" />
+            android:textColor="@color/colorBackground"
+            android:textSize="20sp" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3">
+            android:layout_weight="100">
 
             <ImageView
                 android:id="@+id/city_image"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:scaleType="fitXY"
                 android:src="@mipmap/city6" />
 
-            <ImageView
-                android:id="@+id/car_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerInParent="true"
-                android:scaleType="fitCenter" />
-
             <LinearLayout
-                android:id="@+id/qqqq"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/transparent_bg"
-                android:layout_gravity="top"
-                android:padding="10dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
 
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:id="@+id/qqqq"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:gravity="center"
-                    android:orientation="vertical">
+                    android:layout_gravity="top"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/transparent_bg"
+                    android:orientation="horizontal"
+                    android:padding="10dp">
 
-                    <TextView
-                        android:id="@+id/details_field"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textAlignment="center"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@color/textColor" />
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/current_temperature_field"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawableLeft="@drawable/ic_thermometer"
-                        android:drawableStart="@drawable/ic_thermometer"
-                        android:text="-10C"
-                        android:textAlignment="center"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textColor="@color/textColor"
-                        android:textSize="25sp" />
+                        <TextView
+                            android:id="@+id/details_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:textColor="@color/textColor"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/current_temperature_field"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_thermometer"
+                            android:drawableStart="@drawable/ic_thermometer"
+                            android:text="-10C"
+                            android:textAlignment="center"
+                            android:textColor="@color/textColor"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/weather_icon_day0"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:scaleType="fitCenter"
+                        android:src="@mipmap/few_clouds_d" />
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/action_wash"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center"
+                        android:text="@string/wash_car"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_cleaner" />
+                </LinearLayout>
+
                 <ImageView
-                    android:id="@+id/weather_icon_day0"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:id="@+id/car_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center|bottom"
+                    android:layout_marginLeft="100dp"
+                    android:layout_marginRight="100dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
-                    android:src="@mipmap/few_clouds_d" />
+                    android:src="@mipmap/car1" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/action_wash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableBottom="@drawable/ic_cleaner"
-                android:src="@drawable/ic_cleaner"
-                android:text="@string/wash_car"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/textColor"
-                android:layout_below="@+id/qqqq"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="10dp" />
-        </RelativeLayout>
 
-        <ProgressBar
-            android:id="@+id/precipitation_meter"
-            style="@android:style/Widget.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="5dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp" />
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp">
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/dry"
-                android:textColor="@color/textColor" />
+            <ProgressBar
+                android:id="@+id/precipitation_meter"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dp" />
 
-            <TextView
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/normal"
-                android:textColor="@color/textColor" />
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/wet"
-                android:textColor="@color/textColor" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/dry"
+                    android:textColor="@color/textColor"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/normal"
+                    android:textColor="@color/textColor"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="@string/wet"
+                    android:textColor="@color/textColor"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </LinearLayout>
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rwForecast"
@@ -170,12 +210,14 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
+            android:layout_weight="1"
             android:background="@drawable/background_tabs" />
 
         <TextView
             android:id="@+id/updated_field"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Последнее обновление: 25 ноября 2016, 21:00"
             android:textAlignment="center"
             android:textColor="@color/textColor"

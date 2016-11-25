@@ -15,7 +15,7 @@ public class AboutAppDialog extends DialogFragment implements
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.activity_about_app_dialog, null))
-                .setTitle(getString(R.string.app_name) + ", " + getString(R.string.app_version))
+                .setTitle(getString(R.string.app_name) + ", v" + BuildConfig.VERSION_NAME)
                 .setIcon(R.mipmap.ic_launcher)
                 .setPositiveButton(android.R.string.ok, this).create();
         return builder.create();

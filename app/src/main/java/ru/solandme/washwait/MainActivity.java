@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ImageView carImage;
     private ImageView cityImage;
     private TextView forecastMessage;
-    private TextView actionWash;
+    private View actionWash;
 
     private ProgressBar dirtyMeter;
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         detailsField = (TextView) findViewById(R.id.details_field);
         currentTemperatureField = (TextView) findViewById(R.id.current_temperature_field);
         forecastMessage = (TextView) findViewById(R.id.forecast_message);
-        actionWash = (TextView) findViewById(R.id.action_wash);
+        actionWash = findViewById(R.id.action_wash);
 
 
         weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);

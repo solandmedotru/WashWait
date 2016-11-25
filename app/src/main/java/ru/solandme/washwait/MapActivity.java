@@ -265,7 +265,6 @@ public class MapActivity extends FragmentActivity implements
                         if (googleApiClient == null) {
                             buildGoogleApiClient();
                         }
-                        map.setMyLocationEnabled(true);
                     }
                 } else {
                     Toast.makeText(this, R.string.permission_danied, Toast.LENGTH_LONG).show();
