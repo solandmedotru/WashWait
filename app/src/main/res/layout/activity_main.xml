@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:text="Moskow, RU"
             android:textColor="@color/textColor"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="8dp"
             android:layout_weight="1"
             android:background="@drawable/background"
             android:padding="10dp"
@@ -66,43 +66,40 @@
                     android:layout_gravity="top"
                     android:layout_marginEnd="16dp"
                     android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
+                    android:gravity="center"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/transparent_bg"
                     android:orientation="horizontal"
                     android:padding="10dp">
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/details_field"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="4"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
 
-                        <TextView
-                            android:id="@+id/details_field"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textAlignment="center"
-                            android:textColor="@color/textColor"
-                            android:textSize="20sp" />
-
-                        <TextView
-                            android:id="@+id/current_temperature_field"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:drawableLeft="@drawable/ic_thermometer"
-                            android:drawableStart="@drawable/ic_thermometer"
-                            android:text="-10C"
-                            android:textAlignment="center"
-                            android:textColor="@color/textColor"
-                            android:textSize="20sp" />
-
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/current_temperature_field"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:drawableLeft="@drawable/ic_thermometer"
+                        android:drawableStart="@drawable/ic_thermometer"
+                        android:text="-10C"
+                        android:textAlignment="center"
+                        android:textColor="@color/textColor"
+                        android:textSize="20sp" />
 
                     <ImageView
                         android:id="@+id/weather_icon_day0"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
                         android:scaleType="fitCenter"
@@ -121,7 +118,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
                         android:text="@string/wash_car"
                         android:textColor="@color/textColor"
@@ -140,8 +137,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center|bottom"
-                    android:layout_marginLeft="100dp"
-                    android:layout_marginRight="100dp"
+                    android:layout_marginLeft="90dp"
+                    android:layout_marginRight="90dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/car1" />
