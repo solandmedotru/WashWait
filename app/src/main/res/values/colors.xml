@@ -6,11 +6,16 @@
     <color name="colorBackground">#500d64</color>
     <color name="textColor">#dcffffff</color>
     <color name="colorGrey">#a0ffffff</color>
-    <color name="colorCall">#005b06</color>
+    <color name="colorCall">#14635d</color>
     <color name="colorCancel">#6e6e6e</color>
 
     <color name="colorPrimaryB">#0288d1</color>
     <color name="colorPrimaryDarkB">#01579b</color>
     <color name="colorAccentB">#930071</color>
     <color name="colorBackgroundB">#0288d1</color>
+
+    <color name="colorPrimaryG">#2d807a</color>
+    <color name="colorPrimaryDarkG">#14635d</color>
+    <color name="colorAccentG">#c77400</color>
+    <color name="colorBackgroundG">#2d807a</color>
 </resources>

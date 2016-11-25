@@ -1,17 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <group android:id="@+id/action_theme">
-        <item
-            android:title="@string/theme_blue"
-            android:id="@+id/action_theme_blue"
-            app:showAsAction="never" />
-        <item
-            android:title="@string/theme_violet"
-            android:id="@+id/action_theme_violet"
-            app:showAsAction="never" />
-    </group>
+    <item
+        android:id="@+id/menu_search_option"
+        app:showAsAction="never"
+        android:title="@string/theme">
+        <menu>
+            <group android:id="@+id/action_theme">
+                <item
+                    android:id="@+id/action_theme_blue"
+                    android:title="@string/theme_blue"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_theme_violet"
+                    android:title="@string/theme_violet"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/action_theme_green"
+                    android:title="@string/theme_green"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
     <item
         android:id="@+id/settings"
         android:icon="@drawable/ic_settings_24dp"

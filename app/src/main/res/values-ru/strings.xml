@@ -41,4 +41,8 @@
     <string name="example_zip">Например, 101000</string>
     <string name="click_to_find">Нажмите, чтобы найти</string>
     <string name="find_your_location">Где бы вы ни были</string>
+    <string name="theme">Тема</string>
+    <string name="theme_blue">Синяя</string>
+    <string name="theme_color">Выбрать тему</string>
+    <string name="theme_violet">Фиолетовая</string>
 </resources>

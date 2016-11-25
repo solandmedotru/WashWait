@@ -26,6 +26,15 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
+    <style name="Green" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryG</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkG</item>
+        <item name="colorAccent">@color/colorAccentG</item>
+        <item name="android:colorBackground">@color/colorPrimaryG</item>
+        <item name="android:textColor">@color/colorPrimaryG</item>
+    </style>
+
     <style name="PlaceDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">90%</item>

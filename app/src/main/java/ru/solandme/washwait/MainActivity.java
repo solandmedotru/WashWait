@@ -303,6 +303,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             case R.id.action_theme_violet:
                 Utils.changeToTheme(Utils.THEME_MATERIAL_VIOLET, this);
                 return true;
+            case R.id.action_theme_green:
+                Utils.changeToTheme(Utils.THEME_MATERIAL_GREEN, this);
+                return true;
         }
         return true;
     }
