@@ -8,13 +8,23 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.Blue" parent="AppTheme">
+    <style name="Blue" parent="AppTheme">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimaryB</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkB</item>
         <item name="colorAccent">@color/colorAccentB</item>
+        <item name="android:colorBackground">@color/colorPrimaryB</item>
+        <item name="android:textColor">@color/colorPrimaryB</item>
     </style>
 
+    <style name="Violet" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
 
     <style name="PlaceDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">true</item>

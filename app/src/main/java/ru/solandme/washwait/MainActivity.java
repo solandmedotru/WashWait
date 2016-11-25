@@ -79,13 +79,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorBackground);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(this);
 
         cityField = (TextView) findViewById(R.id.city_field);
@@ -140,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setRefreshing(true);
 
         units = sharedPref.getString("units", defaultUnits);
-        forecastDistance = Integer.parseInt(sharedPref.getString("limit", defaultLimit));
+        forecastDistance = Integer.parseInt(sharedPref.getString(getString(R.string.pref_limit_key), defaultLimit));
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
@@ -296,6 +297,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             case R.id.choose_location_action:
                 chooseCity();
                 break;
+            case R.id.action_theme_blue:
+                Utils.changeToTheme(Utils.THEME_MATERIAL_BLUE, this);
+                return true;
+            case R.id.action_theme_violet:
+                Utils.changeToTheme(Utils.THEME_MATERIAL_VIOLET, this);
+                return true;
         }
         return true;
     }

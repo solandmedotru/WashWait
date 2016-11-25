@@ -62,6 +62,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 

@@ -6,9 +6,11 @@
     <color name="colorBackground">#500d64</color>
     <color name="textColor">#dcffffff</color>
     <color name="colorGrey">#a0ffffff</color>
+    <color name="colorCall">#005b06</color>
+    <color name="colorCancel">#6e6e6e</color>
 
-    <color name="colorPrimaryB">#009bdd</color>
-    <color name="colorPrimaryDarkB">#00709f</color>
+    <color name="colorPrimaryB">#0288d1</color>
+    <color name="colorPrimaryDarkB">#01579b</color>
     <color name="colorAccentB">#930071</color>
-    <color name="colorBackgroundB">#009bdd</color>
+    <color name="colorBackgroundB">#0288d1</color>
 </resources>

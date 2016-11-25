@@ -31,6 +31,7 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_place_dialog);
 
@@ -92,7 +93,7 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
                 "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference="
                         + photoRef + "&key="
                         + getResources().getString(R.string.google_maps_key))
-                .placeholder(R.mipmap.city6).fit()
+                .placeholder(R.mipmap.city8).fit()
                 .into(photoAboutPlace);
 
     }

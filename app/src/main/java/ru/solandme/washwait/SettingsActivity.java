@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
@@ -24,6 +25,7 @@ public class SettingsActivity extends PreferenceActivity {
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_limit_key)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_theme_color_key)));
 
         }
 

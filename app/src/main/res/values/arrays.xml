@@ -32,4 +32,14 @@
         <item>Kelvin</item>
     </string-array>
 
+    <string-array name="colors">
+        <item>Blue</item>
+        <item>Purpur</item>
+    </string-array>
+
+    <string-array name="themesColor">
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

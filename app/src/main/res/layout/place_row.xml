@@ -22,15 +22,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
-            android:text="Wash car"
-            android:textColor="@color/colorPrimaryDark" />
+            android:text="Wash car" />
 
         <TextView
             android:id="@+id/place_vicinity"
             android:textSize="15sp"
+            style="@android:style/TextAppearance.Small"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="@color/colorPrimary" />
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

@@ -33,7 +33,10 @@
     <string name="i_am_here">I am here</string>
     <string name="pref_city_key" translatable="false">city</string>
     <string name="pref_units_key" translatable="false">units</string>
-    <string name="pref_limit_key" translatable="false">limit</string>
+    <string name="pref_theme_color_key" translatable="false">theme</string>
+    <string name="pref_limit_key" translatable="false">2</string>
+
+
     <string name="choose_location">To Choose Location</string>
     <string name="wash_car">CAR WASH</string>
     <string name="permission_danied">Permission denied. Part of the functions will not work</string>
@@ -47,4 +50,7 @@
     <string name="example_zip">For Example, 43140</string>
     <string name="find_your_location">your location</string>
     <string name="zip_or_index">Fill in Zip or Postal code</string>
+    <string name="theme_color">Select Theme</string>
+    <string name="theme_blue">Blue Theme</string>
+    <string name="theme_violet">Violet Theme</string>
 </resources>
