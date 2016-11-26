@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -144,6 +143,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         forecastDistance = Integer.parseInt(sharedPref.getString(getString(R.string.pref_limit_key), defaultLimit));
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
+        ForecastService.startActionGetForecast(this, "Openweathermap", lon, lat, units);
+
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
         Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, appid);
@@ -172,6 +173,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+
+
     }
 
     private void updateWashForecastUI() {

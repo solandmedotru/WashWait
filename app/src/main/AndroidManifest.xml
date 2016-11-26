@@ -48,6 +48,10 @@
         </activity>
         <activity android:name=".ChooseCityActivity" />
         <activity android:name=".AboutPlace" />
+
+        <service
+            android:name=".ForecastService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

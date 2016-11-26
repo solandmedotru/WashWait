@@ -20,6 +20,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'OPEN_WEATHER_MAP_API_KEY', MyOpenWeatherMapApiKey
+        it.buildConfigField 'String', 'FORECAST_IO_API_KEY', ForecastIOApiKey
     }
 }
 
@@ -32,6 +33,10 @@ dependencies {
     compile 'com.android.support:support-core-ui:25.0.1'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
+
+    compile 'com.survivingwithandroid:weatherlib:1.6.0'
+    compile 'com.survivingwithandroid:weatherlib_okhttpclient:1.6.0'
+
     compile 'com.android.support:recyclerview-v7:25.0.1'
     compile 'com.google.android.gms:play-services-base:10.0.0'
     compile 'com.google.android.gms:play-services-location:10.0.0'
