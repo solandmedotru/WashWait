@@ -4,8 +4,8 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.R;
+import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 
 public class WashHelper {
 
@@ -30,7 +30,7 @@ public class WashHelper {
                 Forecast forecast = new Forecast();
 
                 forecast.setWeatherId(weather.getList().get(i).getWeather().get(0).getId());
-                forecast.setTemperature(weather.getList().get(i).getTemp().getDay());
+                forecast.setTemperature(weather.getList().get(i).getTemp().getMax());
                 forecast.setDate(weather.getList().get(i).getDt() * 1000);
                 forecast.setImageRes(getWeatherPicture(weather.getList().get(i).getWeather().get(0).getIcon()));
                 forecast.setCityName(weather.getCity().getName());

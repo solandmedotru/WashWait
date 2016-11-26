@@ -1,12 +1,14 @@
 
 package ru.solandme.washwait.forecast.POJO;
 
-import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 
-public class BigWeatherForecast {
+
+public class BigWeatherForecast implements Serializable {
 
     @SerializedName("city")
     @Expose

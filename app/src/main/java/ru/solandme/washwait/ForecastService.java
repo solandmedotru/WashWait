@@ -3,50 +3,47 @@ package ru.solandme.washwait;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+import android.util.Log;
 
-import com.survivingwithandroid.weather.lib.WeatherClient;
-import com.survivingwithandroid.weather.lib.WeatherConfig;
-import com.survivingwithandroid.weather.lib.client.okhttp.WeatherDefaultClient;
-import com.survivingwithandroid.weather.lib.exception.WeatherLibException;
-import com.survivingwithandroid.weather.lib.exception.WeatherProviderInstantiationException;
-import com.survivingwithandroid.weather.lib.model.DayForecast;
-import com.survivingwithandroid.weather.lib.model.WeatherForecast;
-import com.survivingwithandroid.weather.lib.provider.IProviderType;
-import com.survivingwithandroid.weather.lib.provider.forecastio.ForecastIOProviderType;
-import com.survivingwithandroid.weather.lib.provider.openweathermap.OpenweathermapProviderType;
-import com.survivingwithandroid.weather.lib.provider.wunderground.WeatherUndergroundProviderType;
-import com.survivingwithandroid.weather.lib.provider.yahooweather.YahooProviderType;
-import com.survivingwithandroid.weather.lib.request.WeatherRequest;
-
-import java.util.List;
+import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import ru.solandme.washwait.data.WeatherDbHelper;
+import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
+import ru.solandme.washwait.rest.ForecastApiHelper;
+import ru.solandme.washwait.rest.ForecastApiService;
 
 public class ForecastService extends IntentService {
 
-    private static final String ACTION_GET_FORECAST = "ru.solandme.washwait.action.GET_FORECAST";
     private static final String TAG = ForecastService.class.getSimpleName();
+    private static final String ACTION_GET_FORECAST = "ru.solandme.washwait.action.GET_FORECAST";
+    private static final double DEFAULT_LONGITUDE = 40.716667F;
+    private static final double DEFAULT_LATITUDE = -74F;
+    private static final String DEFAULT_FORECAST_DISTANCE = "2";
+    private static final String CNT = "16";
+    private static final String DEFAULT_UNITS = "metric";
 
-    private static final String WEATHER_PROVIDER_KEY = "weatherProvider";
-    private static final String LONGITUDE = "longitude";
-    private static final String LATITUDE = "latitude";
-    private static final String UNITS = "units";
-    public static final double DEFAULT_LONGITUDE = 40.716667F;
-    public static final double DEFAULT_LATITUDE = -74F;
+    private SharedPreferences sharedPref;
+    private String lang = Locale.getDefault().getLanguage();
+    private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 
-    WeatherClient client;
-    List<DayForecast> dayForecastList;
+    public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
+    String forecastDistance;
+
+    BigWeatherForecast weather;
 
     public ForecastService() {
         super(TAG);
     }
 
-    public static void startActionGetForecast(Context context, String weatherProvider, double lon, double lat, String units) {
+    public static void startActionGetForecast(Context context) {
         Intent intent = new Intent(context, ForecastService.class);
         intent.setAction(ACTION_GET_FORECAST);
-        intent.putExtra(WEATHER_PROVIDER_KEY, weatherProvider);
-        intent.putExtra(LONGITUDE, lon);
-        intent.putExtra(LATITUDE, lat);
-        intent.putExtra(UNITS, units);
         context.startService(intent);
     }
 
@@ -56,82 +53,132 @@ public class ForecastService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_GET_FORECAST.equals(action)) {
-                final String weatherProvider = intent.getStringExtra(WEATHER_PROVIDER_KEY);
-                final double lon = intent.getDoubleExtra(LONGITUDE, DEFAULT_LONGITUDE);
-                final double lat = intent.getDoubleExtra(LATITUDE, DEFAULT_LATITUDE);
-                final String units = intent.getStringExtra(UNITS);
-                handleForecast(weatherProvider, lon, lat, units);
+                handleForecast();
             }
         }
     }
 
-    private void handleForecast(String weatherProvider, double lon, double lat, String units) {
+    private void handleForecast() {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        float lat = sharedPref.getFloat("lat", (float) DEFAULT_LATITUDE);
+        float lon = sharedPref.getFloat("lon", (float) DEFAULT_LONGITUDE);
+        String units = sharedPref.getString("units", DEFAULT_UNITS);
+        forecastDistance = sharedPref.getString(getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
+        String city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
-        WeatherClient.ClientBuilder builder = new WeatherClient.ClientBuilder();
-        WeatherConfig config = new WeatherConfig();
-        switch (units) {
-            case "metric":
-                config.unitSystem = WeatherConfig.UNIT_SYSTEM.M;
-                break;
-            case "imperial":
-                config.unitSystem = WeatherConfig.UNIT_SYSTEM.I;
-                break;
-        }
-        config.lang = Locale.getDefault().getLanguage().toLowerCase();
-        config.numDays = 16;
+        final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
-        IProviderType forecastProviderType;
-        switch (weatherProvider) {
-            case "Openweathermap":
-                forecastProviderType = new OpenweathermapProviderType();
-                config.ApiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-                break;
-            case "Forecast.io":
-                forecastProviderType = new ForecastIOProviderType();
-                config.ApiKey = BuildConfig.FORECAST_IO_API_KEY;
-                break;
-            case "Yahoo":
-                forecastProviderType = new YahooProviderType();
-                break;
-            case "Weatherundergroung":
-                forecastProviderType = new WeatherUndergroundProviderType();
-                break;
-            default:
-                forecastProviderType = new OpenweathermapProviderType();
-        }
-
-        try {
-            client = builder.attach(getApplicationContext())
-                    .provider(forecastProviderType)
-                    .httpClient(WeatherDefaultClient.class)
-                    .config(config)
-                    .build();
-        } catch (WeatherProviderInstantiationException e) {
-            e.printStackTrace();
-        }
-
-
-        client.getForecastWeather(new WeatherRequest(lon, lat), new WeatherClient.ForecastWeatherEventListener() {
+        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, appid);
+        weatherCall.enqueue(new Callback<BigWeatherForecast>() {
             @Override
-            public void onWeatherError(WeatherLibException wle) {
-                wle.printStackTrace();
+            public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
+                if (response.isSuccessful()) {
+
+                    weather = response.body();
+                    saveForecastToDataBase();
+                    publishResults(weather);
+
+                }
             }
 
             @Override
-            public void onConnectionError(Throwable t) {
-                t.printStackTrace();
-            }
-
-            @Override
-            public void onWeatherRetrieved(WeatherForecast forecast) {
-                dayForecastList = forecast.getForecast();
-                saveForecastToDataBase(dayForecastList);
+            public void onFailure(Call<BigWeatherForecast> call, Throwable t) {
+                Log.e(TAG, "onError: " + t);
             }
         });
+
+
     }
 
-    private void saveForecastToDataBase(List<DayForecast> dayForecastList) {
+    private long getWashData(int washDayNumber) {
+        return weather.getList().get(washDayNumber).getDt() * 1000;
+    }
 
+    private int getWashDayNumber() {
+        int washDayNumber = -1;
+        int firstDirtyDay = -1;
+        int clearDaysCounter = 0;
+        int daysCounter = 0;
+
+        for (int i = 0; i < weather.getList().size(); i++) {
+            int weatherId = weather.getList().get(i).getWeather().get(0).getId();
+            double maxTemp = weather.getList().get(i).getTemp().getMax();
+
+            daysCounter++;
+            if (!isDirty(weatherId, maxTemp)) {
+                clearDaysCounter++;
+                if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
+                    if (washDayNumber == -1) {
+                        washDayNumber = daysCounter - clearDaysCounter;
+                    }
+                }
+            } else {
+                clearDaysCounter = 0;
+            }
+        }
+
+        Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
+        return washDayNumber;
+    }
+
+    boolean isDirty(int weatherId, double temperature) {
+        return weatherId < 600 || weatherId < 700 && temperature > -10;
+    }
+
+    private String getTextForWashForecast(int washDayNumber, long dataToWash) {
+        String dateToWashFormated = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash);
+        switch (washDayNumber) {
+            case 0:
+                return getResources().getString(R.string.can_wash);
+            case 1:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 2:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 3:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 4:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 5:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 6:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 7:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 8:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 9:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 10:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 11:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 12:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 13:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 14:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            case 15:
+                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+            default:
+                return getResources().getString(R.string.not_wash);
+        }
+    }
+
+    private void saveForecastToDataBase() {
+
+        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
+        dbHelper.saveWeather(weather);
+    }
+
+    private void publishResults(BigWeatherForecast weather) {
+        int washDayNumber = getWashDayNumber();
+        String textForWashForecast = getTextForWashForecast(washDayNumber, getWashData(washDayNumber));
+        Log.e(TAG, "day: " + washDayNumber + " " + textForWashForecast);
+
+        Intent intent = new Intent(NOTIFICATION);
+        intent.putExtra("TextForecast", textForWashForecast);
+        sendBroadcast(intent);
     }
 
 }

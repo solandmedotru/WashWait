@@ -51,7 +51,8 @@
 
         <service
             android:name=".ForecastService"
-            android:exported="false"></service>
+            android:exported="false" />
+
     </application>
 
 </manifest>

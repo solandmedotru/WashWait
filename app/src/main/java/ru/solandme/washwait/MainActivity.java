@@ -1,6 +1,9 @@
 package ru.solandme.washwait;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -76,6 +79,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
 
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                String textForecast = bundle.getString("TextForecast");
+                forecastMessage.setText(textForecast);
+            }
+        }
+    };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,24 +140,32 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 chooseCity();
             }
         });
+
+        ForecastService.startActionGetForecast(this);
     }
 
     @Override
     public void onResume() {
-        lat = sharedPref.getFloat("lat", defaultLat);
-        lon = sharedPref.getFloat("lon", defaultLon);
+        registerReceiver(receiver, new IntentFilter(
+                ForecastService.NOTIFICATION));
         getWeather();
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     void getWeather() {
         swipeRefreshLayout.setRefreshing(true);
 
+        lat = sharedPref.getFloat("lat", defaultLat);
+        lon = sharedPref.getFloat("lon", defaultLon);
         units = sharedPref.getString("units", defaultUnits);
         forecastDistance = Integer.parseInt(sharedPref.getString(getString(R.string.pref_limit_key), defaultLimit));
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-
-        ForecastService.startActionGetForecast(this, "Openweathermap", lon, lat, units);
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
@@ -173,14 +195,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     private void updateWashForecastUI() {
 
-        String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
-        forecastMessage.setText(forecastText);
+//        String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
+//        forecastMessage.setText(forecastText);
 
         Double dirtyCounter = washHelper.getDirtyCounter() * 10;
         dirtyMeter.setMax(40);
@@ -191,46 +211,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
         cityImage.startAnimation(moveFromRight);
-    }
-
-    private String getTextForWashForecast(int washDayNumber, long dataToWash) {
-        String dateToWashFormated = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash);
-        switch (washDayNumber) {
-            case 0:
-                return getResources().getString(R.string.can_wash);
-            case 1:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 2:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 3:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 4:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 5:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 6:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 7:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 8:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 9:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 10:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 11:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 12:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 13:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 14:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            case 15:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
-            default:
-                return getResources().getString(R.string.not_wash);
-        }
     }
 
     private void updateWeatherUI() {
@@ -273,7 +253,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
-        if (temp < -15) return R.mipmap.car1;
+        if (temp < -10) return R.mipmap.car1;
         if (dirtyCounter <= 0) return R.mipmap.car1;
         if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car2;
         if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car3;
@@ -285,6 +265,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        ForecastService.startActionGetForecast(this);
         getWeather();
     }
 
