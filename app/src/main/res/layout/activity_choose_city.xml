@@ -16,6 +16,7 @@
             android:orientation="horizontal">
 
             <AutoCompleteTextView
+                style="@style/AppTheme"
                 android:id="@+id/autocomplete_places"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

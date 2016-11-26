@@ -5,14 +5,11 @@
     <string name="change_city">Сменить город</string>
     <string name="wash">Рекомендую помыть машину\n%1$s</string>
     <string name="not_wash">Ближайшие две недели лучше не мыть машину.</string>
-    <string name="humidity">"Влажность: "</string>
     <string name="last_update">"Последнее обновление: "</string>
-    <string name="pressure">"Давление: "</string>
     <string name="error_from_response">Ошибка!</string>
     <string name="settings">Настройки</string>
     <string name="units_format_label">Единицы измерения</string>
 
-    <string name="zeroDay">сегодня</string>
     <string name="dry">слабые осадки</string>
     <string name="wet">сильные осадки</string>
     <string name="normal">средние</string>
@@ -45,4 +42,7 @@
     <string name="theme_blue">Синяя</string>
     <string name="theme_color">Выбрать тему</string>
     <string name="theme_violet">Фиолетовая</string>
+    <string name="theme_green">Зеленая</string>
+
+
 </resources>

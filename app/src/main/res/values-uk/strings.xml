@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">МетеоМойка</string>
+    <string name="can_wash">Сьогодні хороший день щоб помити машину!</string>
+    <string name="change_city">Змінити місто</string>
+    <string name="wash">Рекомендую помити машину\n%1$s</string>
+    <string name="not_wash">Найближчі два тижні краще не мити машину.</string>
+    <string name="last_update">"Останнє оновлення: "</string>
+    <string name="error_from_response">Помилка!</string>
+    <string name="settings">Налаштування</string>
+    <string name="units_format_label">Одиниці виміру</string>
+
+    <string name="dry">слабкі опади</string>
+    <string name="wet">сильні опади</string>
+    <string name="normal">середні</string>
+    <string name="city_name_settings">Місто або індекс (приклад Київ або 01000)</string>
+    <string name="clear_period">Період в днях</string>
+    <string name="about_app">Про програму</string>
+    <string name="author">Автор програми</string>
+    <string name="designer">Дизайнер</string>
+    <string name="author_name">Соломин Андрей</string>
+    <string name="address">Адреса:</string>
+    <string name="close">Закрити</string>
+    <string name="make_call">Дзвонити</string>
+    <string name="phone">Телефон:</string>
+    <string name="title_activity_map">Карта</string>
+    <string name="i_am_here">Я тут!</string>
+    <string name="choose_location">Населений пункт</string>
+    <string name="wash_car">АВТОМИЙКИ</string>
+    <string name="current_position">Ви тут</string>
+    <string name="permission_danied">Дозвіл не отримано! Частина функцій не буде працювати.</string>
+    <string name="latitude">"Широта: "</string>
+    <string name="longitude">" Долгота: "</string>
+    <string name="enter_location">Пошук розташування</string>
+    <string name="enter_city">Введіть місто</string>
+    <string name="example_city">Наприклад, Київ</string>
+    <string name="zip_or_index">Введіть поштовий індекс\nабо поштовий індекс</string>
+    <string name="example_zip">Або, 01000</string>
+    <string name="click_to_find">Натисніть, щоб знайти</string>
+    <string name="find_your_location">своє місце розташування</string>
+    <string name="theme">Тема</string>
+    <string name="theme_blue">Синя</string>
+    <string name="theme_color">Вибрати тему</string>
+    <string name="theme_violet">Фіолетова</string>
+    <string name="theme_green">Зелена</string>
+
+
+</resources>

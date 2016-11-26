@@ -13,7 +13,7 @@
         <item name="colorPrimary">@color/colorPrimaryB</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkB</item>
         <item name="colorAccent">@color/colorAccentB</item>
-        <item name="android:colorBackground">@color/colorPrimaryB</item>
+        <item name="android:windowBackground">@color/colorPrimaryB</item>
         <item name="android:textColor">@color/colorPrimaryB</item>
     </style>
 
@@ -22,7 +22,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
@@ -31,7 +31,7 @@
         <item name="colorPrimary">@color/colorPrimaryG</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkG</item>
         <item name="colorAccent">@color/colorAccentG</item>
-        <item name="android:colorBackground">@color/colorPrimaryG</item>
+        <item name="android:windowBackground">@color/colorPrimaryG</item>
         <item name="android:textColor">@color/colorPrimaryG</item>
     </style>
 

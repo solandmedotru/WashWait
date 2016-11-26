@@ -31,4 +31,16 @@
         <item>Фаренгейты</item>
         <item>Кельвины</item>
     </string-array>
+
+    <string-array name="colors">
+        <item>Голубой</item>
+        <item>Фиолетовый</item>
+        <item>Зеленый</item>
+    </string-array>
+
+    <string-array name="themesColor">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 </resources>

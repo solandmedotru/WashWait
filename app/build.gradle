@@ -8,8 +8,8 @@ android {
         applicationId "ru.solandme.washwait"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 4
-        versionName "0.0.4"
+        versionCode 8
+        versionName "0.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -33,10 +33,10 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     compile 'com.android.support:recyclerview-v7:25.0.1'
-    compile 'com.google.android.gms:play-services-base:9.8.0'
-    compile 'com.google.android.gms:play-services-location:9.8.0'
-    compile 'com.google.android.gms:play-services-maps:9.8.0'
-    compile 'com.google.android.gms:play-services-places:9.8.0'
+    compile 'com.google.android.gms:play-services-base:10.0.0'
+    compile 'com.google.android.gms:play-services-location:10.0.0'
+    compile 'com.google.android.gms:play-services-maps:10.0.0'
+    compile 'com.google.android.gms:play-services-places:10.0.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     testCompile 'junit:junit:4.12'
 }
