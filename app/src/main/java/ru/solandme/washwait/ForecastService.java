@@ -1,10 +1,16 @@
 package ru.solandme.washwait;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -26,6 +32,8 @@ public class ForecastService extends IntentService {
     private static final String DEFAULT_FORECAST_DISTANCE = "2";
     private static final String CNT = "16";
     private static final String DEFAULT_UNITS = "metric";
+    private static final int NOTIFICATION_ID = 1981;
+    public static final String RUN_FROM_BACKGROUND = "isRunFromBackground";
 
     private SharedPreferences sharedPref;
     private String lang = Locale.getDefault().getLanguage();
@@ -39,14 +47,16 @@ public class ForecastService extends IntentService {
 
     ArrayList<Forecast> forecasts = new ArrayList<>();
     private boolean isResultOK;
+    private boolean isRunFromBackground;
 
     public ForecastService() {
         super(TAG);
     }
 
-    public static void startActionGetForecast(Context context) {
+    public static void startActionGetForecast(Context context, boolean isRunFromBackground) {
         Intent intent = new Intent(context, ForecastService.class);
         intent.setAction(ACTION_GET_FORECAST);
+        intent.putExtra(RUN_FROM_BACKGROUND, isRunFromBackground);
         context.startService(intent);
     }
 
@@ -55,6 +65,7 @@ public class ForecastService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
+            isRunFromBackground = intent.getBooleanExtra(RUN_FROM_BACKGROUND, false);
             if (ACTION_GET_FORECAST.equals(action)) {
                 handleForecast();
             }
@@ -67,7 +78,6 @@ public class ForecastService extends IntentService {
         float lon = sharedPref.getFloat("lon", (float) DEFAULT_LONGITUDE);
         String units = sharedPref.getString("units", DEFAULT_UNITS);
         forecastDistance = sharedPref.getString(getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
-        String city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
@@ -78,12 +88,10 @@ public class ForecastService extends IntentService {
                 if (response.isSuccessful()) {
 
                     weather = response.body();
-
                     generateForecast();
 //                    saveForecastToDataBase();
                     isResultOK = true;
-                    publishResults(isResultOK);
-
+                    publishResults(isResultOK, isRunFromBackground);
                 }
             }
 
@@ -91,7 +99,7 @@ public class ForecastService extends IntentService {
             public void onFailure(Call<BigWeatherForecast> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
                 isResultOK = false;
-                publishResults(isResultOK);
+                publishResults(isResultOK, isRunFromBackground);
             }
         });
 
@@ -146,11 +154,15 @@ public class ForecastService extends IntentService {
 //        dbHelper.saveWeather(weather);
     }
 
-    private void publishResults(boolean isResultOK) {
+    private void publishResults(boolean isResultOK, boolean runFromService) {
         Intent intent = new Intent(NOTIFICATION);
         if (isResultOK) {
             int washDayNumber = getWashDayNumber();
+
             String textForWashForecast = getTextForWashForecast(washDayNumber, getWashData(washDayNumber));
+
+            if (washDayNumber == 0 && runFromService) sendNotification(textForWashForecast);
+
             Log.e(TAG, "day: " + washDayNumber + " " + textForWashForecast);
             intent.putExtra("TextForecast", textForWashForecast);
             intent.putExtra("Weather", forecasts);
@@ -158,7 +170,31 @@ public class ForecastService extends IntentService {
 
         }
         intent.putExtra("isResultOK", isResultOK);
-        sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    private void sendNotification(String textForWashForecast) {
+
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent contentIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+        Notification notification = builder.setContentIntent(contentIntent)
+                .setContentTitle(getString(R.string.app_name))
+                .setTicker(textForWashForecast)
+                .setContentText(textForWashForecast)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
+                .setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_SOUND)
+                .setWhen(System.currentTimeMillis()).build();
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(NOTIFICATION_ID, notification);
     }
 
     private int getWashDayNumber() {

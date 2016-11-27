@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,29 +56,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private MyForecastRVAdapter adapter;
 
     ArrayList<Forecast> forecasts = new ArrayList<>();
-
-    BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            swipeRefreshLayout.setRefreshing(false);
-            Bundle bundle = intent.getExtras();
-            boolean isResultOK = intent.getBooleanExtra("isResultOK", false);
-            if (isResultOK) {
-                String textForecast = bundle.getString("TextForecast");
-                forecastMessage.setText(textForecast);
-                if (null != forecasts) {
-                    forecasts.clear();
-                }
-                forecasts.addAll((ArrayList<Forecast>) bundle.get("Weather"));
-                updateWeatherUI();
-                adapter.notifyDataSetChanged();
-                updateWashForecastUI(bundle.getDouble("DirtyCounter"));
-            } else {
-                Toast.makeText(getApplicationContext(), R.string.error_from_response, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,16 +113,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onResume() {
-        registerReceiver(receiver, new IntentFilter(
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 ForecastService.NOTIFICATION));
-        ForecastService.startActionGetForecast(this);
+        ForecastService.startActionGetForecast(this, false);
         super.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(receiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     private void updateWashForecastUI(double dirtyCounter) {
@@ -214,7 +192,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-        ForecastService.startActionGetForecast(this);
+        ForecastService.startActionGetForecast(this, false);
     }
 
     @Override
@@ -251,4 +229,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
+
+    BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            swipeRefreshLayout.setRefreshing(false);
+            Bundle bundle = intent.getExtras();
+            boolean isResultOK = intent.getBooleanExtra("isResultOK", false);
+            if (isResultOK) {
+                String textForecast = bundle.getString("TextForecast");
+                forecastMessage.setText(textForecast);
+                if (null != forecasts) {
+                    forecasts.clear();
+                }
+                forecasts.addAll((ArrayList<Forecast>) bundle.get("Weather"));
+                updateWeatherUI();
+                adapter.notifyDataSetChanged();
+                updateWashForecastUI(bundle.getDouble("DirtyCounter"));
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.error_from_response, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 }
