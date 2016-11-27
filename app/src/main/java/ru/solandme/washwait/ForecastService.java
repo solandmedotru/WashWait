@@ -33,7 +33,9 @@ public class ForecastService extends IntentService {
     private static final String CNT = "16";
     private static final String DEFAULT_UNITS = "metric";
     private static final int NOTIFICATION_ID = 1981;
-    public static final String RUN_FROM_BACKGROUND = "isRunFromBackground";
+    public static final String RUN_FROM = "isRunFromBackground";
+    public static final boolean RUN_FROM_ACTIVITY = false;
+    public static final boolean RUN_FROM_BACKGROUND = true;
 
     private SharedPreferences sharedPref;
     private String lang = Locale.getDefault().getLanguage();
@@ -56,7 +58,7 @@ public class ForecastService extends IntentService {
     public static void startActionGetForecast(Context context, boolean isRunFromBackground) {
         Intent intent = new Intent(context, ForecastService.class);
         intent.setAction(ACTION_GET_FORECAST);
-        intent.putExtra(RUN_FROM_BACKGROUND, isRunFromBackground);
+        intent.putExtra(RUN_FROM, isRunFromBackground);
         context.startService(intent);
     }
 
@@ -65,7 +67,7 @@ public class ForecastService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            isRunFromBackground = intent.getBooleanExtra(RUN_FROM_BACKGROUND, false);
+            isRunFromBackground = intent.getBooleanExtra(RUN_FROM, ForecastService.RUN_FROM_ACTIVITY);
             if (ACTION_GET_FORECAST.equals(action)) {
                 handleForecast();
             }
@@ -91,6 +93,9 @@ public class ForecastService extends IntentService {
                     generateForecast();
 //                    saveForecastToDataBase();
                     isResultOK = true;
+                    publishResults(isResultOK, isRunFromBackground);
+                } else {
+                    isResultOK = false;
                     publishResults(isResultOK, isRunFromBackground);
                 }
             }
@@ -164,10 +169,10 @@ public class ForecastService extends IntentService {
             if (washDayNumber == 0 && runFromService) sendNotification(textForWashForecast);
 
             Log.e(TAG, "day: " + washDayNumber + " " + textForWashForecast);
+
             intent.putExtra("TextForecast", textForWashForecast);
             intent.putExtra("Weather", forecasts);
             intent.putExtra("DirtyCounter", getDirtyCounter());
-
         }
         intent.putExtra("isResultOK", isResultOK);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);

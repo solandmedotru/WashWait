@@ -46,6 +46,7 @@ import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
 import ru.solandme.washwait.rest.PlacesApiHelper;
+import ru.solandme.washwait.utils.Utils;
 
 public class MapActivity extends FragmentActivity implements
         OnMapReadyCallback,

@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import ru.solandme.washwait.utils.Utils;
+
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "AboutPlaceDialog";
 

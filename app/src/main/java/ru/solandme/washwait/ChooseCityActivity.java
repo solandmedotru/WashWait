@@ -37,6 +37,7 @@ import com.google.android.gms.location.places.Places;
 import java.util.Locale;
 
 import ru.solandme.washwait.adapters.PlaceAutocompleteAdapter;
+import ru.solandme.washwait.utils.Utils;
 
 public class ChooseCityActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
 

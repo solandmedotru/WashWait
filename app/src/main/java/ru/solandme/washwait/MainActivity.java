@@ -22,6 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.gcm.GcmNetworkManager;
+import com.google.android.gms.gcm.PeriodicTask;
+import com.google.android.gms.gcm.Task;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -29,6 +33,7 @@ import java.util.Locale;
 
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.forecast.POJO.Forecast;
+import ru.solandme.washwait.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -56,12 +61,26 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private MyForecastRVAdapter adapter;
 
     ArrayList<Forecast> forecasts = new ArrayList<>();
+    private GcmNetworkManager mGcmNetworkManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
+        Task task = new PeriodicTask.Builder()
+                .setService(PeriodicalForecastTask.class)
+                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                .setPeriod(86400) // one day period
+                .setTag(PeriodicalForecastTask.TAG_TASK_PERIODIC)
+                .setPersisted(true)
+                .setUpdateCurrent(true)
+                .build();
+
+        mGcmNetworkManager.schedule(task);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -75,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         currentTemperatureField = (TextView) findViewById(R.id.current_temperature_field);
         forecastMessage = (TextView) findViewById(R.id.forecast_message);
         actionWash = findViewById(R.id.action_wash);
-
 
         weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
 
@@ -115,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void onResume() {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 ForecastService.NOTIFICATION));
-        ForecastService.startActionGetForecast(this, false);
+        ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_ACTIVITY);
         super.onResume();
     }
 
@@ -192,7 +210,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-        ForecastService.startActionGetForecast(this, false);
+        ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_ACTIVITY);
     }
 
     @Override

@@ -1,9 +1,11 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.utils;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+
+import ru.solandme.washwait.R;
 
 public class Utils {
     private static String sTheme;

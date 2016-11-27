@@ -53,6 +53,15 @@
             android:name=".ForecastService"
             android:exported="false" />
 
+        <service
+            android:name=".PeriodicalForecastTask"
+            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>
