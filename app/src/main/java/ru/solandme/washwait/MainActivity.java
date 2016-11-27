@@ -11,7 +11,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,20 +26,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
-import ru.solandme.washwait.data.Forecast;
-import ru.solandme.washwait.data.WashHelper;
-import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
-import ru.solandme.washwait.rest.ForecastApiHelper;
-import ru.solandme.washwait.rest.ForecastApiService;
+import ru.solandme.washwait.forecast.POJO.Forecast;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
+    private static final String DEFAULT_UNITS = "metric";
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -56,36 +49,31 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private ProgressBar dirtyMeter;
 
-    private float lat;
-    private float lon;
-    private static final String CNT = "16";
-
-    private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-
-    private String defaultUnits = "metric";
-    private String defaultLimit = "2";
-    private float defaultLat = 64.10F;
-    private float defaultLon = 47.34F;
-    private int forecastDistance;
-
-    private String lang = Locale.getDefault().getLanguage();
-    private String units;
-    private String city;
     private SharedPreferences sharedPref;
 
     private RecyclerView forecastRecyclerView;
     private MyForecastRVAdapter adapter;
 
-    WashHelper washHelper = new WashHelper();
     ArrayList<Forecast> forecasts = new ArrayList<>();
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            swipeRefreshLayout.setRefreshing(false);
             Bundle bundle = intent.getExtras();
-            if (bundle != null) {
+            boolean isResultOK = intent.getBooleanExtra("isResultOK", false);
+            if (isResultOK) {
                 String textForecast = bundle.getString("TextForecast");
                 forecastMessage.setText(textForecast);
+                if (null != forecasts) {
+                    forecasts.clear();
+                }
+                forecasts.addAll((ArrayList<Forecast>) bundle.get("Weather"));
+                updateWeatherUI();
+                adapter.notifyDataSetChanged();
+                updateWashForecastUI(bundle.getDouble("DirtyCounter"));
+            } else {
+                Toast.makeText(getApplicationContext(), R.string.error_from_response, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -98,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setContentView(R.layout.activity_main);
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -127,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         actionWash.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
+                float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
                 Intent intent = new Intent(MainActivity.this, MapActivity.class);
                 intent.putExtra("lat", lat);
                 intent.putExtra("lon", lon);
@@ -140,15 +131,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 chooseCity();
             }
         });
-
-        ForecastService.startActionGetForecast(this);
     }
 
     @Override
     public void onResume() {
         registerReceiver(receiver, new IntentFilter(
                 ForecastService.NOTIFICATION));
-        getWeather();
+        ForecastService.startActionGetForecast(this);
         super.onResume();
     }
 
@@ -158,53 +147,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         unregisterReceiver(receiver);
     }
 
-    void getWeather() {
-        swipeRefreshLayout.setRefreshing(true);
+    private void updateWashForecastUI(double dirtyCounter) {
 
-        lat = sharedPref.getFloat("lat", defaultLat);
-        lon = sharedPref.getFloat("lon", defaultLon);
-        units = sharedPref.getString("units", defaultUnits);
-        forecastDistance = Integer.parseInt(sharedPref.getString(getString(R.string.pref_limit_key), defaultLimit));
-        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-
-        final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
-
-        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, appid);
-        weatherCall.enqueue(new Callback<BigWeatherForecast>() {
-            @Override
-            public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
-                if (response.isSuccessful()) {
-
-                    swipeRefreshLayout.setRefreshing(false);
-                    washHelper.generateForecast(response.body(), forecasts, forecastDistance);
-                    forecasts = washHelper.getForecasts();
-
-                    adapter.notifyDataSetChanged();
-
-                    updateWeatherUI();
-                    updateWashForecastUI();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BigWeatherForecast> call, Throwable t) {
-
-                swipeRefreshLayout.setRefreshing(false);
-
-                Log.e(TAG, "onError: " + t);
-                Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    private void updateWashForecastUI() {
-
-//        String forecastText = getTextForWashForecast(washHelper.getWashDayNumber(), washHelper.getDataToWashCar());
-//        forecastMessage.setText(forecastText);
-
-        Double dirtyCounter = washHelper.getDirtyCounter() * 10;
         dirtyMeter.setMax(40);
-        dirtyMeter.setProgress(dirtyCounter.intValue());
+        dirtyMeter.setProgress((int) (dirtyCounter * 10));
 
         carImage.setImageResource(getCarPicture(dirtyCounter, forecasts.get(0).getTemperature()));
         Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
@@ -214,6 +160,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void updateWeatherUI() {
+        String units = sharedPref.getString("units", DEFAULT_UNITS);
+        String city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
         long dt = forecasts.get(0).getDate();
         double temp = forecasts.get(0).getTemperature();
@@ -265,8 +213,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
         ForecastService.startActionGetForecast(this);
-        getWeather();
     }
 
     @Override

@@ -25,7 +25,6 @@ public class SettingsActivity extends PreferenceActivity {
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_limit_key)));
-            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_theme_color_key)));
 
         }
 

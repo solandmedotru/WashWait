@@ -2,8 +2,10 @@ package ru.solandme.washwait.data;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 
 import ru.solandme.washwait.data.WeatherContract.LocationEntry;
 import ru.solandme.washwait.data.WeatherContract.WeatherEntry;
@@ -107,5 +109,41 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
         }
         values.clear();
         db.close();
+    }
+
+    public Cursor getLastWeather(String cityName) {
+
+        SQLiteDatabase db = getReadableDatabase();
+
+        SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
+        sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
+        //This is an inner join which looks like
+        //weather INNER JOIN location ON weather.location_id = location._id
+        sWeatherByLocationSettingQueryBuilder.setTables(
+                WeatherContract.WeatherEntry.TABLE_NAME + " INNER JOIN " +
+                        WeatherContract.LocationEntry.TABLE_NAME +
+                        " ON " + WeatherContract.WeatherEntry.TABLE_NAME +
+                        "." + WeatherContract.WeatherEntry.COLUMN_LOC_KEY +
+                        " = " + WeatherContract.LocationEntry.TABLE_NAME +
+                        "." + WeatherContract.LocationEntry._ID);
+
+        final String sLocationSettingSelection =
+                WeatherContract.LocationEntry.TABLE_NAME +
+                        "." + LocationEntry.COLUMN_CITY_NAME + " = ? ";
+
+        String[] selectionArgs = new String[]{cityName};
+        Cursor cursor = sWeatherByLocationSettingQueryBuilder.query(
+                db,
+                null,
+                sLocationSettingSelection,
+                selectionArgs,
+                null,
+                null,
+                null
+        );
+
+        db.close();
+
+        return cursor;
     }
 }

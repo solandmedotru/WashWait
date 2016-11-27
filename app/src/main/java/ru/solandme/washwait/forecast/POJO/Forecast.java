@@ -1,10 +1,10 @@
-package ru.solandme.washwait.data;
+package ru.solandme.washwait.forecast.POJO;
 
-public class Forecast {
+import java.io.Serializable;
+
+public class Forecast implements Serializable {
 
     private int weatherId;
-    private double rainCounter;
-    private double snowCounter;
     private double temperature;
     private int imageRes;
     private String cityName;
@@ -14,8 +14,9 @@ public class Forecast {
     private float lat;
     private float lon;
 
-    boolean isDirty() {
-        return weatherId < 600 || weatherId < 700 && temperature > -10;
+
+    public int getWeatherId() {
+        return weatherId;
     }
 
     public void setWeatherId(int weatherId) {
@@ -38,10 +39,17 @@ public class Forecast {
         this.imageRes = imageRes;
     }
 
+    public String getCityName() {
+        return cityName;
+    }
+
     public void setCityName(String cityName) {
         this.cityName = cityName;
     }
 
+    public String getCountry() {
+        return country;
+    }
 
     public void setCountry(String country) {
         this.country = country;
@@ -63,8 +71,16 @@ public class Forecast {
         this.description = description;
     }
 
+    public float getLat() {
+        return lat;
+    }
+
     public void setLat(float lat) {
         this.lat = lat;
+    }
+
+    public float getLon() {
+        return lon;
     }
 
     public void setLon(float lon) {

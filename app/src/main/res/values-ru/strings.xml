@@ -6,7 +6,7 @@
     <string name="wash">Рекомендую помыть машину\n%1$s</string>
     <string name="not_wash">Ближайшие две недели лучше не мыть машину.</string>
     <string name="last_update">"Последнее обновление: "</string>
-    <string name="error_from_response">Ошибка!</string>
+    <string name="error_from_response">Ошибка сети!</string>
     <string name="settings">Настройки</string>
     <string name="units_format_label">Единицы измерения</string>
 
