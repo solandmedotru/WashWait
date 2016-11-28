@@ -22,7 +22,7 @@
             android:layout_weight="1"
             android:text="Moskow, RU"
             android:textColor="@color/textColor"
-            android:textSize="20sp" />
+            android:textSize="46sp" />
 
         <TextView
             android:id="@+id/forecast_message"
@@ -35,7 +35,7 @@
             android:background="@drawable/background"
             android:padding="10dp"
             android:textAlignment="center"
-            android:textSize="20sp" />
+            android:textSize="46sp" />
 
 
         <RelativeLayout
@@ -79,7 +79,7 @@
                         android:layout_gravity="center"
                         android:textAlignment="center"
                         android:textColor="@color/textColor"
-                        android:textSize="20sp" />
+                        android:textSize="46sp" />
 
                     <TextView
                         android:id="@+id/current_temperature_field"
@@ -92,7 +92,7 @@
                         android:text="-10C"
                         android:textAlignment="center"
                         android:textColor="@color/textColor"
-                        android:textSize="20sp" />
+                        android:textSize="46sp" />
 
                     <ImageView
                         android:id="@+id/weather_icon_day0"
@@ -120,7 +120,7 @@
                         android:gravity="center"
                         android:text="@string/wash_car"
                         android:textColor="@color/textColor"
-                        android:textSize="20sp" />
+                        android:textSize="46sp" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -134,9 +134,9 @@
                     android:id="@+id/car_image"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_gravity="center|bottom"
-                    android:layout_marginLeft="110dp"
-                    android:layout_marginRight="110dp"
+                    android:layout_gravity="center_horizontal|bottom"
+                    android:layout_marginLeft="160dp"
+                    android:layout_marginRight="160dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/car1" />
@@ -156,7 +156,7 @@
                 android:id="@+id/precipitation_meter"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="5dp"
+                android:layout_height="15dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="5dp" />
@@ -175,7 +175,7 @@
                     android:maxLines="1"
                     android:text="@string/dry"
                     android:textColor="@color/textColor"
-                    android:textSize="12sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -185,7 +185,7 @@
                     android:maxLines="1"
                     android:text="@string/normal"
                     android:textColor="@color/textColor"
-                    android:textSize="12sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:layout_width="0dp"
@@ -195,7 +195,7 @@
                     android:maxLines="1"
                     android:text="@string/wet"
                     android:textColor="@color/textColor"
-                    android:textSize="12sp" />
+                    android:textSize="22sp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -216,7 +216,8 @@
             android:text="Последнее обновление: 25 ноября 2016, 21:00"
             android:textAlignment="center"
             android:textColor="@color/textColor"
-            android:textSize="12sp" />
+            android:textSize="22sp" />
 
     </LinearLayout>
 </android.support.v4.widget.SwipeRefreshLayout>
+

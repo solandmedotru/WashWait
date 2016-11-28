@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="forecastLimit">
-        <item>1 day</item>
-        <item>2 days</item>
-        <item>3 days</item>
-        <item>4 days</item>
-        <item>5 days</item>
-        <item>6 days</item>
-        <item>7 days</item>
-    </string-array>
-
-    <string-array name="limit">
+    <string-array name="forecastLimit" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>
@@ -20,25 +10,35 @@
         <item>7</item>
     </string-array>
 
-    <string-array name="units">
+    <string-array name="limit" translatable="false">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="units" translatable="false">
         <item>metric</item>
         <item>imperial</item>
         <item>standard</item>
     </string-array>
 
-    <string-array name="unitsName">
-        <item>Celsius</item>
-        <item>Fahrenheit</item>
-        <item>Kelvin</item>
+    <string-array name="unitsName" translatable="false">
+        <item>C</item>
+        <item>F</item>
+        <item>K</item>
     </string-array>
 
-    <string-array name="colors">
-        <item>Blue</item>
-        <item>Violet</item>
-        <item>Green</item>
+    <string-array name="colors" translatable="false">
+        <item>Blue Theme</item>
+        <item>Violet Theme</item>
+        <item>Green Theme</item>
     </string-array>
 
-    <string-array name="themesColor">
+    <string-array name="themesColor" translatable="false">
         <item>1</item>
         <item>2</item>
         <item>3</item>

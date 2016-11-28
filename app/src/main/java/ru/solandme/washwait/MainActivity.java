@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -94,7 +95,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         forecastRecyclerView = (RecyclerView) findViewById(R.id.rwForecast);
         forecastRecyclerView.setHasFixedSize(true);
-        forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+
+        int orientation = getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        } else {
+            forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        }
 
         adapter = new MyForecastRVAdapter(forecasts);
         forecastRecyclerView.setAdapter(adapter);
