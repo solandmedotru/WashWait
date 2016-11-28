@@ -11,8 +11,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -34,8 +34,8 @@
                 android:id="@+id/forecast_message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/background"
                 android:layout_marginTop="8dp"
+                android:background="@drawable/background"
                 android:padding="6dp"
                 android:textAlignment="center"
                 android:textSize="46sp" />
@@ -183,17 +183,28 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_weight="2"
             android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rwForecast"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:padding="8dp"
+                android:layout_weight="10"
+                android:background="@drawable/background_tabs" />
 
             <LinearLayout
                 android:id="@+id/action_wash"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="2"
+                android:padding="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_gravity="center"
+                android:layout_weight="2"
+                android:background="@drawable/background_tabs"
                 android:orientation="vertical">
 
                 <TextView
@@ -214,14 +225,6 @@
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_cleaner" />
             </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rwForecast"
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="10"
-                android:background="@drawable/background_tabs" />
         </LinearLayout>
 
 

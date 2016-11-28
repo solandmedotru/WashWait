@@ -135,8 +135,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center|bottom"
-                    android:layout_marginLeft="110dp"
-                    android:layout_marginRight="110dp"
+                    android:layout_marginLeft="80dp"
+                    android:layout_marginRight="80dp"
                     android:layout_weight="1"
                     android:scaleType="fitCenter"
                     android:src="@mipmap/car1" />
