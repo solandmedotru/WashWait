@@ -6,6 +6,7 @@ import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 
 public class SettingsActivity extends PreferenceActivity {
     @Override
@@ -25,16 +26,24 @@ public class SettingsActivity extends PreferenceActivity {
 
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_limit_key)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_task_key)));
 
         }
 
         private void bindPreferenceSummaryToValue(Preference preference) {
             preference.setOnPreferenceChangeListener(this);
 
-            onPreferenceChange(preference,
-                    PreferenceManager
-                            .getDefaultSharedPreferences(preference.getContext())
-                            .getString(preference.getKey(), ""));
+            if (preference instanceof ListPreference) {
+                onPreferenceChange(preference,
+                        PreferenceManager
+                                .getDefaultSharedPreferences(preference.getContext())
+                                .getString(preference.getKey(), ""));
+            } else if (preference instanceof SwitchPreference) {
+                onPreferenceChange(preference,
+                        PreferenceManager
+                                .getDefaultSharedPreferences(preference.getContext())
+                                .getBoolean(preference.getKey(), false));
+            }
         }
 
         @Override
@@ -48,9 +57,14 @@ public class SettingsActivity extends PreferenceActivity {
                 if (prefIndex >= 0) {
                     preference.setSummary(listPreference.getEntries()[prefIndex]);
                 }
+            } else if (preference instanceof SwitchPreference) {
+                SwitchPreference swPref = (SwitchPreference) preference;
+                boolean prefValue = swPref.isEnabled();
+                preference.setEnabled(prefValue);
             } else {
                 preference.setSummary(stringValue);
             }
+
 
             return true;
         }

@@ -69,20 +69,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
-        Task task = new PeriodicTask.Builder()
-                .setService(PeriodicalForecastTask.class)
-                .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                .setPeriod(86400) // one day period
-                .setTag(PeriodicalForecastTask.TAG_TASK_PERIODIC)
-                .setPersisted(true)
-                .setUpdateCurrent(true)
-                .build();
 
-        mGcmNetworkManager.schedule(task);
-
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -134,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 ForecastService.NOTIFICATION));
         ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_ACTIVITY);
+        checkTask();
         super.onResume();
     }
 
@@ -141,6 +132,22 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    private void checkTask() {
+        if (sharedPref.getBoolean(getString(R.string.pref_task_key), false)) {
+            Task task = new PeriodicTask.Builder()
+                    .setService(PeriodicalForecastTask.class)
+                    .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                    .setPeriod(43200) // two times per day period
+                    .setTag(PeriodicalForecastTask.TAG_TASK_PERIODIC)
+                    .setPersisted(true)
+                    .setUpdateCurrent(true)
+                    .build();
+            mGcmNetworkManager.schedule(task);
+        } else {
+            mGcmNetworkManager.cancelAllTasks(PeriodicalForecastTask.class);
+        }
     }
 
     private void updateWashForecastUI(double dirtyCounter) {

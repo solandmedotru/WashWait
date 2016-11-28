@@ -43,6 +43,7 @@
     <string name="theme_color">Вибрати тему</string>
     <string name="theme_violet">Фіолетова</string>
     <string name="theme_green">Зелена</string>
+    <string name="notification">Повідомлення</string>
 
 
 </resources>

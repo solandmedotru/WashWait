@@ -52,4 +52,6 @@
     <string name="theme_violet">Violet Theme</string>
     <string name="theme">Theme</string>
     <string name="theme_green">Green Theme</string>
+    <string name="pref_task_key" translatable="false">pref_task_key</string>
+    <string name="notification">Notification</string>
 </resources>
