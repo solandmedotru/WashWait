@@ -10,8 +10,6 @@
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340263.png" width="200">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340881.png" width="200">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340891.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340909.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341511.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341530.png" width="200">
