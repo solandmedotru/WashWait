@@ -12,7 +12,7 @@
     <dimen name="paddingLeft">12dp</dimen>
     <dimen name="paddingRight">12dp</dimen>
     <dimen name="padding">12dp</dimen>
-    <dimen name="padding_icon">6dp</dimen>
     <dimen name="icon_size">60dp</dimen>
+    <dimen name="padding_icon">6dp</dimen>
     <dimen name="icon_size_land">40dp</dimen>
 </resources>

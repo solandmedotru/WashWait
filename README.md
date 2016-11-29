@@ -9,11 +9,14 @@
 ![minSdkVersion](https://img.shields.io/badge/minSdkVersion-16-yellow.svg?style=true)
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340263.png" height="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340909.png" height="300">
-
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340810.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341530.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru1.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru2.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru3.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru4.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru6.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru7.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru8.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru9.png" width="300">
 
 
 This sample is available

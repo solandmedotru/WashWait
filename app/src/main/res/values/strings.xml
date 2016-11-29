@@ -54,7 +54,7 @@
     <string name="theme_green">Green Theme</string>
     <string name="pref_task_key" translatable="false">pref_task_key</string>
     <string name="notification">Notification</string>
-    <string name="white_car_image">White car image</string>
-    <string name="weather_icon">Weather icon</string>
+    <string name="white_car_image" translatable="false">White car image</string>
+    <string name="weather_icon" translatable="false">Weather icon</string>
     <string name="image_city">Image city</string>
 </resources>

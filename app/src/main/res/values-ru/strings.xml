@@ -44,6 +44,7 @@
     <string name="theme_violet">Фиолетовая</string>
     <string name="theme_green">Зеленая</string>
     <string name="notification">Уведомления</string>
+    <string name="image_city">Картинка города</string>
 
 
 </resources>
