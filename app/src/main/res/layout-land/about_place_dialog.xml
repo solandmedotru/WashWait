@@ -19,14 +19,14 @@
 
         <ImageView
             android:id="@+id/rating"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:layout_marginBottom="10dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:src="@drawable/ic_rating5" />
 
     </RelativeLayout>
@@ -39,14 +39,13 @@
         android:background="@android:color/white"
         android:gravity="bottom|end"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/padding">
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="3"
             android:background="@android:color/white"
-            android:padding="16dp"
             android:useDefaultMargins="true">
 
             <TextView
@@ -124,10 +123,10 @@
                 android:id="@+id/btnCancelPlace"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:background="@color/colorCancel"
-                android:padding="10dp"
+                android:padding="@dimen/padding"
                 android:text="@string/close"
                 android:textColor="@color/textColor" />
 
@@ -136,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/colorCall"
-                android:padding="10dp"
+                android:padding="@dimen/padding"
                 android:text="@string/make_call"
                 android:textColor="@color/textColor" />
         </LinearLayout>

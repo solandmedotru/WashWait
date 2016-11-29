@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/weather_icon_day"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon_size"
+        android:layout_height="@dimen/icon_size"
         android:layout_gravity="center"
         android:scaleType="fitCenter"
         android:src="@mipmap/few_clouds_d" />
@@ -22,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:textAlignment="center"
-        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textAllCaps="true"
+        android:textSize="@dimen/main_text_size_land"
         android:textColor="@color/textColor" />
 </LinearLayout>

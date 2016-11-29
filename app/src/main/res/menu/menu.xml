@@ -37,8 +37,15 @@
     <item
         android:id="@+id/choose_location_action"
         android:icon="@drawable/ic_location"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:title="@string/choose_location"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_view_wash"
+        android:icon="@drawable/ic_car_wash"
+        android:orderInCategory="1"
+        android:title="@string/wash_car"
         app:showAsAction="ifRoom" />
 
 

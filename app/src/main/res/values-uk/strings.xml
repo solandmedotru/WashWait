@@ -10,8 +10,8 @@
     <string name="settings">Налаштування</string>
     <string name="units_format_label">Одиниці виміру</string>
 
-    <string name="dry">слабкі опади</string>
-    <string name="wet">сильні опади</string>
+    <string name="dry">слабкі</string>
+    <string name="wet">сильні</string>
     <string name="normal">середні</string>
     <string name="city_name_settings">Місто або індекс (приклад Київ або 01000)</string>
     <string name="clear_period">Період в днях</string>
@@ -26,7 +26,7 @@
     <string name="title_activity_map">Карта</string>
     <string name="i_am_here">Я тут!</string>
     <string name="choose_location">Населений пункт</string>
-    <string name="wash_car">АВТОМИЙКИ</string>
+    <string name="wash_car">Автомийки</string>
     <string name="current_position">Ви тут</string>
     <string name="permission_danied">Дозвіл не отримано! Частина функцій не буде працювати.</string>
     <string name="latitude">"Широта: "</string>

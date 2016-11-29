@@ -32,24 +32,21 @@ public class ForecastService extends IntentService {
     private static final String DEFAULT_FORECAST_DISTANCE = "2";
     private static final String CNT = "16";
     private static final String DEFAULT_UNITS = "metric";
+    private static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     private static final int NOTIFICATION_ID = 1981;
-    public static final String RUN_FROM = "isRunFromBackground";
-    public static final boolean RUN_FROM_ACTIVITY = false;
-    public static final boolean RUN_FROM_BACKGROUND = true;
-
-    private SharedPreferences sharedPref;
-    private String lang = Locale.getDefault().getLanguage();
-    private String appid = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-
-    public static final double DEFAULT_LONGITUDE = 40.716667F;
-    public static final double DEFAULT_LATITUDE = -74F;
-    public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
-    String forecastDistance;
-    BigWeatherForecast weather;
-
-    ArrayList<Forecast> forecasts = new ArrayList<>();
+    private String forecastDistance;
+    private BigWeatherForecast weather;
+    private ArrayList<Forecast> forecasts = new ArrayList<>();
     private boolean isResultOK;
     private boolean isRunFromBackground;
+    private SharedPreferences sharedPref;
+
+    public static final String RUN_FROM = "isRunFromBackground";
+    public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
+    public static final boolean RUN_FROM_ACTIVITY = false;
+    public static final boolean RUN_FROM_BACKGROUND = true;
+    public static final double DEFAULT_LONGITUDE = 40.716667F;
+    public static final double DEFAULT_LATITUDE = -74F;
 
     public ForecastService() {
         super(TAG);
@@ -76,6 +73,7 @@ public class ForecastService extends IntentService {
 
     private void handleForecast() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        String lang = Locale.getDefault().getLanguage();
         float lat = sharedPref.getFloat("lat", (float) DEFAULT_LATITUDE);
         float lon = sharedPref.getFloat("lon", (float) DEFAULT_LONGITUDE);
         String units = sharedPref.getString("units", DEFAULT_UNITS);
@@ -83,7 +81,7 @@ public class ForecastService extends IntentService {
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
-        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, appid);
+        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, APPID);
         weatherCall.enqueue(new Callback<BigWeatherForecast>() {
             @Override
             public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
@@ -93,11 +91,10 @@ public class ForecastService extends IntentService {
                     generateForecast();
 //                    saveForecastToDataBase();
                     isResultOK = true;
-                    publishResults(isResultOK, isRunFromBackground);
                 } else {
                     isResultOK = false;
-                    publishResults(isResultOK, isRunFromBackground);
                 }
+                publishResults(isResultOK, isRunFromBackground);
             }
 
             @Override
@@ -107,47 +104,54 @@ public class ForecastService extends IntentService {
                 publishResults(isResultOK, isRunFromBackground);
             }
         });
-
-
     }
 
     boolean isDirty(int weatherId, double temperature) {
-        return weatherId < 600 || weatherId < 700 && temperature > -10;
+        String units = sharedPref.getString(getString(R.string.pref_units_key), "standard");
+
+        switch (units) {
+            case "metric":
+                return weatherId < 600 || weatherId < 700 && temperature > -10;
+            case "imperial":
+                return weatherId < 600 || weatherId < 700 && temperature > 14;
+            default:
+                return weatherId < 600 || weatherId < 700 && temperature > 263;
+        }
     }
 
     private String getTextForWashForecast(int washDayNumber, long dataToWash) {
-        String dateToWashFormated = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash);
+        String dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash);
         switch (washDayNumber) {
             case 0:
                 return getResources().getString(R.string.can_wash);
             case 1:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 2:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 3:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 4:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 5:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 6:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 7:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 8:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 9:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 10:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 11:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 12:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 13:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             case 14:
-                return getResources().getString(R.string.wash, dateToWashFormated.toUpperCase());
+                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
             default:
                 return getResources().getString(R.string.not_wash);
         }

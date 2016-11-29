@@ -10,8 +10,8 @@
     <string name="settings">Настройки</string>
     <string name="units_format_label">Единицы измерения</string>
 
-    <string name="dry">слабые осадки</string>
-    <string name="wet">сильные осадки</string>
+    <string name="dry">слабые</string>
+    <string name="wet">обильные</string>
     <string name="normal">средние</string>
     <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
     <string name="clear_period">Период в днях</string>
@@ -26,7 +26,7 @@
     <string name="title_activity_map">Карта</string>
     <string name="i_am_here">Я здесь!</string>
     <string name="choose_location">Выбрать город</string>
-    <string name="wash_car">АВТОМОЙКИ</string>
+    <string name="wash_car">Автомойки</string>
     <string name="current_position">Вы здесь</string>
     <string name="permission_danied">Разрешение не получено! Часть функций не будет работать.</string>
     <string name="latitude">"Широта: "</string>

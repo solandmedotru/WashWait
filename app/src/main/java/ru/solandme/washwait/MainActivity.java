@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ImageView carImage;
     private ImageView cityImage;
     private TextView forecastMessage;
-    private View actionWash;
 
     private ProgressBar dirtyMeter;
 
@@ -68,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         detailsField = (TextView) findViewById(R.id.details_field);
         currentTemperatureField = (TextView) findViewById(R.id.current_temperature_field);
         forecastMessage = (TextView) findViewById(R.id.forecast_message);
-        actionWash = findViewById(R.id.action_wash);
 
         weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
 
@@ -106,18 +105,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         adapter = new MyForecastRVAdapter(forecasts);
         forecastRecyclerView.setAdapter(adapter);
 
-        actionWash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
-                float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
-                Intent intent = new Intent(MainActivity.this, MapActivity.class);
-                intent.putExtra("lat", lat);
-                intent.putExtra("lon", lon);
-                intent.putExtra("lang", Locale.getDefault().getLanguage().toLowerCase());
-                startActivity(intent);
-            }
-        });
         cityField.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -167,6 +154,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
         cityImage.startAnimation(moveFromRight);
+
+        carImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startWashCarActivity();
+            }
+        });
     }
 
     private void updateWeatherUI() {
@@ -179,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         int icon = forecasts.get(0).getImageRes();
 
         cityField.setText(city);
-
         detailsField.setText(description);
 
         String unitTemperature;
@@ -241,15 +234,28 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 break;
             case R.id.action_theme_blue:
                 Utils.changeToTheme(Utils.THEME_MATERIAL_BLUE, this);
-                return true;
+                break;
             case R.id.action_theme_violet:
                 Utils.changeToTheme(Utils.THEME_MATERIAL_VIOLET, this);
-                return true;
+                break;
             case R.id.action_theme_green:
                 Utils.changeToTheme(Utils.THEME_MATERIAL_GREEN, this);
-                return true;
+                break;
+            case R.id.action_view_wash:
+                startWashCarActivity();
+                break;
         }
         return true;
+    }
+
+    private void startWashCarActivity() {
+        float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
+        float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
+        Intent intent = new Intent(MainActivity.this, MapActivity.class);
+        intent.putExtra("lat", lat);
+        intent.putExtra("lon", lon);
+        intent.putExtra("lang", Locale.getDefault().getLanguage().toLowerCase());
+        startActivity(intent);
     }
 
     private void chooseCity() {

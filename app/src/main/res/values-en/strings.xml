@@ -28,7 +28,7 @@
 
 
     <string name="choose_location">To Choose Location</string>
-    <string name="wash_car">CAR WASH</string>
+    <string name="wash_car">Car washes</string>
     <string name="permission_danied">Permission denied. Part of the functions will not work</string>
     <string name="current_position">Current Position</string>
     <string name="latitude">"Lat: "</string>

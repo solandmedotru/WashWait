@@ -35,7 +35,7 @@
 
 
     <string name="choose_location">To Choose Location</string>
-    <string name="wash_car">CAR WASH</string>
+    <string name="wash_car">Car washes</string>
     <string name="permission_danied">Permission denied. Part of the functions will not work</string>
     <string name="current_position">Current Position</string>
     <string name="latitude">"Lat: "</string>
@@ -54,4 +54,7 @@
     <string name="theme_green">Green Theme</string>
     <string name="pref_task_key" translatable="false">pref_task_key</string>
     <string name="notification">Notification</string>
+    <string name="white_car_image">White car image</string>
+    <string name="weather_icon">Weather icon</string>
+    <string name="image_city">Image city</string>
 </resources>

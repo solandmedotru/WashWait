@@ -164,6 +164,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             lat = (float) place.getLatLng().latitude;
             lon = (float) place.getLatLng().longitude;
             city = place.getName().toString();
+
             sharedPref.edit()
                     .putFloat("lat", lat)
                     .putFloat("lon", lon)
@@ -188,10 +189,6 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION)) {
-                // Show an expanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-
                 //Prompt the user once explanation has been shown
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                         MA_PERMISSIONS_REQUEST_LOCATION);
@@ -214,7 +211,6 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         switch (requestCode) {
             case MA_PERMISSIONS_REQUEST_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     // permission was granted, yay! Do the
                     // contacts-related task you need to do.
@@ -235,8 +231,6 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                 }
                 return;
             }
-            // other 'case' lines to check for other
-            // permissions this app might request
         }
     }
 

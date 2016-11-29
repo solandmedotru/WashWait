@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Blue" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryB</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkB</item>
+        <item name="colorAccent">@color/colorAccentB</item>
+        <item name="android:windowBackground">@color/colorPrimaryB</item>
+        <item name="android:textColor">@color/colorPrimaryB</item>
+
+    </style>
+
+    <style name="Violet" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Green" parent="AppTheme">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimaryG</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkG</item>
+        <item name="colorAccent">@color/colorAccentG</item>
+        <item name="android:windowBackground">@color/colorPrimaryG</item>
+        <item name="android:textColor">@color/colorPrimaryG</item>
+    </style>
+
+</resources>
