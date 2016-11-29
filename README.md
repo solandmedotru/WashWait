@@ -1,17 +1,21 @@
 ![AppIcon](https://github.com/solandmedotru/WashWait/blob/master/app/src/main/res/mipmap-xhdpi/ic_launcher.png) 
 # WashWait
-Приложение подскажет когда лучше помыть машину, а когда лучше сэкономить. Также приложение показывает ближайшие к Вам автомойки.
+Вы только помыли машину, а на следующий день пошел дождь? Вы устали зря тратить деньги на автомойку? Больше этого не случиться. Приложение МетеоМойка предложит наиболее удачный день, чтобы помыть машину, а также покажет ближайшие автомойки в вашем городе. Просто откройте приложение и выберите город и приложение подскажет вам удачный день для мойки или посоветует не мыть машину в ближайшие дни. А если вы решили помыть машину, то приложение подскажет вам ближайшие мойки и покажет их на карте. А также покажет телефон, адрес и рейтинг основанный на отзывах. В зависимости от количества осадков изображение автомобиля будет покрываться грязью и вы сразу будете знать, что сегодня не лучший день чтобы помыть машину.
+Вам надоели штрафы за грязные автомобильные номера? Следите за ПДД, а не за погодой с приложением МетеоМойкой. Однако помните, что прогноз погоды - это не точная наука и иногда ошибается. Будьте терпимы к советам приложения.
+МетеоМойкой - приложение для водителей, которое даст заботливым автомобилистам возможность не тратить время и деньги на мытьё машины перед дождем и мокрым снегом. В настройках приложения Вы всегда можете изменить количество дней без осадков. По умолчанию, это двое суток.
+
+Все ваши замечания и предложение, отправляйте на e-mail автора приложения. Буду рад улучшить функциональность программы, следуя Вашим советам.
 
 ![minSdkVersion](https://img.shields.io/badge/minSdkVersion-16-yellow.svg?style=true)
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665150.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340263" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340881.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340891.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340909.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341511.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341530.png" width="200">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665154.png" width="200">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665174.png" width="200">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665191.png" width="200">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665197.png" width="200">
+
 
 This sample is available
 
