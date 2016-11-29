@@ -6,6 +6,8 @@
 ![compileSdkVersion](https://img.shields.io/badge/compileSdkVersion-24-green.svg?style=true)
 
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665150.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341511.png" width="200">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341530.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665154.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665174.png" width="200">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1479665191.png" width="200">
@@ -13,7 +15,7 @@
 
 This sample is available
 
-[![Get it on Google Play](https://play.google.com/intl/en_us/badges/images/badge_new.png)](https://play.google.com/store/apps/details?id=ru.solandme.remindmeabout)
+[![Get it on Google Play](https://play.google.com/intl/en_us/badges/images/badge_new.png)](https://play.google.com/store/apps/details?id=ru.solandme.washwait)
 
 ## Contributing
 
