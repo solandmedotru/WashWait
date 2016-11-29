@@ -11,8 +11,9 @@
 
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340263.png" height="300">
 <img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340909.png" height="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340810.png" width="400">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341530.png" width="400">
+
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480340810.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/Screenshot_1480341530.png" width="300">
 
 
 This sample is available
