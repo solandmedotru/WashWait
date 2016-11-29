@@ -1,9 +1,10 @@
 
 package ru.solandme.washwait.forecast.POJO;
 
-import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 
 public class BigWeatherForecast {

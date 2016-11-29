@@ -20,7 +20,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ForecastApiHelper {
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
     private static final long HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 10 * 1024 * 1024;
-    private static final long CONNECTION_TIMEOUT = 20;
+    private static final long CONNECTION_TIMEOUT = 10;
     private static Retrofit retrofit = null;
 
 

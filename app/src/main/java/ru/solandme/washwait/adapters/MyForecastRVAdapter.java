@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.data.Forecast;
+import ru.solandme.washwait.forecast.POJO.Forecast;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
