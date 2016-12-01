@@ -29,14 +29,13 @@ import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.data.WeatherContract;
 import ru.solandme.washwait.data.WeatherDbHelper;
-import ru.solandme.washwait.forecast.POJO.Forecast;
+import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 import ru.solandme.washwait.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -63,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerView forecastRecyclerView;
     private MyForecastRVAdapter adapter;
 
-    ArrayList<Forecast> forecasts = new ArrayList<>();
+    WeatherForecast weatherForecast;
     private GcmNetworkManager mGcmNetworkManager;
     private String units;
     private String city;
@@ -108,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         }
 
-        adapter = new MyForecastRVAdapter(forecasts);
+        adapter = new MyForecastRVAdapter(weatherForecast);
         forecastRecyclerView.setAdapter(adapter);
 
         cityField.setOnClickListener(new View.OnClickListener() {
@@ -186,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         dirtyMeter.setMax(40);
         dirtyMeter.setProgress((int) (dirtyCounter * 10));
 
-        carImage.setImageResource(getCarPicture(dirtyCounter, forecasts.get(0).getTemperature()));
+        carImage.setImageResource(getCarPicture(dirtyCounter, weatherForecast.getList().get(0).getTemp().getMax()));
         Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
@@ -203,10 +202,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void updateWeatherUI() {
         units = sharedPref.getString("units", DEFAULT_UNITS);
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-        long dt = forecasts.get(0).getDate();
-        double temp = forecasts.get(0).getTemperature();
-        String description = forecasts.get(0).getDescription().toUpperCase();
-        int icon = forecasts.get(0).getImageRes();
+        long dt = weatherForecast.getList().get(0).getDt() * 1000;
+        double maxTemp = weatherForecast.getList().get(0).getTemp().getMax();
+        String description = weatherForecast.getList().get(0).getWeather().get(0).getDescription().toUpperCase();
+        int icon = weatherForecast.getList().get(0).getImageRes();
 
         cityField.setText(city);
         detailsField.setText(description);
@@ -225,7 +224,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         currentTemperatureField.setText(String.format("%s%s",
-                String.format(Locale.getDefault(), "%.1f", temp),
+                String.format(Locale.getDefault(), "%.1f", maxTemp),
                 unitTemperature));
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
@@ -313,10 +312,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             if (isResultOK) {
                 String textForecast = bundle.getString("TextForecast");
                 forecastMessage.setText(textForecast);
-                if (null != forecasts) {
-                    forecasts.clear();
-                }
-                forecasts.addAll((ArrayList<Forecast>) bundle.get("Weather"));
+                weatherForecast = (WeatherForecast) bundle.get("Weather");
                 updateWeatherUI();
                 adapter.notifyDataSetChanged();
                 updateWashForecastUI(bundle.getDouble("DirtyCounter"));

@@ -1,9 +1,10 @@
 
 package ru.solandme.washwait.forecast.POJO;
 
-import java.util.ArrayList;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.ArrayList;
 
 public class List {
 
@@ -37,6 +38,18 @@ public class List {
     @SerializedName("rain")
     @Expose
     private double rain;
+
+    private int imageRes;
+
+
+    public int getImageRes() {
+        return imageRes;
+    }
+
+    public void setImageRes(int imageRes) {
+        this.imageRes = imageRes;
+    }
+
 
     /**
      * 

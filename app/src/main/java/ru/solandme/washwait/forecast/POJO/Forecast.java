@@ -13,10 +13,15 @@ public class Forecast implements Serializable {
     private String description;
     private float lat;
     private float lon;
+    private int cityId;
 
 
     public int getWeatherId() {
         return weatherId;
+    }
+
+    public int getCityId() {
+        return cityId;
     }
 
     public void setWeatherId(int weatherId) {
@@ -86,4 +91,9 @@ public class Forecast implements Serializable {
     public void setLon(float lon) {
         this.lon = lon;
     }
+
+    public void setCityId(int cityId) {
+        this.cityId = cityId;
+    }
 }
+

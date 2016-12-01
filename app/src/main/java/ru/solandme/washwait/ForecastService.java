@@ -14,15 +14,13 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.data.WeatherDbHelper;
-import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
-import ru.solandme.washwait.forecast.POJO.Forecast;
+import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
 
@@ -36,8 +34,7 @@ public class ForecastService extends IntentService {
     private static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     private static final int NOTIFICATION_ID = 1981;
     private String forecastDistance;
-    private BigWeatherForecast weather;
-    private ArrayList<Forecast> forecasts = new ArrayList<>();
+    private WeatherForecast weather;
     private boolean isResultOK;
     private boolean isRunFromBackground;
     private SharedPreferences sharedPref;
@@ -82,15 +79,22 @@ public class ForecastService extends IntentService {
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
-        Call<BigWeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, APPID);
-        weatherCall.enqueue(new Callback<BigWeatherForecast>() {
+        Call<WeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, APPID);
+        weatherCall.enqueue(new Callback<WeatherForecast>() {
             @Override
-            public void onResponse(Call<BigWeatherForecast> call, Response<BigWeatherForecast> response) {
+            public void onResponse(Call<WeatherForecast> call, Response<WeatherForecast> response) {
                 if (response.isSuccessful()) {
 
                     weather = response.body();
-                    generateForecast();
-                    saveForecastToDataBase();
+
+                    int size = weather.getList().size();
+
+                    for (int i = 0; i < size; i++) {
+                        weather.getList().get(i).setImageRes(getWeatherPicture(weather.getList().get(i).getWeather().get(0).getIcon()));
+                    }
+
+                    saveForecastToDataBase(weather);
+
                     isResultOK = true;
                 } else {
                     isResultOK = false;
@@ -99,7 +103,7 @@ public class ForecastService extends IntentService {
             }
 
             @Override
-            public void onFailure(Call<BigWeatherForecast> call, Throwable t) {
+            public void onFailure(Call<WeatherForecast> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
                 isResultOK = false;
                 publishResults(isResultOK, isRunFromBackground);
@@ -158,10 +162,10 @@ public class ForecastService extends IntentService {
         }
     }
 
-    private void saveForecastToDataBase() {
+    private void saveForecastToDataBase(WeatherForecast weatherForecast) {
 
         WeatherDbHelper dbHelper = new WeatherDbHelper(this);
-        dbHelper.saveWeather(weather);
+        dbHelper.saveWeather(weatherForecast);
         dbHelper.close();
     }
 
@@ -177,7 +181,7 @@ public class ForecastService extends IntentService {
             Log.e(TAG, "day: " + washDayNumber + " " + textForWashForecast);
 
             intent.putExtra("TextForecast", textForWashForecast);
-            intent.putExtra("Weather", forecasts);
+            intent.putExtra("Weather", weather);
             intent.putExtra("DirtyCounter", getDirtyCounter());
         }
         intent.putExtra("isResultOK", isResultOK);
@@ -214,9 +218,9 @@ public class ForecastService extends IntentService {
         int clearDaysCounter = 0;
         int daysCounter = 0;
 
-        for (int i = 0; i < forecasts.size(); i++) {
-            int weatherId = forecasts.get(i).getWeatherId();
-            double maxTemp = forecasts.get(i).getTemperature();
+        for (int i = 0; i < weather.getList().size(); i++) {
+            int weatherId = weather.getList().get(i).getWeather().get(0).getId();
+            double maxTemp = weather.getList().get(i).getTemp().getMax();
 
             daysCounter++;
             if (!isDirty(weatherId, maxTemp)) {
@@ -237,33 +241,9 @@ public class ForecastService extends IntentService {
 
     private long getWashData(int washDayNumber) {
 
-        if (washDayNumber >= forecasts.size()) return forecasts.get(forecasts.size() - 1).getDate();
-        return forecasts.get(washDayNumber).getDate();
-    }
-
-    public void generateForecast() {
-
-        if (null != weather) {
-            sharedPref.edit().putInt("cityId", weather.getCity().getId()).apply();
-
-            forecasts.clear();
-            int size = weather.getList().size();
-
-            for (int i = 0; i < size; i++) {
-                Forecast forecast = new Forecast();
-
-                forecast.setWeatherId(weather.getList().get(i).getWeather().get(0).getId());
-                forecast.setTemperature(weather.getList().get(i).getTemp().getMax());
-                forecast.setDate(weather.getList().get(i).getDt() * 1000);
-                forecast.setImageRes(getWeatherPicture(weather.getList().get(i).getWeather().get(0).getIcon()));
-                forecast.setCityName(weather.getCity().getName());
-                forecast.setCountry(weather.getCity().getCountry());
-                forecast.setDescription(weather.getList().get(i).getWeather().get(0).getDescription());
-                forecast.setLat(weather.getCity().getCoord().getLat());
-                forecast.setLon(weather.getCity().getCoord().getLon());
-                forecasts.add(forecast);
-            }
-        }
+        if (washDayNumber >= weather.getList().size())
+            return weather.getList().get(weather.getList().size() - 1).getDt();
+        return weather.getList().get(washDayNumber).getDt();
     }
 
     private int getWeatherPicture(String icon) {

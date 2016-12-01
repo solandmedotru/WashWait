@@ -8,15 +8,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Locale;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.forecast.POJO.Forecast;
+import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
-    private ArrayList<Forecast> forecasts;
+    private WeatherForecast weatherForecast;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView date1;
@@ -29,8 +28,8 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
         }
     }
 
-    public MyForecastRVAdapter(ArrayList<Forecast> forecasts) {
-        this.forecasts = forecasts;
+    public MyForecastRVAdapter(WeatherForecast weatherForecast) {
+        this.weatherForecast = weatherForecast;
     }
 
     @Override
@@ -44,12 +43,14 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        holder.date1.setText(dateFormat.format(forecasts.get(position).getDate()));
-        holder.image1.setImageResource(forecasts.get(position).getImageRes());
+        holder.date1.setText(dateFormat.format(weatherForecast.getList().get(position).getDt() * 1000));
+        holder.image1.setImageResource(weatherForecast.getList().get(position).getImageRes());
     }
 
     @Override
     public int getItemCount() {
-        return forecasts.size();
+        if (null == weatherForecast) return 0;
+
+        return weatherForecast.getList().size();
     }
 }

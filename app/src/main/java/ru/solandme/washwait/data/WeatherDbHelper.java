@@ -10,7 +10,7 @@ import android.util.Log;
 
 import ru.solandme.washwait.data.WeatherContract.LocationEntry;
 import ru.solandme.washwait.data.WeatherContract.WeatherEntry;
-import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
+import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 
 
 public class WeatherDbHelper extends SQLiteOpenHelper {
@@ -75,7 +75,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
         onUpgrade(sqLiteDatabase, oldVersion, newVersion);
     }
 
-    public void saveWeather(BigWeatherForecast weather) {
+    public void saveWeather(WeatherForecast weather) {
         // Gets the data repository in write mode
         SQLiteDatabase db = getWritableDatabase();
 
