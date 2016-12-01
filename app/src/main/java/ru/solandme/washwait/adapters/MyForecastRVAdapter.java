@@ -15,9 +15,21 @@ import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
+    private OnItemClickListener listener;
+
+    // Define the listener interface
+    public interface OnItemClickListener {
+        void onItemClick(View itemView, int position);
+    }
+
+    // Define the method that allows the parent activity or fragment to define the listener
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
     private WeatherForecast weatherForecast;
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         TextView date1;
         ImageView image1;
 
@@ -25,6 +37,19 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
             super(v);
             date1 = (TextView) v.findViewById(R.id.date);
             image1 = (ImageView) v.findViewById(R.id.weather_icon_day);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Triggers click upwards to the adapter on click
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onItemClick(itemView, position);
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -45,6 +70,7 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
         holder.date1.setText(dateFormat.format(weatherForecast.getList().get(position).getDt() * 1000));
         holder.image1.setImageResource(weatherForecast.getList().get(position).getImageRes());
+
     }
 
     @Override

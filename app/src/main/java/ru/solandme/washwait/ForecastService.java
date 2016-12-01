@@ -111,21 +111,21 @@ public class ForecastService extends IntentService {
         });
     }
 
-    boolean isDirty(int weatherId, double temperature) {
+    boolean isBadConditions(int weatherId, double temperature) {
         String units = sharedPref.getString(getString(R.string.pref_units_key), "standard");
 
         switch (units) {
             case "metric":
-                return weatherId < 600 || weatherId < 700 && temperature > -10;
+                return (weatherId < 600) || (weatherId < 700 && temperature > -10) || (temperature < -20);
             case "imperial":
-                return weatherId < 600 || weatherId < 700 && temperature > 14;
+                return (weatherId < 600) || (weatherId < 700 && temperature > 14) || (temperature < -4);
             default:
-                return weatherId < 600 || weatherId < 700 && temperature > 263;
+                return (weatherId < 600) || (weatherId < 700 && temperature > 263) || (temperature < 253);
         }
     }
 
     private String getTextForWashForecast(int washDayNumber, long dataToWash) {
-        String dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash);
+        String dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
         switch (washDayNumber) {
             case 0:
                 return getResources().getString(R.string.can_wash);
@@ -223,7 +223,7 @@ public class ForecastService extends IntentService {
             double maxTemp = weatherForecast.getList().get(i).getTemp().getMax();
 
             daysCounter++;
-            if (!isDirty(weatherId, maxTemp)) {
+            if (!isBadConditions(weatherId, maxTemp)) {
                 clearDaysCounter++;
                 if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
                     if (washDayNumber == 15) {

@@ -45,12 +45,12 @@
                         android:useDefaultMargins="true">
 
                         <TextView
+                            android:id="@+id/currentDataField"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_column="0"
                             android:layout_gravity="start"
                             android:layout_row="0"
-                            android:elevation="8dp"
                             android:text="THU 18,Dec"
                             android:textColor="@color/textColor"
                             android:textSize="@dimen/main_text_size" />
@@ -64,7 +64,6 @@
                             android:layout_row="0"
                             android:drawableEnd="@drawable/ic_location"
                             android:drawableRight="@drawable/ic_location"
-                            android:elevation="6dp"
                             android:scrollHorizontally="true"
                             android:textColor="@color/textColor"
                             android:textSize="@dimen/main_text_size" />
@@ -76,7 +75,6 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/headerCard"
                         android:layout_gravity="end"
-                        android:elevation="5dp"
                         android:gravity="end"
                         android:textColor="@color/textColor"
                         android:textSize="@dimen/main_text_size" />
@@ -97,7 +95,6 @@
                             android:layout_gravity="center_horizontal"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/weather_icon"
-                            android:elevation="5dp"
                             android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:src="@mipmap/few_clouds_d" />
@@ -108,7 +105,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
                             android:layout_weight="2"
-                            android:elevation="5dp"
                             android:gravity="end"
                             android:textColor="@color/textColor"
                             android:textSize="48sp" />
@@ -120,7 +116,6 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/cardContent"
                     android:padding="16dp"
-                    android:elevation="6dp"
                     android:textAlignment="center"
                     android:textSize="@dimen/main_text_size" />
             </RelativeLayout>
