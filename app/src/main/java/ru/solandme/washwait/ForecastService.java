@@ -20,6 +20,7 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.forecast.POJO.BigWeatherForecast;
 import ru.solandme.washwait.forecast.POJO.Forecast;
 import ru.solandme.washwait.rest.ForecastApiHelper;
@@ -89,7 +90,7 @@ public class ForecastService extends IntentService {
 
                     weather = response.body();
                     generateForecast();
-//                    saveForecastToDataBase();
+                    saveForecastToDataBase();
                     isResultOK = true;
                 } else {
                     isResultOK = false;
@@ -158,9 +159,10 @@ public class ForecastService extends IntentService {
     }
 
     private void saveForecastToDataBase() {
-//
-//        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
-//        dbHelper.saveWeather(weather);
+
+        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
+        dbHelper.saveWeather(weather);
+        dbHelper.close();
     }
 
     private void publishResults(boolean isResultOK, boolean runFromService) {
@@ -234,6 +236,8 @@ public class ForecastService extends IntentService {
     }
 
     private long getWashData(int washDayNumber) {
+
+        if (washDayNumber >= forecasts.size()) return forecasts.get(forecasts.size() - 1).getDate();
         return forecasts.get(washDayNumber).getDate();
     }
 
