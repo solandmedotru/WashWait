@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
         long dt = weatherForecast.getList().get(0).getDt() * 1000;
         double maxTemp = weatherForecast.getList().get(0).getTemp().getMax();
-        String description = weatherForecast.getList().get(0).getWeather().get(0).getDescription().toUpperCase();
+        String description = weatherForecast.getList().get(0).getWeather().get(0).getDescription();
         int icon = weatherForecast.getList().get(0).getImageRes();
 
         cityField.setText(city);

@@ -4,10 +4,7 @@
     <style name="ForecastCardViewStyle" parent="Theme.AppCompat.Light">
         <item name="cardCornerRadius">2dp</item>
         <item name="cardElevation">2dp</item>
-        <item name="contentPaddingBottom">12dp</item>
-        <item name="contentPaddingTop">12dp</item>
-        <item name="contentPaddingLeft">12dp</item>
-        <item name="contentPaddingRight">12dp</item>
+
     </style>
 
     <style name="ForecastCardViewStyleLand" parent="ForecastCardViewStyle">
