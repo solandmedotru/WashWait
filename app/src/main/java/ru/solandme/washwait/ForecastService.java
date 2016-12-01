@@ -34,7 +34,7 @@ public class ForecastService extends IntentService {
     private static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     private static final int NOTIFICATION_ID = 1981;
     private String forecastDistance;
-    private WeatherForecast weather;
+    private WeatherForecast weatherForecast;
     private boolean isResultOK;
     private boolean isRunFromBackground;
     private SharedPreferences sharedPref;
@@ -85,15 +85,15 @@ public class ForecastService extends IntentService {
             public void onResponse(Call<WeatherForecast> call, Response<WeatherForecast> response) {
                 if (response.isSuccessful()) {
 
-                    weather = response.body();
+                    weatherForecast = response.body();
 
-                    int size = weather.getList().size();
+                    int size = weatherForecast.getList().size();
 
                     for (int i = 0; i < size; i++) {
-                        weather.getList().get(i).setImageRes(getWeatherPicture(weather.getList().get(i).getWeather().get(0).getIcon()));
+                        weatherForecast.getList().get(i).setImageRes(getWeatherPicture(weatherForecast.getList().get(i).getWeather().get(0).getIcon()));
                     }
 
-                    saveForecastToDataBase(weather);
+                    saveForecastToDataBase(weatherForecast);
 
                     isResultOK = true;
                 } else {
@@ -181,7 +181,7 @@ public class ForecastService extends IntentService {
             Log.e(TAG, "day: " + washDayNumber + " " + textForWashForecast);
 
             intent.putExtra("TextForecast", textForWashForecast);
-            intent.putExtra("Weather", weather);
+            intent.putExtra("Weather", weatherForecast);
             intent.putExtra("DirtyCounter", getDirtyCounter());
         }
         intent.putExtra("isResultOK", isResultOK);
@@ -218,9 +218,9 @@ public class ForecastService extends IntentService {
         int clearDaysCounter = 0;
         int daysCounter = 0;
 
-        for (int i = 0; i < weather.getList().size(); i++) {
-            int weatherId = weather.getList().get(i).getWeather().get(0).getId();
-            double maxTemp = weather.getList().get(i).getTemp().getMax();
+        for (int i = 0; i < weatherForecast.getList().size(); i++) {
+            int weatherId = weatherForecast.getList().get(i).getWeather().get(0).getId();
+            double maxTemp = weatherForecast.getList().get(i).getTemp().getMax();
 
             daysCounter++;
             if (!isDirty(weatherId, maxTemp)) {
@@ -241,9 +241,9 @@ public class ForecastService extends IntentService {
 
     private long getWashData(int washDayNumber) {
 
-        if (washDayNumber >= weather.getList().size())
-            return weather.getList().get(weather.getList().size() - 1).getDt();
-        return weather.getList().get(washDayNumber).getDt();
+        if (washDayNumber >= weatherForecast.getList().size())
+            return weatherForecast.getList().get(weatherForecast.getList().size() - 1).getDt();
+        return weatherForecast.getList().get(washDayNumber).getDt();
     }
 
     private int getWeatherPicture(String icon) {
@@ -292,8 +292,8 @@ public class ForecastService extends IntentService {
 
     public Double getDirtyCounter() {
         Double rainCounter = 0.0, snowCounter = 0.0;
-        rainCounter = rainCounter + weather.getList().get(0).getRain();
-        snowCounter = snowCounter + weather.getList().get(0).getSnow();
+        rainCounter = rainCounter + weatherForecast.getList().get(0).getRain();
+        snowCounter = snowCounter + weatherForecast.getList().get(0).getSnow();
 
         Log.e(TAG, "dirtyCounter: " + (rainCounter + (snowCounter)) * 4);
         return (rainCounter + (snowCounter)) * 4;

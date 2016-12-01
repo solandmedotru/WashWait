@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
     private static final String DEFAULT_UNITS = "metric";
+    public static final int PERIODICAL_TIMER = 43200;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -75,10 +76,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
-
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -107,8 +108,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         }
 
-        adapter = new MyForecastRVAdapter(weatherForecast);
-        forecastRecyclerView.setAdapter(adapter);
+
 
         cityField.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 chooseCity();
             }
         });
-
 
         cityId = sharedPref.getInt("cityId", 2643743);
 
@@ -169,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             Task task = new PeriodicTask.Builder()
                     .setService(PeriodicalForecastTask.class)
                     .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                    .setPeriod(43200) // two times per day period
+                    .setPeriod(PERIODICAL_TIMER) // two times per day period
                     .setTag(PeriodicalForecastTask.TAG_TASK_PERIODIC)
                     .setPersisted(true)
                     .setUpdateCurrent(true)
@@ -199,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
     }
 
-    private void updateWeatherUI() {
+    private void updateWeatherUI(WeatherForecast weatherForecast) {
         units = sharedPref.getString("units", DEFAULT_UNITS);
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
         long dt = weatherForecast.getList().get(0).getDt() * 1000;
@@ -312,8 +311,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             if (isResultOK) {
                 String textForecast = bundle.getString("TextForecast");
                 forecastMessage.setText(textForecast);
+
                 weatherForecast = (WeatherForecast) bundle.get("Weather");
-                updateWeatherUI();
+
+                updateWeatherUI(weatherForecast);
+                adapter = new MyForecastRVAdapter(weatherForecast);
+                forecastRecyclerView.setAdapter(adapter);
+
                 adapter.notifyDataSetChanged();
                 updateWashForecastUI(bundle.getDouble("DirtyCounter"));
             } else {
