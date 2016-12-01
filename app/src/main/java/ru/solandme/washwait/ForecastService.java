@@ -244,6 +244,8 @@ public class ForecastService extends IntentService {
     public void generateForecast() {
 
         if (null != weather) {
+            sharedPref.edit().putInt("cityId", weather.getCity().getId()).apply();
+
             forecasts.clear();
             int size = weather.getList().size();
 

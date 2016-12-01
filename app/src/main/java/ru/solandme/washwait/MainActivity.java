@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
@@ -33,6 +34,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
+import ru.solandme.washwait.data.WeatherContract;
+import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.forecast.POJO.Forecast;
 import ru.solandme.washwait.utils.Utils;
 
@@ -62,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     ArrayList<Forecast> forecasts = new ArrayList<>();
     private GcmNetworkManager mGcmNetworkManager;
+    private String units;
+    private String city;
+    private int cityId;
 
 
     @Override
@@ -111,6 +117,37 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 chooseCity();
             }
         });
+
+
+        cityId = sharedPref.getInt("cityId", 2643743);
+
+        getLastWeatherFromDB(cityId);
+    }
+
+    private void getLastWeatherFromDB(int cityId) {
+        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
+        Cursor cursor = dbHelper.getLastWeather(cityId);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            detailsField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)));
+            currentTemperatureField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
+        }
+
+//        while (cursor.moveToNext()) {
+//            detailsField.setText(cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
+//            holiday.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
+//            holiday.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
+//            holiday.setImageUri(cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URI)));
+//            holiday.setCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
+//            holiday.setDate(cursor.getLong(cursor.getColumnIndex(COLUMN_DATA)));
+//            holiday.setCode(cursor.getString(cursor.getColumnIndex(COLUMN_CODE)));
+//            holiday.setHoursLeft(getHoursForHolidayDate(holiday.getDate()));
+//            holidays.add(holiday);
+//        }
+
+
+        cursor.close();
     }
 
     @Override
@@ -164,9 +201,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void updateWeatherUI() {
-        String units = sharedPref.getString("units", DEFAULT_UNITS);
-        String city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-
+        units = sharedPref.getString("units", DEFAULT_UNITS);
+        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
         long dt = forecasts.get(0).getDate();
         double temp = forecasts.get(0).getTemperature();
         String description = forecasts.get(0).getDescription().toUpperCase();
