@@ -11,7 +11,7 @@ import android.preference.SwitchPreference;
 public class SettingsActivity extends PreferenceActivity {
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
-        setTheme(R.style.AppTheme);
+        setTheme(R.style.Dialog);
         super.onCreate(savedInstanceState);
 
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();

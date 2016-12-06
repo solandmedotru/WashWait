@@ -47,4 +47,8 @@
     <string name="theme_green">Green Theme</string>
     <string name="notification">Notification</string>
     <string name="image_city">Image city</string>
+    <string name="meter_per_sec">m/s</string>
+    <string name="miles_per_h">mph</string>
+    <string name="h_pa">hPa</string>
+    <string name="m_hg">mmHg</string>
 </resources>

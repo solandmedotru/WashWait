@@ -68,7 +68,7 @@
                     android:textSize="@dimen/main_text_size_land" />
 
                 <TextView
-                    android:id="@+id/current_temperature_field"
+                    android:id="@+id/max_t_field"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"

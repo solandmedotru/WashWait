@@ -45,6 +45,10 @@
     <string name="theme_green">Зелена</string>
     <string name="notification">Повідомлення</string>
     <string name="image_city">Картинка города</string>
+    <string name="meter_per_sec">м/с</string>
+    <string name="miles_per_h">миль/ч</string>
+    <string name="h_pa">гПа</string>
+    <string name="m_hg">мм рт.ст.</string>
 
 
 </resources>

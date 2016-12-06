@@ -57,4 +57,8 @@
     <string name="white_car_image" translatable="false">White car image</string>
     <string name="weather_icon" translatable="false">Weather icon</string>
     <string name="image_city">Image city</string>
+    <string name="meter_per_sec">m/s</string>
+    <string name="miles_per_h">mph</string>
+    <string name="m_hg">mmHg</string>
+    <string name="h_pa">hPa</string>
 </resources>

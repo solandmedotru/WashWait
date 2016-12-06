@@ -4,8 +4,8 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="activity_vertical_margin_land">12dp</dimen>
     <dimen name="margin_image">6dp</dimen>
-    <dimen name="main_text_size">21sp</dimen>
-    <dimen name="main_text_size_land">18sp</dimen>
+    <dimen name="main_text_size">16sp</dimen>
+    <dimen name="main_text_size_land">14sp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="paddingBottom">12dp</dimen>
     <dimen name="paddingTop">12dp</dimen>

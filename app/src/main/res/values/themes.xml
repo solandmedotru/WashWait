@@ -15,7 +15,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkB</item>
         <item name="colorAccent">@color/colorAccentB</item>
         <item name="android:windowBackground">@color/colorPrimaryB</item>
-
     </style>
 
     <style name="Violet" parent="AppTheme">

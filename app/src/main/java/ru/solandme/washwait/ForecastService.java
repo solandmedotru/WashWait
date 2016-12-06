@@ -112,7 +112,7 @@ public class ForecastService extends IntentService {
     }
 
     boolean isBadConditions(int weatherId, double temperature) {
-        String units = sharedPref.getString(getString(R.string.pref_units_key), "standard");
+        String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
 
         switch (units) {
             case "metric":

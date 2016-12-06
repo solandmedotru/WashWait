@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String TAG_ABOUT = "about";
     private static final String DEFAULT_UNITS = "metric";
     public static final int PERIODICAL_TIMER = 43200;
+    public static final int FIRST_DAY_POSITION = 0;
 
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -53,7 +55,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private TextView cityField;
     private TextView updatedField;
     private TextView detailsField;
-    private TextView currentTemperatureField;
+    private TextView curMaxTempField;
+    private TextView curMinTempField;
+    private TextView humidityField;
+    private TextView barometerField;
+    private TextView speedWindField;
     private ImageView weatherIconDay0;
     private ImageView carImage;
     private ImageView cityImage;
@@ -71,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private String units;
     private String city;
     private int cityId;
+    private Typeface weatherFont;
 
 
     @Override
@@ -79,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weatherFont.ttf");
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -92,7 +101,20 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         cityField = (TextView) findViewById(R.id.city_field);
         updatedField = (TextView) findViewById(R.id.updated_field);
         detailsField = (TextView) findViewById(R.id.details_field);
-        currentTemperatureField = (TextView) findViewById(R.id.current_temperature_field);
+
+        curMaxTempField = (TextView) findViewById(R.id.max_t_field);
+        curMaxTempField.setTypeface(weatherFont);
+        curMinTempField = (TextView) findViewById(R.id.min_t_field);
+        curMinTempField.setTypeface(weatherFont);
+
+        humidityField = (TextView) findViewById(R.id.humidity_field);
+        humidityField.setTypeface(weatherFont);
+        barometerField = (TextView) findViewById(R.id.barometer_field);
+        barometerField.setTypeface(weatherFont);
+        speedWindField = (TextView) findViewById(R.id.speed_wind_field);
+        speedWindField.setTypeface(weatherFont);
+
+
         forecastMessage = (TextView) findViewById(R.id.forecast_message);
 
         weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
@@ -140,21 +162,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             detailsField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)));
-            currentTemperatureField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
+            curMaxTempField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
+
+            units = sharedPref.getString("units", DEFAULT_UNITS);
+            city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
+
+            double maxTemp = Double.parseDouble(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
+            String description = cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC));
+            long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
+            currentDataField.setText(getDataWithFormat(new Date(dt)));
+            curMaxTempField.setText(getStringTemperature(maxTemp, units));
+            detailsField.setText(description);
         }
-
-//        while (cursor.moveToNext()) {
-//            detailsField.setText(cursor.getString(cursor.getColumnIndex(COLUMN_NAME));
-//            holiday.setName(cursor.getString(cursor.getColumnIndex(COLUMN_NAME)));
-//            holiday.setDescription(cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION)));
-//            holiday.setImageUri(cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URI)));
-//            holiday.setCategory(cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY)));
-//            holiday.setDate(cursor.getLong(cursor.getColumnIndex(COLUMN_DATA)));
-//            holiday.setCode(cursor.getString(cursor.getColumnIndex(COLUMN_CODE)));
-//            holiday.setHoursLeft(getHoursForHolidayDate(holiday.getDate()));
-//            holidays.add(holiday);
-//        }
-
 
         cursor.close();
     }
@@ -209,56 +228,34 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
     }
 
-    private void updateWeatherUI(WeatherForecast weatherForecast) {
-        units = sharedPref.getString("units", DEFAULT_UNITS);
-        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-        long dt = weatherForecast.getList().get(0).getDt() * 1000;
-        double maxTemp = weatherForecast.getList().get(0).getTemp().getMax();
-        String description = weatherForecast.getList().get(0).getWeather().get(0).getDescription();
-        int icon = weatherForecast.getList().get(0).getImageRes();
-
-        cityField.setText(city);
-        detailsField.setText(description);
-        currentTemperatureField.setText(getStringTemperature(maxTemp, units));
-
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
-        String updatedOn = dateFormat.format(new Date(dt));
-
-        updatedField.setText(String.format("%s%s",
-                getString(R.string.last_update),
-                updatedOn));
-
-        weatherIconDay0.setImageResource(icon);
-    }
-
     private String getStringTemperature(double maxTemp, String units) {
         String unitTemperature;
         switch (units) {
             case "metric":
-                unitTemperature = String.format("%sC", "\u00b0");
+                unitTemperature = String.format("%s", getString(R.string.wi_celsius));
                 break;
             case "imperial":
-                unitTemperature = String.format("%sF", "\u00b0");
+                unitTemperature = String.format("%s", getString(R.string.wi_fahrenheit));
                 break;
             default:
                 unitTemperature = String.format("%sK", "\u00b0");
                 break;
         }
         return String.format("%s%s",
-                String.format(Locale.getDefault(), "%.1f", maxTemp),
+                (int) Math.round(maxTemp),
                 unitTemperature);
     }
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
-        if (temp < -10) return R.mipmap.car_new_shadow1;
-        if (dirtyCounter <= 0) return R.mipmap.car_new_shadow1;
-        if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car_new_shadow1;
-        if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car_new_shadow1;
-        if (dirtyCounter >= 15 && dirtyCounter < 50) return R.mipmap.car_new_shadow1;
-        if (dirtyCounter >= 50) return R.mipmap.car_new_shadow1;
+        if (temp < -10) return R.mipmap.car10;
+        if (dirtyCounter <= 0) return R.mipmap.car10;
+        if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car10;
+        if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car10;
+        if (dirtyCounter >= 15 && dirtyCounter < 50) return R.mipmap.car10;
+        if (dirtyCounter >= 50) return R.mipmap.car10;
 
-        return R.mipmap.car_new_shadow1;
+        return R.mipmap.car10;
     }
 
     @Override
@@ -327,26 +324,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 weatherForecast = (WeatherForecast) bundle.get("Weather");
 
-                updateWeatherUI(weatherForecast);
+                fillWeatherCard(FIRST_DAY_POSITION);
+
                 adapter = new MyForecastRVAdapter(weatherForecast);
                 forecastRecyclerView.setAdapter(adapter);
 
                 adapter.setOnItemClickListener(new MyForecastRVAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-
-                        units = sharedPref.getString("units", DEFAULT_UNITS);
-                        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-
-                        double maxTemp = weatherForecast.getList().get(position).getTemp().getMax();
-                        String description = weatherForecast.getList().get(position).getWeather().get(0).getDescription();
-                        int icon = weatherForecast.getList().get(position).getImageRes();
-                        long dt = weatherForecast.getList().get(position).getDt() * 1000;
-                        currentDataField.setText(getDataWithFormat(new Date(dt)));
-                        currentTemperatureField.setText(getStringTemperature(maxTemp, units));
-                        detailsField.setText(description);
-                        weatherIconDay0.setImageResource(icon);
-
+                        fillWeatherCard(position);
                     }
                 });
 
@@ -357,4 +343,105 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         }
     };
+
+    private void fillWeatherCard(int position) {
+        units = sharedPref.getString("units", DEFAULT_UNITS);
+        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
+
+        double maxTemp = weatherForecast.getList().get(position).getTemp().getMax();
+        double minTemp = weatherForecast.getList().get(position).getTemp().getMin();
+        String description = weatherForecast.getList().get(position).getWeather().get(0).getDescription();
+        int icon = weatherForecast.getList().get(position).getImageRes();
+        long dt = weatherForecast.getList().get(position).getDt() * 1000;
+        int humidity = weatherForecast.getList().get(position).getHumidity();
+        double barometer = weatherForecast.getList().get(position).getPressure();
+        double speedWind = weatherForecast.getList().get(position).getSpeed();
+        int speedDirection = weatherForecast.getList().get(position).getDeg();
+
+        cityField.setText(city);
+
+        currentDataField.setText(getDataWithFormat(new Date(dt)));
+        curMaxTempField.setText(getStringTemperature(maxTemp, units));
+        curMinTempField.setText(getStringTemperature(minTemp, units));
+        humidityField.setText(getString(R.string.wi_humidity) + " " + humidity + "%");
+        barometerField.setText(getStringBarometer(barometer, units));
+        speedWindField.setText(getStringWind(speedDirection, speedWind, units));
+
+        detailsField.setText(description);
+        weatherIconDay0.setImageResource(icon);
+
+        long dtLast = weatherForecast.getList().get(0).getDt() * 1000;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
+        String updatedOn = dateFormat.format(new Date(dtLast));
+
+        updatedField.setText(String.format("%s%s",
+                getString(R.string.last_update),
+                updatedOn));
+    }
+
+    @NonNull
+    private String getStringBarometer(double barometer, String units) {
+        String barUnits;
+        switch (units) {
+            case "metric":
+                barUnits = String.format("%s", getString(R.string.m_hg));
+                barometer = Math.round(barometer * 100 / 133.3224);
+                break;
+            case "imperial":
+                barUnits = String.format("%s", getString(R.string.h_pa));
+                break;
+            default:
+                barUnits = String.format("%s", getString(R.string.m_hg));
+                break;
+        }
+        return String.format("%s %s %s",
+                getString(R.string.wi_barometer),
+                (int) barometer,
+                barUnits);
+    }
+
+    @NonNull
+    private String getStringWind(int speedDirection, double speedWind, String units) {
+        String windUnits;
+        switch (units) {
+            case "metric":
+                windUnits = String.format("%s", getString(R.string.meter_per_sec));
+                break;
+            case "imperial":
+                windUnits = String.format("%s", getString(R.string.miles_per_h));
+                break;
+            default:
+                windUnits = String.format("%s", getWindRes(speedDirection));
+                break;
+        }
+        return String.format("%s %s %s",
+                getString(getWindRes(speedDirection)),
+                (int) Math.round(speedWind),
+                windUnits);
+    }
+
+    private int getWindRes(int direction) {
+        int val = (int) Math.round(((double) direction % 360) / 45);
+        switch (val % 16) {
+            case 0:
+                return R.string.wi_wind_north;
+            case 1:
+                return R.string.wi_wind_north_east;
+            case 2:
+                return R.string.wi_wind_east;
+            case 3:
+                return R.string.wi_wind_south_east;
+            case 4:
+                return R.string.wi_wind_south;
+            case 5:
+                return R.string.wi_wind_south_west;
+            case 6:
+                return R.string.wi_wind_west;
+            case 7:
+                return R.string.wi_wind_north_west;
+            case 8:
+                return R.string.wi_wind_north;
+        }
+        return R.string.wi_wind_east;
+    }
 }

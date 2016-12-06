@@ -15,7 +15,7 @@
     </style>
 
 
-    <style name="PlaceDialog" parent="Theme.AppCompat.Light.Dialog">
+    <style name="Dialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowMinWidthMajor">90%</item>
         <item name="android:windowMinWidthMinor">90%</item>

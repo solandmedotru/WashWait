@@ -32,12 +32,12 @@
 
                 <RelativeLayout
                     android:id="@+id/cardContent"
-                    android:padding="16dp"
-                    android:background="?attr/colorPrimaryDark"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="?attr/colorPrimaryDark"
+                    android:padding="16dp">
 
-                    <GridLayout
+                    <LinearLayout
                         android:id="@+id/headerCard"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -46,28 +46,26 @@
 
                         <TextView
                             android:id="@+id/currentDataField"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_column="0"
                             android:layout_gravity="start"
-                            android:layout_row="0"
+                            android:layout_weight="1"
                             android:text="THU 18,Dec"
                             android:textColor="@color/textColor"
                             android:textSize="@dimen/main_text_size" />
 
                         <TextView
                             android:id="@+id/city_field"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_column="1"
                             android:layout_gravity="end"
-                            android:layout_row="0"
-                            android:drawableEnd="@drawable/ic_location"
-                            android:drawableRight="@drawable/ic_location"
+                            android:layout_weight="2"
+                            android:gravity="end"
                             android:scrollHorizontally="true"
+                            android:text="Moskow"
                             android:textColor="@color/textColor"
                             android:textSize="@dimen/main_text_size" />
-                    </GridLayout>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/details_field"
@@ -76,6 +74,7 @@
                         android:layout_below="@id/headerCard"
                         android:layout_gravity="end"
                         android:gravity="end"
+                        android:text="rain"
                         android:textColor="@color/textColor"
                         android:textSize="@dimen/main_text_size" />
 
@@ -95,27 +94,76 @@
                             android:layout_gravity="center_horizontal"
                             android:adjustViewBounds="true"
                             android:contentDescription="@string/weather_icon"
-                            android:padding="8dp"
                             android:scaleType="fitCenter"
                             android:src="@mipmap/few_clouds_d" />
 
                         <TextView
-                            android:id="@+id/current_temperature_field"
+                            android:id="@+id/max_t_field"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:layout_marginEnd="10dp"
+                            android:text="-10 C"
+                            android:textColor="@color/textColor"
+                            android:textSize="40sp"
+                            android:layout_marginRight="10dp" />
+                        <TextView
+                            android:id="@+id/min_t_field"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="end"
+                            android:text="-12 C"
+                            android:textColor="@color/textColor"
+                            android:textSize="40sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/weatherCard"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/humidity_field"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:layout_weight="2"
-                            android:gravity="end"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="70%"
                             android:textColor="@color/textColor"
-                            android:textSize="48sp" />
+                            android:textSize="@dimen/main_text_size" />
+
+                        <TextView
+                            android:id="@+id/barometer_field"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="1008 mPa"
+                            android:textColor="@color/textColor"
+                            android:textSize="@dimen/main_text_size" />
+
+                        <TextView
+                            android:id="@+id/speed_wind_field"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:text="5 m/s"
+                            android:textColor="@color/textColor"
+                            android:textSize="@dimen/main_text_size" />
                     </LinearLayout>
                 </RelativeLayout>
+
                 <TextView
                     android:id="@+id/forecast_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/cardContent"
                     android:padding="16dp"
+                    android:text="@string/can_wash"
                     android:textAlignment="center"
                     android:textSize="@dimen/main_text_size" />
             </RelativeLayout>
@@ -150,7 +198,7 @@
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/white_car_image"
                 android:scaleType="fitCenter"
-                android:src="@mipmap/car_new_shadow1" />
+                android:src="@mipmap/car10" />
         </LinearLayout>
 
         <ProgressBar
