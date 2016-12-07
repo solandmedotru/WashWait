@@ -21,13 +21,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -45,6 +41,7 @@ import retrofit2.Response;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
+import ru.solandme.washwait.places.POJO.PlaceInfo;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
 
@@ -91,6 +88,7 @@ public class MapActivity extends FragmentActivity implements
         }
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         carWashList.setLayoutManager(linearLayoutManager);
         DividerItemDecoration dividerItemDecoration =
@@ -107,8 +105,6 @@ public class MapActivity extends FragmentActivity implements
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
                 .build();
         googleApiClient.connect();
     }
@@ -130,7 +126,8 @@ public class MapActivity extends FragmentActivity implements
             map.setMyLocationEnabled(true);
         }
 
-        requestPlacesToCurrentLocation(currentLatLng);
+        placesHelper = new PlacesApiHelper(this);
+        requestPlacesNearCurrentLocation(currentLatLng);
     }
 
 
@@ -139,76 +136,73 @@ public class MapActivity extends FragmentActivity implements
         map.animateCamera(CameraUpdateFactory.zoomTo(12));
     }
 
-    private void requestPlacesToCurrentLocation(LatLng currentLatLng) {
-        placesHelper = new PlacesApiHelper(this);
-        placesHelper.requestPlaces("car_wash", currentLatLng, lang, placesResponseCallback);
-    }
+    private void requestPlacesNearCurrentLocation(final LatLng currentLatLng) {
+        placesHelper.requestPlaces("car_wash", currentLatLng, lang, new Callback<PlacesResponse>() {
+            @Override
+            public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
+                results = response.body().getResults();
 
-    private Callback<PlacesResponse> placesResponseCallback = new Callback<PlacesResponse>() {
-        @Override
-        public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
+                for (Result result : results) {
+                    ru.solandme.washwait.map.POJO.Location location = result.getGeometry().getLocation();
+                    LatLng latLng = new LatLng(location.getLat(), location.getLng());
+                    map.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .snippet(result.getVicinity())
+                            .title(result.getName()));
+                }
 
-            results = response.body().getResults();
-
-            for (Result result : results) {
-                ru.solandme.washwait.map.POJO.Location location = result.getGeometry().getLocation();
-                LatLng latLng = new LatLng(location.getLat(), location.getLng());
-                map.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .snippet(result.getVicinity())
-                        .title(result.getName()));
+                adapter = new MyPlacesRVAdapter(results, MapActivity.this);
+                carWashList.setAdapter(adapter);
+                moveCameraToLocation(currentLatLng);
             }
 
-            adapter = new MyPlacesRVAdapter(results, MapActivity.this);
-            carWashList.setAdapter(adapter);
-            moveCameraToLocation(currentLatLng);
-        }
+            @Override
+            public void onFailure(Call<PlacesResponse> call, Throwable t) {
 
-        @Override
-        public void onFailure(Call<PlacesResponse> call, Throwable t) {
-        }
-    };
+            }
+        });
+    }
+
 
     @Override
     public void onPlaceItemSelected(final int position, final Result result) {
-        Places.GeoDataApi.getPlaceById(googleApiClient, result.getPlaceId())
-                .setResultCallback(new ResultCallback<PlaceBuffer>() {
-                    @Override
-                    public void onResult(PlaceBuffer places) {
-                        if (places.getStatus().isSuccess() && places.getCount() > 0) {
-                            final Place myPlace = places.get(0);
-                            Log.i(TAG, "Place found: " + myPlace.getName());
 
-                            Intent intent = new Intent(MapActivity.this, AboutPlace.class);
-                            intent.putExtra("name", myPlace.getName().toString());
-                            intent.putExtra("phone", myPlace.getPhoneNumber().toString());
-                            intent.putExtra("placeId", myPlace.getId());
-                            intent.putExtra("address", myPlace.getAddress().toString());
-                            intent.putExtra("rating", myPlace.getRating());
+        placesHelper.requestPlaceInfo(result.getPlaceId(), lang, new Callback<PlaceInfo>() {
+            @Override
+            public void onResponse(Call<PlaceInfo> call, Response<PlaceInfo> response) {
 
-                            if (myPlace.getWebsiteUri() != null)
-                                intent.putExtra("webUrl", myPlace.getWebsiteUri().toString());
+                ru.solandme.washwait.places.POJO.Result result = response.body().getResult();
 
-                            if (result.getPhotos().size() > 0) {
-                                intent.putExtra("photoRef", result.getPhotos().get(0).getPhotoReference());
-                            }
+                Log.i(TAG, "Place found: " + result.getName());
 
-                            if (result.getOpeningHours() != null) {
-                                String open = "";
-                                for (int i = 0; i < result.getOpeningHours().getWeekdayText().size(); i++) {
-                                    open = open + "\n" + result.getOpeningHours().getWeekdayText().get(i).toString();
-                                    intent.putExtra("openHours", open);
+                Intent intent = new Intent(MapActivity.this, AboutPlace.class);
+                intent.putExtra(AboutPlace.PLACE_NAME_KEY, result.getName());
+                intent.putExtra(AboutPlace.PHONE_KEY, result.getInternationalPhoneNumber());
+                intent.putExtra(AboutPlace.ADDRESS_KEY, result.getVicinity());
+                intent.putExtra(AboutPlace.RATING_KEY, result.getRating());
 
-                                }
-                            }
-                            startActivity(intent);
-                        } else {
-                            Log.e(TAG, "Place not found");
-                        }
-                        places.release();
+                if (result.getWebsite() != null)
+                    intent.putExtra(AboutPlace.WEB_URL_KEY, result.getWebsite());
+
+                if (result.getPhotos() != null) {
+                    intent.putExtra(AboutPlace.PHOTO_REF_KEY, result.getPhotos().get(0).getPhotoReference());
+                }
+
+                if (result.getOpeningHours() != null) {
+                    String open = "";
+                    for (int i = 0; i < result.getOpeningHours().getWeekdayText().size(); i++) {
+                        open = open + "\n" + result.getOpeningHours().getWeekdayText().get(i);
+                        intent.putExtra(AboutPlace.OPEN_HOURS_KEY, open);
                     }
-                });
+                }
+                startActivity(intent);
+            }
 
+            @Override
+            public void onFailure(Call<PlaceInfo> call, Throwable t) {
+                Log.e(TAG, "Place not found");
+            }
+        });
     }
 
     @Override
@@ -227,7 +221,7 @@ public class MapActivity extends FragmentActivity implements
         mCurrLocationMarker = map.addMarker(markerOptions);
 
         currentLatLng = latLng;
-        requestPlacesToCurrentLocation(currentLatLng);
+        requestPlacesNearCurrentLocation(currentLatLng);
         //stop location updates
         if (map != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);

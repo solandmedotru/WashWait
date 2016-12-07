@@ -15,6 +15,13 @@ import ru.solandme.washwait.utils.Utils;
 
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "AboutPlaceDialog";
+    public static final String OPEN_HOURS_KEY = "openHours";
+    public static final String PLACE_NAME_KEY = "name";
+    public static final String PHONE_KEY = "phone";
+    public static final String ADDRESS_KEY = "address";
+    public static final String PHOTO_REF_KEY = "photoRef";
+    public static final String WEB_URL_KEY = "webUrl";
+    public static final String RATING_KEY = "rating";
 
     TextView nameAboutPlace;
     TextView phoneAboutPlace;
@@ -38,13 +45,13 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.about_place_dialog);
 
         Bundle args = getIntent().getExtras();
-        openHours = args.getString("openHours");
-        placeName = args.getString("name");
-        placePhone = args.getString("phone");
-        placeAddress = args.getString("address");
-        photoRef = args.getString("photoRef");
-        webUrl = args.getString("webUrl");
-        placeRating = args.getFloat("rating");
+        openHours = args.getString(OPEN_HOURS_KEY);
+        placeName = args.getString(PLACE_NAME_KEY);
+        placePhone = args.getString(PHONE_KEY);
+        placeAddress = args.getString(ADDRESS_KEY);
+        photoRef = args.getString(PHOTO_REF_KEY);
+        webUrl = args.getString(WEB_URL_KEY);
+        placeRating = args.getFloat(RATING_KEY);
 
         photoAboutPlace = (ImageView) findViewById(R.id.place_photo);
         ratingAboutPlace = (ImageView) findViewById(R.id.rating);

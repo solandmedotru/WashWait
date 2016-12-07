@@ -20,7 +20,6 @@ import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -96,10 +95,10 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                 }
                 if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                        buildlocationClient();
+                        buildLocationClient();
                     }
                 } else {
-                    buildlocationClient();
+                    buildLocationClient();
                 }
             }
         });
@@ -113,7 +112,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     }
 
-    protected synchronized void buildlocationClient() {
+    protected synchronized void buildLocationClient() {
         locationClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this, 1 /* clientId */, this)
                 .addConnectionCallbacks(this)
@@ -227,7 +226,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                         }
 
                         if (locationClient == null) {
-                            buildlocationClient();
+                            buildLocationClient();
                         }
                     }
                 } else {

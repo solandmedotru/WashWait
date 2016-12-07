@@ -151,7 +151,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @NonNull
     private String getDataWithFormat(Date date) {
-        DateFormat simpleDateFormat = SimpleDateFormat.getDateInstance();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM",
+                java.util.Locale.getDefault());
         return simpleDateFormat.format(date).toUpperCase();
     }
 
