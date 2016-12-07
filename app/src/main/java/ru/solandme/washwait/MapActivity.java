@@ -141,7 +141,7 @@ public class MapActivity extends FragmentActivity implements
 
     private void requestPlacesToCurrentLocation(LatLng currentLatLng) {
         placesHelper = new PlacesApiHelper(this);
-        placesHelper.requestPlaces("car_wash", currentLatLng, 10000, lang, placesResponseCallback);
+        placesHelper.requestPlaces("car_wash", currentLatLng, lang, placesResponseCallback);
     }
 
     private Callback<PlacesResponse> placesResponseCallback = new Callback<PlacesResponse>() {

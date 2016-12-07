@@ -37,7 +37,7 @@
     <string name="zip_or_index">Введіть поштовий індекс\nабо поштовий індекс</string>
     <string name="example_zip">Або, 01000</string>
     <string name="click_to_find">Натисніть, щоб знайти</string>
-    <string name="find_your_location">своє місце розташування</string>
+    <string name="find_your_location">місце розташування</string>
     <string name="theme">Тема</string>
     <string name="theme_blue">Синя</string>
     <string name="theme_color">Вибрати тему</string>

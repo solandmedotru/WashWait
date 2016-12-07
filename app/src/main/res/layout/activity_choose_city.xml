@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <AutoCompleteTextView
+            <android.support.v7.widget.AppCompatAutoCompleteTextView
                 style="@style/AppTheme"
                 android:id="@+id/autocomplete_places"
                 android:layout_width="0dp"
@@ -70,7 +70,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/enter_city"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="20sp"
                     android:textColor="@color/textColor" />
 
                 <TextView
@@ -78,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/example_city"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="16sp"
                     android:textColor="@color/textColor" />
             </LinearLayout>
         </LinearLayout>
@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/zip_or_index"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="20sp"
                     android:textColor="@color/textColor" />
 
                 <TextView
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/example_zip"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="16sp"
                     android:textColor="@color/textColor" />
             </LinearLayout>
         </LinearLayout>
@@ -149,7 +149,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/click_to_find"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textSize="20sp"
                     android:textColor="@color/textColor" />
 
                 <TextView
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:text="@string/find_your_location"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="16sp"
                     android:textColor="@color/textColor" />
             </LinearLayout>
         </LinearLayout>

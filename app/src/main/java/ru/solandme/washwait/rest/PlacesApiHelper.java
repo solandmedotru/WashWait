@@ -22,7 +22,7 @@ public class PlacesApiHelper {
         mContext = context;
     }
 
-    public void requestPlaces(String types, LatLng latLng, int radius, String lang, Callback<PlacesResponse> callback) {
+    public void requestPlaces(String types, LatLng latLng, String lang, Callback<PlacesResponse> callback) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(GOOGLEAPIS_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -30,9 +30,10 @@ public class PlacesApiHelper {
 
         PlaceApiService service = retrofit.create(PlaceApiService.class);
 
-        Call<PlacesResponse> call = service.requestPlaces(types,
+        Call<PlacesResponse> call = service.requestPlaces(
+                types,
                 String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude),
-                String.valueOf(radius),
+                "distance",
                 "false",
                 lang,
                 mContext.getString(R.string.google_maps_key));

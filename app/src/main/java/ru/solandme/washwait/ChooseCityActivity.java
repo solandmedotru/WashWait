@@ -4,6 +4,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -14,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -34,6 +37,8 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import ru.solandme.washwait.adapters.PlaceAutocompleteAdapter;
@@ -52,7 +57,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     LocationManager locationManager;
     private LocationRequest mLocationRequest;
     private PlaceAutocompleteAdapter mAdapter;
-    private AutoCompleteTextView mAutocompleteView;
+    private AppCompatAutoCompleteTextView mAutocompleteView;
 
     private ImageView actionLocation;
     private float lat;
@@ -75,7 +80,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                 .build();
 
         setContentView(R.layout.activity_choose_city);
-        mAutocompleteView = (AutoCompleteTextView) findViewById(R.id.autocomplete_places);
+        mAutocompleteView = (AppCompatAutoCompleteTextView) findViewById(R.id.autocomplete_places);
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
         actionLocation = (ImageView) findViewById(R.id.action_location);
@@ -101,7 +106,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
 
         AutocompleteFilter filter = new AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_REGIONS)
+                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_CITIES)
                 .build();
         mAdapter = new PlaceAutocompleteAdapter(this, mGoogleApiClient, null, filter);
         mAutocompleteView.setAdapter(mAdapter);
@@ -110,6 +115,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     protected synchronized void buildlocationClient() {
         locationClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this, 1 /* clientId */, this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
@@ -163,7 +169,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             final Place place = places.get(0);
             lat = (float) place.getLatLng().latitude;
             lon = (float) place.getLatLng().longitude;
-            city = place.getName().toString();
+            city = place.getName().toString().trim();
 
             sharedPref.edit()
                     .putFloat("lat", lat)
@@ -267,14 +273,26 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     public void onLocationChanged(Location location) {
         lat = (float) location.getLatitude();
         lon = (float) location.getLongitude();
+        String city = "";
+
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+            List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (!addressList.isEmpty()) {
+                for (Address address : addressList) {
+                    city += address.getLocality() != null ? address.getLocality() : getString(R.string.choose_location);
+                    Log.i(TAG, city);
+                }
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "Failed Geocoding.");
+        }
+
         sharedPref.edit()
                 .putFloat("lat", lat)
                 .putFloat("lon", lon)
-                .putString("city",
-                        getString(R.string.latitude)
-                                + String.format(Locale.getDefault(), "%.4f", lat)
-                                + getString(R.string.longitude)
-                                + String.format(Locale.getDefault(), "%.4f", lon))
+                .putString("city", city)
                 .apply();
         if (locationClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
