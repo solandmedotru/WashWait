@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
@@ -16,29 +15,31 @@
         android:paddingEnd="16dp"
         android:paddingStart="16dp">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/button1"
+                android:id="@+id/btnMakeCallPlace"
                 android:layout_width="70dp"
                 android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_dialog_map" />
+                android:src="@drawable/ic_call" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="BUTTON 1"
+                android:layout_gravity="center"
+                android:text="@string/make_call"
+                android:textAllCaps="true"
                 android:textColor="@color/textColor" />
-        </RelativeLayout>
+        </LinearLayout>
 
 
         <LinearLayout
-            android:id="@+id/establecimiento_layout_favoritos_button"
+            android:id="@+id/btnShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -46,138 +47,130 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/button2"
                 android:layout_width="70dp"
                 android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_dialog_info" />
+                android:src="@drawable/ic_share" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="BUTTON 2"
+                android:layout_gravity="center"
+                android:text="@string/share"
+                android:textAllCaps="true"
                 android:textColor="@color/textColor" />
         </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/establecimiento_share_button"
+                android:id="@+id/btnWebSite"
                 android:layout_width="70dp"
                 android:layout_height="60dp"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@android:drawable/ic_menu_share" />
+                android:src="@drawable/ic_web" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:text="BUTTON 3"
+                android:layout_gravity="center"
+                android:text="@string/web_site"
+                android:textAllCaps="true"
                 android:textColor="@color/textColor" />
-        </RelativeLayout>
+        </LinearLayout>
     </LinearLayout>
 
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="56dp"
+            android:layout_marginStart="56dp"
             android:orientation="vertical">
 
-            <GridLayout
+            <TextView
+                android:id="@+id/place_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:padding="16dp"
-                android:useDefaultMargins="true">
+                android:gravity="center_vertical"
+                android:textSize="18sp" />
 
 
-                <TextView
-                    android:id="@+id/phoneLabel"
-                    style="@android:style/TextAppearance.Medium"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal">
+
+                <RatingBar
+                    android:id="@+id/ratingBar"
+                    style="@style/RatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_row="1"
-                    android:text="@string/phone"
-                    android:textStyle="normal|bold" />
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:isIndicator="true"
+                    android:numStars="5"
+                    android:rating="3.5"
+                    android:stepSize="0.1" />
 
                 <TextView
-                    android:id="@+id/place_phone"
-                    style="@android:style/TextAppearance.Medium"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_gravity="fill_horizontal"
-                    android:layout_row="1"
-                    android:text="+7 999 9999999" />
-
-                <TextView
-                    android:id="@+id/address_label"
-                    style="@android:style/TextAppearance.Medium"
+                    android:id="@+id/ratingNumber"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_row="2"
-                    android:labelFor="@+id/place_address"
-                    android:text="@string/address"
-                    android:textStyle="normal|bold" />
-
-                <TextView
-                    android:id="@+id/place_address"
-                    style="@android:style/TextAppearance.Medium"
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_column="1"
-                    android:layout_gravity="fill_horizontal"
-                    android:layout_row="2"
-                    android:text="Moskow, bulvar Volkova 6-110, dfdfddfdfdfd dfdf" />
-
-                <TextView
-                    android:id="@+id/place_description"
-                    style="@android:style/TextAppearance.Medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_column="0"
-                    android:layout_columnSpan="2"
-                    android:layout_row="3"
-                    android:text="Description: " />
-            </GridLayout>
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@android:color/white"
-        android:gravity="bottom|end"
-        android:orientation="horizontal">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/colorDark54" />
 
-        <Button
-            android:id="@+id/btnCancelPlace"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/place_phone"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_place_height"
+            android:layout_gravity="fill_horizontal"
+            android:drawableLeft="@drawable/ic_phone_black"
+            android:drawablePadding="32dp"
+            android:drawableStart="@drawable/ic_phone_black"
+            android:gravity="center_vertical" />
+
+
+        <TextView
+            android:id="@+id/place_address"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/line_place_height"
+            android:layout_gravity="fill_horizontal"
+            android:drawableLeft="@drawable/ic_address"
+            android:drawablePadding="32dp"
+            android:drawableStart="@drawable/ic_address"
+            android:gravity="center_vertical" />
+
+        <TextView
+            android:id="@+id/place_open_hours"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:background="@color/colorCancel"
-            android:text="@string/close"
-            android:textColor="@color/textColor" />
-
-        <Button
-            android:id="@+id/btnMakeCallPlace"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/colorCall"
-            android:text="@string/make_call"
-            android:textColor="@color/textColor" />
+            android:layout_gravity="fill_horizontal"
+            android:drawableLeft="@drawable/ic_access_time"
+            android:drawablePadding="32dp"
+            android:drawableStart="@drawable/ic_access_time"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/line_place_height" />
 
     </LinearLayout>
 </LinearLayout>
