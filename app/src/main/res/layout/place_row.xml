@@ -23,6 +23,15 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:text="Wash car" />
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:rating="3.5"
+            android:stepSize="0.1" />
 
         <TextView
             android:id="@+id/place_vicinity"
@@ -31,17 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/place_rating"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:layout_marginLeft="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_weight="1"
-        android:src="@drawable/ic_rating5" />
-
 </LinearLayout>
