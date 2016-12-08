@@ -33,57 +33,16 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY"
                     android:src="@mipmap/city8" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:paddingBottom="8dp"
-                    android:paddingEnd="16dp"
-                    android:paddingStart="16dp"
-                    android:paddingTop="8dp">
-
-                    <ImageView
-                        android:id="@+id/rating"
-                        android:layout_width="70dp"
-                        android:layout_height="70dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:paddingTop="8dp"
-                        android:src="@drawable/ic_rating5" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/place_name"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Title dummy"
-                            android:textColor="@android:color/white"
-                            android:textSize="19sp" />
-
-                        <TextView
-                            android:id="@+id/text_dummy1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="Text dummy 1234 1234"
-                            android:textColor="@android:color/white"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:text="Text dummy qwer asdf zxcv"
-                            android:textColor="@android:color/white"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-                </RelativeLayout>
+                <TextView
+                    android:background="@color/colorGrey"
+                    android:id="@+id/photoAttributes"
+                    android:layout_margin="16dp"
+                    android:padding="8dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/textColor"/>
             </FrameLayout>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
