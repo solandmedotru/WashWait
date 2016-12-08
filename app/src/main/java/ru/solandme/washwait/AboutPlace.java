@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,13 +25,14 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     public static final String PHOTO_REF_KEY = "photoRef";
     public static final String WEB_URL_KEY = "webUrl";
     public static final String RATING_KEY = "rating";
+    public static final String PHOTO_ATTRIBUTES_KEY = "photoAttributions";
 
     TextView nameAboutPlace;
     TextView phoneAboutPlace;
     TextView addressAboutPlace;
-    TextView descriptionAboutPlace;
+    TextView openHourAboutPlace;
     ImageView photoAboutPlace;
-    ImageView ratingAboutPlace;
+    RatingBar ratingBarAboutPlace;
 
     private String openHours;
     private String placeName;
@@ -37,6 +41,9 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     private String photoRef;
     private String webUrl;
     private float placeRating;
+    private TextView ratingNumberAboutPlace;
+    private TextView photoAttributes;
+    private String placePhotoAttributes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,50 +59,47 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
         photoRef = args.getString(PHOTO_REF_KEY);
         webUrl = args.getString(WEB_URL_KEY);
         placeRating = args.getFloat(RATING_KEY);
+        placePhotoAttributes = args.getString(PHOTO_ATTRIBUTES_KEY);
 
         photoAboutPlace = (ImageView) findViewById(R.id.place_photo);
-        ratingAboutPlace = (ImageView) findViewById(R.id.rating);
+        ratingBarAboutPlace = (RatingBar) findViewById(R.id.ratingBar);
+        ratingNumberAboutPlace = (TextView) findViewById(R.id.ratingNumber);
         nameAboutPlace = (TextView) findViewById(R.id.place_name);
         phoneAboutPlace = (TextView) findViewById(R.id.place_phone);
         addressAboutPlace = (TextView) findViewById(R.id.place_address);
-        descriptionAboutPlace = (TextView) findViewById(R.id.place_description);
+        openHourAboutPlace = (TextView) findViewById(R.id.place_open_hours);
+        photoAttributes = (TextView) findViewById(R.id.photoAttributes);
 
-        Button btnCancel = (Button) findViewById(R.id.btnCancelPlace);
-        btnCancel.setOnClickListener(this);
-        Button btnMakeCall = (Button) findViewById(R.id.btnMakeCallPlace);
+
+        ImageButton btnMakeCall = (ImageButton) findViewById(R.id.btnMakeCallPlace);
         btnMakeCall.setOnClickListener(this);
+        ImageButton btnWebSite = (ImageButton) findViewById(R.id.btnWebSite);
+        btnWebSite.setOnClickListener(this);
+
+
+        if (null == openHours) openHourAboutPlace.setVisibility(View.GONE);
+        if (null == placeAddress) addressAboutPlace.setVisibility(View.GONE);
+        if (null == placePhotoAttributes || placePhotoAttributes.equals(""))
+            photoAttributes.setVisibility(View.GONE);
+        if (null == placePhone || placePhone.equals("") || placePhone.equals("null")) {
+            phoneAboutPlace.setVisibility(View.GONE);
+            btnMakeCall.setClickable(false);
+        }
+        if (null == webUrl) btnWebSite.setClickable(false);
 
         nameAboutPlace.setText(placeName);
         phoneAboutPlace.setText(placePhone);
-        if (phoneAboutPlace.getText().equals("") || phoneAboutPlace.getText().equals("null")) {
-            btnMakeCall.setVisibility(View.GONE);
-        }
-
         addressAboutPlace.setText(placeAddress);
+        openHourAboutPlace.setText(openHours);
+        ratingBarAboutPlace.setRating(placeRating);
+        ratingNumberAboutPlace.setText(String.valueOf(placeRating));
 
-        if (openHours == null) openHours = "";
-        if (webUrl == null) webUrl = "";
-        descriptionAboutPlace.setText(openHours + "\n" + webUrl);
-
-        switch ((int) placeRating) {
-            case 1:
-                ratingAboutPlace.setImageResource(R.drawable.ic_rating1);
-                break;
-            case 2:
-                ratingAboutPlace.setImageResource(R.drawable.ic_rating2);
-                break;
-            case 3:
-                ratingAboutPlace.setImageResource(R.drawable.ic_rating3);
-                break;
-            case 4:
-                ratingAboutPlace.setImageResource(R.drawable.ic_rating4);
-                break;
-            case 5:
-                ratingAboutPlace.setImageResource(R.drawable.ic_rating5);
-                break;
-            default:
-                ratingAboutPlace.setImageResource(R.drawable.ic_rating0);
-                break;
+        if (null != placePhotoAttributes && !placePhotoAttributes.equals("")) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                photoAttributes.setText(Html.fromHtml(placePhotoAttributes, Html.FROM_HTML_MODE_LEGACY));
+            } else {
+                photoAttributes.setText(Html.fromHtml(placePhotoAttributes));
+            }
         }
 
         Picasso.with(this).load(
@@ -110,12 +114,16 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btnCancelPlace:
-                break;
             case R.id.btnMakeCallPlace:
                 Intent intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
                 startActivity(intent);
+                break;
+            case R.id.btnWebSite:
+                if (!webUrl.startsWith("http://") && !webUrl.startsWith("https://"))
+                    webUrl = "http://" + webUrl;
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUrl));
+                startActivity(browserIntent);
                 break;
         }
         finish();
