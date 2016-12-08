@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView placeName;
-        ImageView placeRating;
+        RatingBar placeRating;
         TextView placeVicinity;
 
         View placesContainer;
@@ -31,7 +32,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         ViewHolder(View v) {
             super(v);
             placeName = (TextView) v.findViewById(R.id.place_name);
-            placeRating = (ImageView) v.findViewById(R.id.place_rating);
+            placeRating = (RatingBar) v.findViewById(R.id.ratingBar);
             placeVicinity = (TextView) v.findViewById(R.id.place_vicinity);
 
             placesContainer = v.findViewById(R.id.places_container);
@@ -67,28 +68,7 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.placeName.setText(results.get(position).getName());
-
-        switch ((int) results.get(position).getRating()) {
-            case 1:
-                holder.placeRating.setImageResource(R.drawable.ic_rating1);
-                break;
-            case 2:
-                holder.placeRating.setImageResource(R.drawable.ic_rating2);
-                break;
-            case 3:
-                holder.placeRating.setImageResource(R.drawable.ic_rating3);
-                break;
-            case 4:
-                holder.placeRating.setImageResource(R.drawable.ic_rating4);
-                break;
-            case 5:
-                holder.placeRating.setImageResource(R.drawable.ic_rating5);
-                break;
-            default:
-                holder.placeRating.setImageResource(R.drawable.ic_rating0);
-                break;
-        }
-
+        holder.placeRating.setRating((float) results.get(position).getRating());
         holder.placeVicinity.setText(results.get(position).getVicinity());
 
 //        holder.placesContainer.setOnClickListener(new View.OnClickListener() {
