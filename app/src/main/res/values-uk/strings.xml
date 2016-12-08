@@ -49,6 +49,8 @@
     <string name="miles_per_h">миль/ч</string>
     <string name="h_pa">гПа</string>
     <string name="m_hg">мм рт.ст.</string>
+    <string name="share">поделиться</string>
+    <string name="web_site">Сайт</string>
 
 
 </resources>

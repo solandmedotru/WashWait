@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,11 +42,12 @@ import retrofit2.Response;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
+import ru.solandme.washwait.places.POJO.Photo;
 import ru.solandme.washwait.places.POJO.PlaceInfo;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
 
-public class MapActivity extends FragmentActivity implements
+public class MapActivity extends AppCompatActivity implements
         OnMapReadyCallback,
         MyPlacesRVAdapter.OnPlaceSelectedListener,
         ConnectionCallbacks,
@@ -81,6 +83,7 @@ public class MapActivity extends FragmentActivity implements
 
         bundle = getIntent().getExtras();
         currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
+        Log.e(TAG, "onCreate: " + currentLatLng.toString() );
         lang = bundle.getString("lang");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -127,16 +130,16 @@ public class MapActivity extends FragmentActivity implements
         }
 
         placesHelper = new PlacesApiHelper(this);
-        requestPlacesNearCurrentLocation(currentLatLng);
+        requestPlacesNearCurrentLocation();
     }
 
 
     private void moveCameraToLocation(LatLng currentLatLng) {
         map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(12));
+        map.animateCamera(CameraUpdateFactory.zoomTo(13));
     }
 
-    private void requestPlacesNearCurrentLocation(final LatLng currentLatLng) {
+    private void requestPlacesNearCurrentLocation() {
         placesHelper.requestPlaces("car_wash", currentLatLng, lang, new Callback<PlacesResponse>() {
             @Override
             public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
@@ -153,7 +156,9 @@ public class MapActivity extends FragmentActivity implements
 
                 adapter = new MyPlacesRVAdapter(results, MapActivity.this);
                 carWashList.setAdapter(adapter);
+
                 moveCameraToLocation(currentLatLng);
+                Log.e(TAG, "onResponse: " + currentLatLng.toString() );
             }
 
             @Override
@@ -179,12 +184,18 @@ public class MapActivity extends FragmentActivity implements
                 intent.putExtra(AboutPlace.PLACE_NAME_KEY, result.getName());
                 intent.putExtra(AboutPlace.PHONE_KEY, result.getInternationalPhoneNumber());
                 intent.putExtra(AboutPlace.ADDRESS_KEY, result.getVicinity());
-                intent.putExtra(AboutPlace.RATING_KEY, result.getRating());
+                intent.putExtra(AboutPlace.RATING_KEY, ((float) result.getRating()));
 
                 if (result.getWebsite() != null)
                     intent.putExtra(AboutPlace.WEB_URL_KEY, result.getWebsite());
 
+
                 if (result.getPhotos() != null) {
+                    String photoAttributions = "";
+                    for (String attr : result.getPhotos().get(0).getHtmlAttributions()) {
+                        photoAttributions = photoAttributions + attr + "\n";
+                    }
+                    intent.putExtra(AboutPlace.PHOTO_ATTRIBUTES_KEY, photoAttributions);
                     intent.putExtra(AboutPlace.PHOTO_REF_KEY, result.getPhotos().get(0).getPhotoReference());
                 }
 
@@ -221,7 +232,8 @@ public class MapActivity extends FragmentActivity implements
         mCurrLocationMarker = map.addMarker(markerOptions);
 
         currentLatLng = latLng;
-        requestPlacesNearCurrentLocation(currentLatLng);
+        Log.e(TAG, "onLocationChanged: " + currentLatLng.toString() );
+        requestPlacesNearCurrentLocation();
         //stop location updates
         if (map != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);

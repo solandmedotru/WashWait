@@ -3,10 +3,10 @@
     android:id="@+id/places_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
     android:orientation="horizontal">
 
 
@@ -18,27 +18,27 @@
 
         <TextView
             android:id="@+id/place_name"
-            style="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="Wash car" />
+            android:text="Wash car"
+            android:textSize="20sp" />
+
         <RatingBar
             android:id="@+id/ratingBar"
             style="@style/RatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:isIndicator="true"
+            android:layout_marginBottom="8dp"
             android:numStars="5"
             android:rating="3.5"
             android:stepSize="0.1" />
 
         <TextView
             android:id="@+id/place_vicinity"
-            android:textSize="15sp"
-            style="@android:style/TextAppearance.Small"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="14sp" />
 
 
     </LinearLayout>

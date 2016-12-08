@@ -66,9 +66,9 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-
+        float rating = (float) results.get(position).getRating();
         holder.placeName.setText(results.get(position).getName());
-        holder.placeRating.setRating((float) results.get(position).getRating());
+        holder.placeRating.setRating(rating);
         holder.placeVicinity.setText(results.get(position).getVicinity());
 
 //        holder.placesContainer.setOnClickListener(new View.OnClickListener() {
