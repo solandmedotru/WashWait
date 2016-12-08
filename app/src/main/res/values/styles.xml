@@ -21,5 +21,9 @@
         <item name="android:windowMinWidthMinor">90%</item>
     </style>
 
+    <style name="RatingBar" parent="Widget.AppCompat.RatingBar.Small">
+        <item name="colorControlActivated">?attr/colorPrimary</item>
+    </style>
+
 
 </resources>
