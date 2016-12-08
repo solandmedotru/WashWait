@@ -61,4 +61,6 @@
     <string name="miles_per_h">mph</string>
     <string name="m_hg">mmHg</string>
     <string name="h_pa">hPa</string>
+    <string name="web_site">web site</string>
+    <string name="share">share</string>
 </resources>
