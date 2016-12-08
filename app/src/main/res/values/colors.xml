@@ -10,6 +10,7 @@
     <color name="colorCall">#2E7D32</color>
     <color name="colorCancel">#6e6e6e</color>
     <color name="colorDarken">#28000000</color>
+    <color name="colorDark54">#86000000</color>
 
     <color name="colorPrimaryB">#2196F3</color>
     <color name="colorPrimaryDarkB">#1871ca</color>

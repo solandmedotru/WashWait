@@ -15,4 +15,5 @@
     <dimen name="icon_size">60dp</dimen>
     <dimen name="padding_icon">6dp</dimen>
     <dimen name="icon_size_land">40dp</dimen>
+    <dimen name="line_place_height">52dp</dimen>
 </resources>
