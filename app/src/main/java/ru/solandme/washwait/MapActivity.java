@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -42,7 +41,6 @@ import retrofit2.Response;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
-import ru.solandme.washwait.places.POJO.Photo;
 import ru.solandme.washwait.places.POJO.PlaceInfo;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
@@ -265,7 +263,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MA_PERMISSIONS_REQUEST_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

@@ -31,7 +31,6 @@ import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -71,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private RecyclerView forecastRecyclerView;
     private MyForecastRVAdapter adapter;
 
-    WeatherForecast weatherForecast;
+    private WeatherForecast weatherForecast;
     private GcmNetworkManager mGcmNetworkManager;
     private String units;
     private String city;

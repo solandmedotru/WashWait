@@ -1,20 +1,15 @@
 <resources>
-    <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin_land">12dp</dimen>
-    <dimen name="margin_image">6dp</dimen>
-    <dimen name="main_text_size">16sp</dimen>
-    <dimen name="main_text_size_land">14sp</dimen>
+    <dimen name="main_padding">16dp</dimen>
+    <dimen name="carSize">250dp</dimen>
+    <dimen name="progressHeight">8dp</dimen>
+    <dimen name="progressMarginTop">6dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
-    <dimen name="paddingBottom">12dp</dimen>
-    <dimen name="paddingTop">12dp</dimen>
-    <dimen name="paddingLeft">12dp</dimen>
-    <dimen name="paddingRight">12dp</dimen>
-    <dimen name="padding">12dp</dimen>
-    <dimen name="icon_size">60dp</dimen>
     <dimen name="padding_icon">6dp</dimen>
-    <dimen name="icon_size_land">40dp</dimen>
+    <dimen name="main_text_size">16sp</dimen>
     <dimen name="line_place_height">52dp</dimen>
-
+    <dimen name="icon_size">60dp</dimen>
+    <dimen name="cardPadding">8dp</dimen>
+    <dimen name="bigTextSize">40sp</dimen>
 </resources>
