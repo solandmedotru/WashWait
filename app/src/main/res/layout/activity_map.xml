@@ -5,32 +5,53 @@
     android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/textColor"
     android:gravity="top"
     sothree:umanoPanelHeight="68dp"
-    android:background="@color/textColor"
     sothree:umanoShadowHeight="4dp">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rwCarWashPlaces"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        map:cameraBearing="112.5"
-        map:cameraTilt="30"
-        map:cameraZoom="13"
-        map:mapType="normal"
-        map:uiCompass="true"
-        map:uiRotateGestures="true"
-        map:uiScrollGestures="true"
-        map:uiTiltGestures="true"
-        map:uiZoomControls="true"
-        map:uiZoomGestures="true"
-        tools:context="ru.solandme.washwait.MapActivity" />
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="false"
+        android:id="@+id/dragView">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="100"
+            map:cameraBearing="112.5"
+            map:cameraTilt="30"
+            map:cameraZoom="13"
+            map:mapType="normal"
+            map:uiCompass="true"
+            map:uiRotateGestures="true"
+            map:uiScrollGestures="true"
+            map:uiTiltGestures="true"
+            map:uiZoomControls="true"
+            map:uiZoomGestures="true"
+            tools:context="ru.solandme.washwait.MapActivity" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center|bottom">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_up_down"/>
+        </LinearLayout>
+    </LinearLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>
 
 

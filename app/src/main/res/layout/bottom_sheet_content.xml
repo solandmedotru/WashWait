@@ -39,7 +39,6 @@
 
 
         <LinearLayout
-            android:id="@+id/btnShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
@@ -47,16 +46,17 @@
             android:orientation="vertical">
 
             <ImageButton
+                android:id="@+id/btnRoute"
                 android:layout_width="70dp"
                 android:layout_height="60dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_share" />
+                android:src="@drawable/ic_directions" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/share"
+                android:text="@string/route"
                 android:textAllCaps="true"
                 android:textColor="@color/textColor" />
         </LinearLayout>

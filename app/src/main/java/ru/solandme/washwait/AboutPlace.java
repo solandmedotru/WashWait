@@ -25,6 +25,8 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     public static final String PHOTO_REF_KEY = "photoRef";
     public static final String WEB_URL_KEY = "webUrl";
     public static final String RATING_KEY = "rating";
+    public static final String LAT_KEY = "lat";
+    public static final String LON_KEY = "lon";
     public static final String PHOTO_ATTRIBUTES_KEY = "photoAttributions";
 
     TextView nameAboutPlace;
@@ -45,13 +47,15 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     private TextView photoAttributes;
     private String placePhotoAttributes;
 
+    Bundle args;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_place_dialog);
 
-        Bundle args = getIntent().getExtras();
+        args = getIntent().getExtras();
         openHours = args.getString(OPEN_HOURS_KEY);
         placeName = args.getString(PLACE_NAME_KEY);
         placePhone = args.getString(PHONE_KEY);
@@ -75,6 +79,8 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
         btnMakeCall.setOnClickListener(this);
         ImageButton btnWebSite = (ImageButton) findViewById(R.id.btnWebSite);
         btnWebSite.setOnClickListener(this);
+        ImageButton btnRoute = (ImageButton) findViewById(R.id.btnRoute);
+        btnRoute.setOnClickListener(this);
 
 
         if (null == openHours) openHourAboutPlace.setVisibility(View.GONE);
@@ -115,15 +121,23 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnMakeCallPlace:
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
-                startActivity(intent);
+                Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                callIntent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
+                startActivity(callIntent);
                 break;
             case R.id.btnWebSite:
                 if (!webUrl.startsWith("http://") && !webUrl.startsWith("https://"))
                     webUrl = "http://" + webUrl;
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webUrl));
                 startActivity(browserIntent);
+                break;
+            case R.id.btnRoute:
+                String lat = String.valueOf(args.getDouble(LAT_KEY));
+                String lon = String.valueOf(args.getDouble(LON_KEY));
+                Uri gmmIntentUri = Uri.parse("google.navigation:q=" + lat + "," + lon + "&mode=d");
+                Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                mapIntent.setPackage("com.google.android.apps.maps");
+                startActivity(mapIntent);
                 break;
         }
         finish();

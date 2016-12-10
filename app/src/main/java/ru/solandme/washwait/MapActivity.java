@@ -185,6 +185,8 @@ public class MapActivity extends AppCompatActivity implements
                 intent.putExtra(AboutPlace.PHONE_KEY, result.getInternationalPhoneNumber());
                 intent.putExtra(AboutPlace.ADDRESS_KEY, result.getVicinity());
                 intent.putExtra(AboutPlace.RATING_KEY, ((float) result.getRating()));
+                intent.putExtra(AboutPlace.LAT_KEY, (result.getGeometry().getLocation().getLat()));
+                intent.putExtra(AboutPlace.LON_KEY, (result.getGeometry().getLocation().getLng()));
 
                 if (result.getWebsite() != null)
                     intent.putExtra(AboutPlace.WEB_URL_KEY, result.getWebsite());

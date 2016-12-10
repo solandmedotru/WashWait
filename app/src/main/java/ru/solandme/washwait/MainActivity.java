@@ -16,6 +16,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -48,11 +49,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String DEFAULT_UNITS = "metric";
     public static final int PERIODICAL_TIMER = 43200;
     public static final int FIRST_DAY_POSITION = 0;
-
+    Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private TextView currentDataField;
-    private TextView cityField;
     private TextView updatedField;
     private TextView detailsField;
     private TextView curMaxTempField;
@@ -90,6 +89,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weatherFont.ttf");
 
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
 
@@ -97,8 +99,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        currentDataField = (TextView) findViewById(R.id.currentDataField);
-        cityField = (TextView) findViewById(R.id.city_field);
         updatedField = (TextView) findViewById(R.id.updated_field);
         detailsField = (TextView) findViewById(R.id.details_field);
 
@@ -134,16 +134,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         }
 
-        String currentData = getDataWithFormat(new Date());
-        currentDataField.setText(currentData);
-
-        cityField.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                chooseCity();
-            }
-        });
-
         cityId = sharedPref.getInt("cityId", 2643743);
 
         getLastWeatherFromDB(cityId);
@@ -151,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @NonNull
     private String getDataWithFormat(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM",
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMM",
                 java.util.Locale.getDefault());
         return simpleDateFormat.format(date).toUpperCase();
     }
@@ -166,12 +156,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             curMaxTempField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
 
             units = sharedPref.getString("units", DEFAULT_UNITS);
-            city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
             double maxTemp = Double.parseDouble(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
             String description = cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC));
             long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
-            currentDataField.setText(getDataWithFormat(new Date(dt)));
+
+            toolbar.setSubtitle(getDataWithFormat(new Date(dt)));
             curMaxTempField.setText(getStringTemperature(maxTemp, units));
             detailsField.setText(description);
         }
@@ -181,6 +171,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onResume() {
+        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
+        String currentData = getDataWithFormat(new Date());
+        fillTitle(city, currentData);
+
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 ForecastService.NOTIFICATION));
         ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_ACTIVITY);
@@ -359,9 +353,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         double speedWind = weatherForecast.getList().get(position).getSpeed();
         int speedDirection = weatherForecast.getList().get(position).getDeg();
 
-        cityField.setText(city);
+        fillTitle(city, getDataWithFormat(new Date(dt)));
 
-        currentDataField.setText(getDataWithFormat(new Date(dt)));
         curMaxTempField.setText(getStringTemperature(maxTemp, units));
         curMinTempField.setText(getStringTemperature(minTemp, units));
         humidityField.setText(getString(R.string.wi_humidity) + " " + humidity + "%");
@@ -378,6 +371,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         updatedField.setText(String.format("%s%s",
                 getString(R.string.last_update),
                 updatedOn));
+    }
+
+    private void fillTitle(String city, String dataWithFormat) {
+        toolbar.setTitle(city);
+        toolbar.setSubtitle(dataWithFormat);
     }
 
     @NonNull
