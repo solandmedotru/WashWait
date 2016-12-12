@@ -23,7 +23,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="12"
-                android:padding="@dimen/main_padding_land">
+                android:padding="@dimen/_8sdp">
 
                 <include
                     android:id="@+id/forecastCard"
@@ -46,13 +46,13 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/precipitation_meter"
                     android:layout_below="@+id/forecastCard"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="@dimen/_8sdp"
                     android:gravity="bottom"
                     android:orientation="vertical">
 
                     <ImageView
                         android:id="@+id/car_image"
-                        android:layout_width="@dimen/carSize"
+                        android:layout_width="@dimen/_250sdp"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|bottom"
                         android:adjustViewBounds="true"
@@ -65,9 +65,8 @@
                     android:id="@+id/precipitation_meter"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/progressHeightLand"
-                    android:layout_above="@+id/progressLabel"
-                    android:layout_marginTop="@dimen/progressMarginTop" />
+                    android:layout_height="@dimen/_6sdp"
+                    android:layout_above="@+id/progressLabel"/>
 
                 <LinearLayout
                     android:id="@+id/progressLabel"
@@ -84,7 +83,7 @@
                         android:text="@string/dry"
                         android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/small_text_size_land" />
+                        android:textSize="@dimen/_12ssp" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -95,7 +94,7 @@
                         android:text="@string/normal"
                         android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/caption" />
+                        android:textSize="@dimen/_12ssp" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -106,7 +105,7 @@
                         android:text="@string/wet"
                         android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/caption" />
+                        android:textSize="@dimen/_12ssp" />
                 </LinearLayout>
 
                 <TextView
@@ -116,17 +115,17 @@
                     android:layout_alignParentBottom="true"
                     android:textAlignment="center"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/caption" />
+                    android:textSize="@dimen/_12ssp" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rwForecast"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/main_padding_land"
-                android:layout_marginEnd="@dimen/main_padding"
-                android:layout_marginRight="@dimen/main_padding"
-                android:layout_marginTop="@dimen/main_padding_land"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_weight="2"
                 android:background="@drawable/transparent_bg" />
         </LinearLayout>

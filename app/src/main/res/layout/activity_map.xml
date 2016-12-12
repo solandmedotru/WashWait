@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/textColor"
     android:gravity="top"
-    sothree:umanoPanelHeight="68dp"
+    sothree:umanoPanelHeight="@dimen/_68sdp"
     sothree:umanoShadowHeight="4dp">
 
     <android.support.v7.widget.RecyclerView

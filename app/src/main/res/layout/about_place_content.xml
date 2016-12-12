@@ -11,9 +11,9 @@
         android:background="?attr/colorPrimary"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        android:paddingBottom="12dp"
-        android:paddingEnd="16dp"
-        android:paddingStart="16dp">
+        android:paddingBottom="@dimen/_12sdp"
+        android:paddingEnd="@dimen/_16sdp"
+        android:paddingStart="@dimen/_16sdp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -22,8 +22,10 @@
 
             <ImageButton
                 android:id="@+id/btnMakeCallPlace"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:padding="@dimen/_16sdp"
+                android:scaleType="fitXY"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_call" />
@@ -33,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/make_call"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="true"
                 android:textColor="@color/textColor" />
         </LinearLayout>
@@ -41,14 +44,16 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp"
+            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginStart="@dimen/_20sdp"
             android:orientation="vertical">
 
             <ImageButton
                 android:id="@+id/btnRoute"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:padding="@dimen/_16sdp"
+                android:scaleType="fitXY"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_directions" />
 
@@ -57,6 +62,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/route"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="true"
                 android:textColor="@color/textColor" />
         </LinearLayout>
@@ -68,8 +74,10 @@
 
             <ImageButton
                 android:id="@+id/btnWebSite"
-                android:layout_width="70dp"
-                android:layout_height="60dp"
+                android:layout_width="@dimen/_60sdp"
+                android:layout_height="@dimen/_60sdp"
+                android:padding="@dimen/_16sdp"
+                android:scaleType="fitXY"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_web" />
@@ -79,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/web_site"
+                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="true"
                 android:textColor="@color/textColor" />
         </LinearLayout>
@@ -89,16 +98,16 @@
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:paddingBottom="@dimen/_8sdp"
+        android:paddingLeft="@dimen/_16sdp"
+        android:paddingRight="@dimen/_16sdp"
+        android:paddingTop="@dimen/_8sdp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:layout_marginStart="56dp"
+            android:layout_marginLeft="@dimen/_56sdp"
+            android:layout_marginStart="@dimen/_56sdp"
             android:orientation="vertical">
 
             <TextView
@@ -106,14 +115,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:textSize="18sp" />
+                android:textSize="@dimen/_16ssp" />
 
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
                 android:orientation="horizontal">
 
                 <RatingBar
@@ -121,8 +130,8 @@
                     style="@style/RatingBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_marginRight="@dimen/_8sdp"
                     android:isIndicator="true"
                     android:numStars="5"
                     android:rating="3.5"
@@ -137,16 +146,17 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/_1sdp"
             android:background="@color/colorDark54" />
 
         <TextView
             android:id="@+id/place_phone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/line_place_height"
+            android:layout_height="@dimen/_52sdp"
             android:layout_gravity="fill_horizontal"
             android:drawableLeft="@drawable/ic_phone_black"
-            android:drawablePadding="32dp"
+            android:drawablePadding="@dimen/_32sdp"
+            android:textSize="@dimen/_14ssp"
             android:drawableStart="@drawable/ic_phone_black"
             android:gravity="center_vertical" />
 
@@ -154,10 +164,11 @@
         <TextView
             android:id="@+id/place_address"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/line_place_height"
+            android:layout_height="@dimen/_52sdp"
             android:layout_gravity="fill_horizontal"
             android:drawableLeft="@drawable/ic_address"
-            android:drawablePadding="32dp"
+            android:drawablePadding="@dimen/_32sdp"
+            android:textSize="@dimen/_14ssp"
             android:drawableStart="@drawable/ic_address"
             android:gravity="center_vertical" />
 
@@ -167,10 +178,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="fill_horizontal"
             android:drawableLeft="@drawable/ic_access_time"
-            android:drawablePadding="32dp"
+            android:drawablePadding="@dimen/_32sdp"
+            android:textSize="@dimen/_14ssp"
             android:drawableStart="@drawable/ic_access_time"
             android:gravity="center_vertical"
-            android:minHeight="@dimen/line_place_height" />
+            android:minHeight="@dimen/_52sdp" />
 
     </LinearLayout>
 </LinearLayout>
