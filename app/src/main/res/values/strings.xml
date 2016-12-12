@@ -64,4 +64,6 @@
     <string name="web_site">web site</string>
     <string name="share">share</string>
     <string name="route">Route</string>
+    <string name="theme_night">Night Theme</string>
+    <string name="clear_cache">Clear weather cache</string>
 </resources>

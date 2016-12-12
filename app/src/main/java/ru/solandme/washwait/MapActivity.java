@@ -32,7 +32,11 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -42,6 +46,7 @@ import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.map.POJO.PlacesResponse;
 import ru.solandme.washwait.map.POJO.Result;
 import ru.solandme.washwait.places.POJO.PlaceInfo;
+import ru.solandme.washwait.places.POJO.Review;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
 
@@ -180,33 +185,8 @@ public class MapActivity extends AppCompatActivity implements
                 Log.i(TAG, "Place found: " + result.getName());
 
                 Intent intent = new Intent(MapActivity.this, AboutPlace.class);
-                intent.putExtra(AboutPlace.PLACE_NAME_KEY, result.getName());
-                intent.putExtra(AboutPlace.PHONE_KEY, result.getInternationalPhoneNumber());
-                intent.putExtra(AboutPlace.ADDRESS_KEY, result.getVicinity());
-                intent.putExtra(AboutPlace.RATING_KEY, ((float) result.getRating()));
-                intent.putExtra(AboutPlace.LAT_KEY, (result.getGeometry().getLocation().getLat()));
-                intent.putExtra(AboutPlace.LON_KEY, (result.getGeometry().getLocation().getLng()));
+                intent.putExtra(AboutPlace.RESULT_KEY, new Gson().toJson(result));
 
-                if (result.getWebsite() != null)
-                    intent.putExtra(AboutPlace.WEB_URL_KEY, result.getWebsite());
-
-
-                if (result.getPhotos() != null) {
-                    String photoAttributions = "";
-                    for (String attr : result.getPhotos().get(0).getHtmlAttributions()) {
-                        photoAttributions = photoAttributions + attr + "\n";
-                    }
-                    intent.putExtra(AboutPlace.PHOTO_ATTRIBUTES_KEY, photoAttributions);
-                    intent.putExtra(AboutPlace.PHOTO_REF_KEY, result.getPhotos().get(0).getPhotoReference());
-                }
-
-                if (result.getOpeningHours() != null) {
-                    String open = "";
-                    for (int i = 0; i < result.getOpeningHours().getWeekdayText().size(); i++) {
-                        open = open + "\n" + result.getOpeningHours().getWeekdayText().get(i);
-                        intent.putExtra(AboutPlace.OPEN_HOURS_KEY, open);
-                    }
-                }
                 startActivity(intent);
             }
 

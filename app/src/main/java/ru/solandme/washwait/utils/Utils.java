@@ -14,6 +14,7 @@ public class Utils {
     public final static String THEME_MATERIAL_BLUE = "1";
     public final static String THEME_MATERIAL_VIOLET = "2";
     public final static String THEME_MATERIAL_GREEN = "3";
+    public final static String THEME_MATERIAL_DAYNIGHT = "4";
 
     public static void changeToTheme(String theme, Activity activity) {
 
@@ -43,6 +44,9 @@ public class Utils {
                 break;
             case THEME_MATERIAL_GREEN:
                 activity.setTheme(R.style.Green);
+                break;
+            case THEME_MATERIAL_DAYNIGHT:
+                activity.setTheme(R.style.Night);
                 break;
         }
     }

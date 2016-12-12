@@ -23,4 +23,9 @@
     <color name="colorAccentG">#EF6C00</color>
     <color name="colorBackgroundG">#00897B</color>
 
+    <color name="colorPrimaryD">#424242</color>
+    <color name="colorPrimaryDarkD">#363636</color>
+    <color name="colorAccentD">#EF6C00</color>
+    <color name="colorBackgroundD">#424242</color>
+
 </resources>

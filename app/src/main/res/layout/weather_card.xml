@@ -62,7 +62,7 @@
 
                 <ImageView
                     android:id="@+id/weather_icon_day0"
-                    android:layout_width="@dimen/_60sdp"
+                    android:layout_width="@dimen/_50sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="@dimen/_16sdp"

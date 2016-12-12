@@ -75,6 +75,13 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
         onUpgrade(sqLiteDatabase, oldVersion, newVersion);
     }
 
+    public void clearCache() {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + LocationEntry.TABLE_NAME);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + WeatherEntry.TABLE_NAME);
+        onCreate(sqLiteDatabase);
+    }
+
     public void saveWeather(WeatherForecast weather) {
         // Gets the data repository in write mode
         SQLiteDatabase db = getWritableDatabase();

@@ -34,4 +34,11 @@
         <item name="android:windowBackground">@color/colorPrimaryG</item>
     </style>
 
+    <style name="Night" parent="AppTheme">
+        <item name="colorPrimary">@color/colorPrimaryD</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkD</item>
+        <item name="colorAccent">@color/colorAccentD</item>
+        <item name="android:windowBackground">@color/colorPrimaryD</item>
+    </style>
+
 </resources>

@@ -24,10 +24,10 @@
                 android:id="@+id/btnMakeCallPlace"
                 android:layout_width="@dimen/_60sdp"
                 android:layout_height="@dimen/_60sdp"
-                android:padding="@dimen/_16sdp"
-                android:scaleType="fitXY"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/_16sdp"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_call" />
 
             <TextView
@@ -35,9 +35,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/make_call"
-                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="true"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/_14ssp" />
         </LinearLayout>
 
 
@@ -52,9 +52,9 @@
                 android:id="@+id/btnRoute"
                 android:layout_width="@dimen/_60sdp"
                 android:layout_height="@dimen/_60sdp"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:padding="@dimen/_16sdp"
                 android:scaleType="fitXY"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_directions" />
 
             <TextView
@@ -62,9 +62,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/route"
-                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="true"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/_14ssp" />
         </LinearLayout>
 
         <LinearLayout
@@ -76,10 +76,10 @@
                 android:id="@+id/btnWebSite"
                 android:layout_width="@dimen/_60sdp"
                 android:layout_height="@dimen/_60sdp"
-                android:padding="@dimen/_16sdp"
-                android:scaleType="fitXY"
                 android:layout_gravity="center"
                 android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="@dimen/_16sdp"
+                android:scaleType="fitXY"
                 android:src="@drawable/ic_web" />
 
             <TextView
@@ -87,9 +87,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="@string/web_site"
-                android:textSize="@dimen/_14ssp"
                 android:textAllCaps="true"
-                android:textColor="@color/textColor" />
+                android:textColor="@color/textColor"
+                android:textSize="@dimen/_14ssp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -121,8 +121,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
                 android:orientation="horizontal">
 
                 <RatingBar
@@ -152,25 +152,25 @@
         <TextView
             android:id="@+id/place_phone"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_52sdp"
+            android:layout_height="@dimen/_45sdp"
             android:layout_gravity="fill_horizontal"
             android:drawableLeft="@drawable/ic_phone_black"
             android:drawablePadding="@dimen/_32sdp"
-            android:textSize="@dimen/_14ssp"
             android:drawableStart="@drawable/ic_phone_black"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="@dimen/_14ssp" />
 
 
         <TextView
             android:id="@+id/place_address"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_52sdp"
+            android:layout_height="@dimen/_45sdp"
             android:layout_gravity="fill_horizontal"
             android:drawableLeft="@drawable/ic_address"
             android:drawablePadding="@dimen/_32sdp"
-            android:textSize="@dimen/_14ssp"
             android:drawableStart="@drawable/ic_address"
-            android:gravity="center_vertical" />
+            android:gravity="center_vertical"
+            android:textSize="@dimen/_14ssp" />
 
         <TextView
             android:id="@+id/place_open_hours"
@@ -179,10 +179,34 @@
             android:layout_gravity="fill_horizontal"
             android:drawableLeft="@drawable/ic_access_time"
             android:drawablePadding="@dimen/_32sdp"
-            android:textSize="@dimen/_14ssp"
             android:drawableStart="@drawable/ic_access_time"
             android:gravity="center_vertical"
-            android:minHeight="@dimen/_52sdp" />
+            android:minHeight="@dimen/_45sdp"
+            android:textSize="@dimen/_14ssp" />
 
+        <TextView
+            android:id="@+id/reviews_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="fill_horizontal"
+            android:layout_marginBottom="@dimen/_6sdp"
+            android:drawableLeft="@drawable/ic_review"
+            android:drawablePadding="@dimen/_32sdp"
+            android:drawableStart="@drawable/ic_review"
+            android:gravity="center_vertical"
+            android:minHeight="@dimen/_45sdp"
+            android:text="Reviews:"
+            android:textSize="@dimen/_14ssp" />
+
+
+        <LinearLayout
+            android:id="@+id/reviews_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_10sdp" />
 </LinearLayout>

@@ -166,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
         cursor.close();
+        dbHelper.close();
     }
 
     @Override
@@ -206,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void updateWashForecastUI(double dirtyCounter) {
 
         dirtyMeter.setMax(40);
-        dirtyMeter.setProgress((int) (dirtyCounter * 10));
+        dirtyMeter.setProgress((int) (dirtyCounter * 5));
 
         carImage.setImageResource(getCarPicture(dirtyCounter, weatherForecast.getList().get(0).getTemp().getMax()));
         Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
@@ -244,10 +245,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         if (temp < -10) return R.mipmap.car10;
         if (dirtyCounter <= 0) return R.mipmap.car10;
-        if (dirtyCounter > 0 && dirtyCounter < 2) return R.mipmap.car10;
-        if (dirtyCounter >= 2 && dirtyCounter < 15) return R.mipmap.car10;
-        if (dirtyCounter >= 15 && dirtyCounter < 50) return R.mipmap.car10;
-        if (dirtyCounter >= 50) return R.mipmap.car10;
+        if (dirtyCounter > 0 && dirtyCounter < 1) return R.mipmap.car2;
+        if (dirtyCounter >= 1 && dirtyCounter < 10) return R.mipmap.car3;
+        if (dirtyCounter >= 10 && dirtyCounter < 30) return R.mipmap.car4;
+        if (dirtyCounter >= 30) return R.mipmap.car5;
 
         return R.mipmap.car10;
     }
@@ -279,8 +280,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             case R.id.action_theme_green:
                 Utils.changeToTheme(Utils.THEME_MATERIAL_GREEN, this);
                 break;
+            case R.id.action_theme_night:
+                Utils.changeToTheme(Utils.THEME_MATERIAL_DAYNIGHT, this);
+                break;
             case R.id.action_view_wash:
                 startWashCarActivity();
+                break;
+            case R.id.clear_cache:
+                WeatherDbHelper dbHelper = new WeatherDbHelper(this);
+                dbHelper.clearCache();
+                dbHelper.close();
                 break;
         }
         return true;

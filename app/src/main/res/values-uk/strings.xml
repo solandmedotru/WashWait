@@ -52,6 +52,8 @@
     <string name="share">поделиться</string>
     <string name="web_site">Сайт</string>
     <string name="route">Маршрут</string>
+    <string name="theme_night">Темна</string>
+    <string name="clear_cache">Очистить кэш приложения</string>
 
 
 </resources>
