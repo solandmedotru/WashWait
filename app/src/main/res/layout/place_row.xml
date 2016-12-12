@@ -4,42 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="5dp"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+    android:layout_marginRight="@dimen/activity_horizontal_margin"
     android:layout_marginTop="5dp"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="0dp"
+    <TextView
+        android:id="@+id/place_name"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="9"
-        android:orientation="vertical">
+        android:text="Wash car"
+        android:textSize="@dimen/body2" />
 
-        <TextView
-            android:id="@+id/place_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Wash car"
-            android:textSize="20sp" />
+    <RatingBar
+        android:id="@+id/ratingBar"
+        style="@style/RatingBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="3.5"
+        android:stepSize="0.1" />
 
-        <RatingBar
-            android:id="@+id/ratingBar"
-            style="@style/RatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:isIndicator="true"
-            android:layout_marginBottom="8dp"
-            android:numStars="5"
-            android:rating="3.5"
-            android:stepSize="0.1" />
-
-        <TextView
-            android:id="@+id/place_vicinity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp" />
-
-
-    </LinearLayout>
+    <TextView
+        android:id="@+id/place_vicinity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/caption" />
 </LinearLayout>

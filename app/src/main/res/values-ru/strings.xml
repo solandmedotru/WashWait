@@ -14,7 +14,7 @@
     <string name="wet">обильные</string>
     <string name="normal">средние</string>
     <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
-    <string name="clear_period">Период в днях</string>
+    <string name="clear_period">Дней без осадков</string>
     <string name="about_app">О приложении</string>
     <string name="author">Автор приложения</string>
     <string name="designer">Дизайнер</string>

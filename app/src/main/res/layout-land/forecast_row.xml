@@ -21,6 +21,6 @@
         android:layout_gravity="center|bottom"
         android:textAlignment="center"
         android:textAllCaps="true"
-        android:textSize="@dimen/main_text_size"
+        android:textSize="@dimen/body2"
         android:textColor="@color/textColor" />
 </LinearLayout>

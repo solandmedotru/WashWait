@@ -13,6 +13,7 @@
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,11 +21,12 @@
 
             <RelativeLayout
                 android:layout_width="0dp"
-                android:layout_weight="10"
                 android:layout_height="match_parent"
-                android:padding="@dimen/main_padding">
+                android:layout_weight="12"
+                android:padding="@dimen/main_padding_land">
 
-                <include android:id="@+id/forecastCard"
+                <include
+                    android:id="@+id/forecastCard"
                     layout="@layout/weather_card" />
 
                 <ImageView
@@ -44,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/precipitation_meter"
                     android:layout_below="@+id/forecastCard"
+                    android:layout_marginTop="8dp"
                     android:gravity="bottom"
                     android:orientation="vertical">
 
@@ -62,7 +65,7 @@
                     android:id="@+id/precipitation_meter"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/progressHeight"
+                    android:layout_height="@dimen/progressHeightLand"
                     android:layout_above="@+id/progressLabel"
                     android:layout_marginTop="@dimen/progressMarginTop" />
 
@@ -81,7 +84,7 @@
                         android:text="@string/dry"
                         android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/small_text_size" />
+                        android:textSize="@dimen/small_text_size_land" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -92,7 +95,7 @@
                         android:text="@string/normal"
                         android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/small_text_size" />
+                        android:textSize="@dimen/caption" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -103,8 +106,9 @@
                         android:text="@string/wet"
                         android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/small_text_size" />
+                        android:textSize="@dimen/caption" />
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/updated_field"
                     android:layout_width="match_parent"
@@ -112,14 +116,18 @@
                     android:layout_alignParentBottom="true"
                     android:textAlignment="center"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/small_text_size" />
+                    android:textSize="@dimen/caption" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rwForecast"
                 android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/main_padding_land"
+                android:layout_marginEnd="@dimen/main_padding"
+                android:layout_marginRight="@dimen/main_padding"
+                android:layout_marginTop="@dimen/main_padding_land"
                 android:layout_weight="2"
-                android:layout_height="wrap_content"
                 android:background="@drawable/transparent_bg" />
         </LinearLayout>
 

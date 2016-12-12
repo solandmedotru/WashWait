@@ -21,7 +21,7 @@
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="@dimen/cityImageHeight"
                 android:background="?attr/colorPrimary"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"
@@ -41,7 +41,7 @@
                     android:layout_gravity="bottom|end"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="12sp"
+                    android:textSize="@dimen/caption"
                     android:textColor="@color/textColor"/>
             </FrameLayout>
         </android.support.design.widget.CollapsingToolbarLayout>

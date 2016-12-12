@@ -89,6 +89,7 @@ public class MapActivity extends AppCompatActivity implements
         }
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
+        carWashList.setHasFixedSize(true);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         carWashList.setLayoutManager(linearLayoutManager);

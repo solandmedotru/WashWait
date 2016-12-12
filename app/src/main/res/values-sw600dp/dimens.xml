@@ -1,0 +1,23 @@
+<resources>
+    <dimen name="activity_horizontal_margin">20dp</dimen>
+    <dimen name="activity_vertical_margin">20dp</dimen>
+    <dimen name="main_padding">20dp</dimen>
+    <dimen name="carSize">300dp</dimen>
+    <dimen name="carSizeLand">250dp</dimen>
+    <dimen name="progressHeight">16dp</dimen>
+    <dimen name="progressHeightLand">12dp</dimen>
+    <dimen name="progressMarginTop">6dp</dimen>
+    <dimen name="caption">20sp</dimen>
+    <dimen name="small_text_size_land">18sp</dimen>
+    <dimen name="padding_icon">16dp</dimen>
+    <dimen name="body2">30sp</dimen>
+    <dimen name="body1">28sp</dimen>
+    <dimen name="line_place_height">72dp</dimen>
+    <dimen name="icon_size">120dp</dimen>
+    <dimen name="icon_size_land">100dp</dimen>
+    <dimen name="cardPadding">16dp</dimen>
+    <dimen name="bigTextSize">55sp</dimen>
+    <dimen name="bigTextSizeLand">50sp</dimen>
+    <dimen name="main_padding_land">16dp</dimen>
+    <dimen name="cityImageHeight">250dp</dimen>
+</resources>

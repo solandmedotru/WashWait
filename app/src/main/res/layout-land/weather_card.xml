@@ -42,12 +42,12 @@
                     android:gravity="end"
                     android:text="10C"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/bigTextSize" />
+                    android:textSize="@dimen/bigTextSizeLand" />
 
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:layout_margin="@dimen/main_padding"
+                    android:layout_margin="@dimen/main_padding_land"
                     android:background="@color/textColorLight" />
 
                 <TextView
@@ -58,15 +58,15 @@
                     android:gravity="end"
                     android:text="12C"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/bigTextSize" />
+                    android:textSize="@dimen/bigTextSizeLand" />
 
                 <ImageView
                     android:id="@+id/weather_icon_day0"
-                    android:layout_width="@dimen/icon_size"
+                    android:layout_width="@dimen/icon_size_land"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginStart="@dimen/main_padding"
-                    android:layout_marginLeft="@dimen/main_padding"
+                    android:layout_marginStart="@dimen/main_padding_land"
+                    android:layout_marginLeft="@dimen/main_padding_land"
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/weather_icon"
                     android:scaleType="fitCenter"
@@ -82,7 +82,7 @@
                 android:gravity="center"
                 android:text="rain"
                 android:textColor="@color/textColor"
-                android:textSize="@dimen/body2" />
+                android:textSize="@dimen/body1" />
 
             <LinearLayout
 
@@ -99,7 +99,7 @@
                     android:gravity="center"
                     android:text="70%"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/body2" />
+                    android:textSize="@dimen/body1" />
 
                 <TextView
                     android:id="@+id/barometer_field"
@@ -108,7 +108,7 @@
                     android:gravity="center"
                     android:text="1008 mPa"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/body2" />
+                    android:textSize="@dimen/body1" />
 
                 <TextView
                     android:id="@+id/speed_wind_field"
@@ -118,7 +118,7 @@
                     android:gravity="center"
                     android:text="5 m/s"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/body2" />
+                    android:textSize="@dimen/body1" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -130,7 +130,7 @@
             android:padding="@dimen/cardPadding"
             android:text="@string/can_wash"
             android:textAlignment="center"
-            android:textSize="@dimen/body2" />
+            android:textSize="@dimen/body1" />
     </RelativeLayout>
 
 </android.support.v7.widget.CardView>

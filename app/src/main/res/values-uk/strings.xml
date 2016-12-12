@@ -14,7 +14,7 @@
     <string name="wet">сильні</string>
     <string name="normal">середні</string>
     <string name="city_name_settings">Місто або індекс (приклад Київ або 01000)</string>
-    <string name="clear_period">Період в днях</string>
+    <string name="clear_period">Дней без осадков</string>
     <string name="about_app">Про програму</string>
     <string name="author">Автор програми</string>
     <string name="designer">Дизайнер</string>
