@@ -113,12 +113,14 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     protected synchronized void buildLocationClient() {
-        locationClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, 1 /* clientId */, this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+        if(locationClient == null){
+            locationClient = new GoogleApiClient.Builder(this)
+                    .enableAutoManage(this, 1 /* clientId */, this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
         locationClient.connect();
     }
 
@@ -247,8 +249,20 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         if (locationClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
         }
+        if (locationClient != null && locationClient.isConnected()) {
+            locationClient.stopAutoManage(this);
+            locationClient.disconnect();
+        }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(this);
+            mGoogleApiClient.disconnect();
+        }
+    }
 
     @Override
     public void onConnected(Bundle bundle) {

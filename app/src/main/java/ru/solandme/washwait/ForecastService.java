@@ -116,11 +116,11 @@ public class ForecastService extends IntentService {
 
         switch (units) {
             case "metric":
-                return (weatherId < 600) || (weatherId < 700 && temperature > -10) || (temperature < -20);
+                return (weatherId < 600) || (weatherId < 700 && temperature > -7) || (temperature < -15);
             case "imperial":
-                return (weatherId < 600) || (weatherId < 700 && temperature > 14) || (temperature < -4);
+                return (weatherId < 600) || (weatherId < 700 && temperature > 19) || (temperature < 5);
             default:
-                return (weatherId < 600) || (weatherId < 700 && temperature > 263) || (temperature < 253);
+                return (weatherId < 600) || (weatherId < 700 && temperature > 266) || (temperature < 258);
         }
     }
 
