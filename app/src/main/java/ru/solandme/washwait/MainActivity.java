@@ -40,6 +40,7 @@ import ru.solandme.washwait.data.WeatherContract;
 import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 import ru.solandme.washwait.utils.Utils;
+import ru.solandme.washwait.weather.POJO.CurrWeather;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -71,11 +72,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private MyForecastRVAdapter adapter;
 
     private WeatherForecast weatherForecast;
+    private CurrWeather currWeather;
+
     private GcmNetworkManager mGcmNetworkManager;
     private String units;
     private String city;
     private int cityId;
     private Typeface weatherFont;
+
+    double maxTemp;
+    double minTemp;
+    String description;
+    int icon;
+    long dt;
+    int humidity;
+    double barometer;
+    double speedWind;
+    int speedDirection;
+    long dtLast;
 
 
     @Override
@@ -90,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
 
@@ -320,12 +333,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         public void onReceive(Context context, Intent intent) {
             swipeRefreshLayout.setRefreshing(false);
             Bundle bundle = intent.getExtras();
-            boolean isResultOK = intent.getBooleanExtra("isResultOK", false);
-            if (isResultOK) {
+            boolean isForecastResultOK = intent.getBooleanExtra("isForecastResultOK", false);
+            boolean isCurrWeatherResultOK = intent.getBooleanExtra("isCurrWeatherResultOK", false);
+            if (isForecastResultOK && isCurrWeatherResultOK) {
                 String textForecast = bundle.getString("TextForecast");
                 forecastMessage.setText(textForecast);
 
                 weatherForecast = (WeatherForecast) bundle.get("Weather");
+                currWeather = (CurrWeather) bundle.get("CurrWeather");
 
                 fillWeatherCard(FIRST_DAY_POSITION);
 
@@ -351,15 +366,29 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         units = sharedPref.getString("units", DEFAULT_UNITS);
         city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
 
-        double maxTemp = weatherForecast.getList().get(position).getTemp().getMax();
-        double minTemp = weatherForecast.getList().get(position).getTemp().getMin();
-        String description = weatherForecast.getList().get(position).getWeather().get(0).getDescription();
-        int icon = weatherForecast.getList().get(position).getImageRes();
-        long dt = weatherForecast.getList().get(position).getDt() * 1000;
-        int humidity = weatherForecast.getList().get(position).getHumidity();
-        double barometer = weatherForecast.getList().get(position).getPressure();
-        double speedWind = weatherForecast.getList().get(position).getSpeed();
-        int speedDirection = weatherForecast.getList().get(position).getDeg();
+        if(position == FIRST_DAY_POSITION) {
+            maxTemp = currWeather.getMain().getTempMax();
+            minTemp = currWeather.getMain().getTempMin();
+            description = currWeather.getWeather().get(0).getDescription();
+            icon = currWeather.getImageRes();
+            dt = currWeather.getDt() * 1000;
+            humidity = currWeather.getMain().getHumidity();
+            barometer = currWeather.getMain().getPressure();
+            speedWind = currWeather.getWind().getSpeed();
+            speedDirection = (int) currWeather.getWind().getDeg();
+            dtLast = currWeather.getDt() * 1000;
+        } else {
+            maxTemp = weatherForecast.getList().get(position).getTemp().getMax();
+            minTemp = weatherForecast.getList().get(position).getTemp().getMin();
+            description = weatherForecast.getList().get(position).getWeather().get(0).getDescription();
+            icon = weatherForecast.getList().get(position).getImageRes();
+            dt = weatherForecast.getList().get(position).getDt() * 1000;
+            humidity = weatherForecast.getList().get(position).getHumidity();
+            barometer = weatherForecast.getList().get(position).getPressure();
+            speedWind = weatherForecast.getList().get(position).getSpeed();
+            speedDirection = weatherForecast.getList().get(position).getDeg();
+            dtLast = weatherForecast.getList().get(0).getDt() * 1000;
+        }
 
         fillTitle(city, getDataWithFormat(new Date(dt)));
 
@@ -372,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         detailsField.setText(description);
         weatherIconDay0.setImageResource(icon);
 
-        long dtLast = weatherForecast.getList().get(0).getDt() * 1000;
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
         String updatedOn = dateFormat.format(new Date(dtLast));
 

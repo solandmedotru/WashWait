@@ -23,6 +23,7 @@ import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.forecast.POJO.WeatherForecast;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
+import ru.solandme.washwait.weather.POJO.CurrWeather;
 
 public class ForecastService extends IntentService {
 
@@ -35,7 +36,9 @@ public class ForecastService extends IntentService {
     private static final int NOTIFICATION_ID = 1981;
     private String forecastDistance;
     private WeatherForecast weatherForecast;
-    private boolean isResultOK;
+    private CurrWeather currWeather;
+    private boolean isForecastResultOK;
+    private boolean isCurrWeatherResultOK;
     private boolean isRunFromBackground;
     private SharedPreferences sharedPref;
 
@@ -45,6 +48,9 @@ public class ForecastService extends IntentService {
     public static final boolean RUN_FROM_BACKGROUND = true;
     public static final double DEFAULT_LONGITUDE = 40.716667F;
     public static final double DEFAULT_LATITUDE = -74F;
+    boolean isFinishedCurrWeather;
+    boolean isFinishedForecast;
+
 
     public ForecastService() {
         super(TAG);
@@ -95,18 +101,51 @@ public class ForecastService extends IntentService {
 
                     saveForecastToDataBase(weatherForecast);
 
-                    isResultOK = true;
+                    isForecastResultOK = true;
+                    isFinishedForecast = true;
                 } else {
-                    isResultOK = false;
+                    isForecastResultOK = false;
+                    isFinishedForecast = true;
                 }
-                publishResults(isResultOK, isRunFromBackground);
+                publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
             }
 
             @Override
             public void onFailure(Call<WeatherForecast> call, Throwable t) {
                 Log.e(TAG, "onError: " + t);
-                isResultOK = false;
-                publishResults(isResultOK, isRunFromBackground);
+                isForecastResultOK = false;
+                isFinishedForecast = true;
+                publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
+            }
+        });
+
+        Call<CurrWeather> currWeatherCall = apiService.getCurrentWeatherByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, APPID);
+        currWeatherCall.enqueue(new Callback<CurrWeather>() {
+            @Override
+            public void onResponse(Call<CurrWeather> call, Response<CurrWeather> response) {
+                if (response.isSuccessful()) {
+                    Log.e(TAG, "onResponse: current");
+
+                    currWeather = response.body();
+                    currWeather.getWeather().get(0).getIcon();
+                    currWeather.setImageRes(getWeatherPicture(currWeather.getWeather().get(0).getIcon()));
+
+                    isCurrWeatherResultOK = true;
+                    isFinishedCurrWeather = true;
+                } else {
+                    Log.e(TAG, "onError: current");
+                    isCurrWeatherResultOK = false;
+                    isFinishedCurrWeather = true;
+                }
+                publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
+            }
+
+            @Override
+            public void onFailure(Call<CurrWeather> call, Throwable t) {
+                Log.e(TAG, "onError: " + t);
+                isCurrWeatherResultOK = false;
+                isFinishedCurrWeather = true;
+                publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
             }
         });
     }
@@ -169,9 +208,9 @@ public class ForecastService extends IntentService {
         dbHelper.close();
     }
 
-    private void publishResults(boolean isResultOK, boolean runFromService) {
+    private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
         Intent intent = new Intent(NOTIFICATION);
-        if (isResultOK) {
+        if (isForecastResultOK && isCurrWeatherResultOK) {
             int washDayNumber = getWashDayNumber();
 
             String textForWashForecast = getTextForWashForecast(washDayNumber, getWashData(washDayNumber));
@@ -182,10 +221,13 @@ public class ForecastService extends IntentService {
 
             intent.putExtra("TextForecast", textForWashForecast);
             intent.putExtra("Weather", weatherForecast);
+            intent.putExtra("CurrWeather", currWeather);
             intent.putExtra("DirtyCounter", getDirtyCounter());
         }
-        intent.putExtra("isResultOK", isResultOK);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        intent.putExtra("isForecastResultOK", isForecastResultOK);
+        intent.putExtra("isCurrWeatherResultOK", isCurrWeatherResultOK);
+
+        if(isFinishedCurrWeather && isFinishedForecast) LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void sendNotification(String textForWashForecast) {
