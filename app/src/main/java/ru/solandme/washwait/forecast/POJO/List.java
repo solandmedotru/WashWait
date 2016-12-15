@@ -41,6 +41,8 @@ public class List {
 
     private int imageRes;
 
+    private double dirtyCounter;
+
 
     public int getImageRes() {
         return imageRes;
@@ -50,6 +52,13 @@ public class List {
         this.imageRes = imageRes;
     }
 
+    public double getDirtyCounter() {
+        return dirtyCounter;
+    }
+
+    public void setDirtyCounter(double dirtyCounter) {
+        this.dirtyCounter = dirtyCounter;
+    }
 
     /**
      * 

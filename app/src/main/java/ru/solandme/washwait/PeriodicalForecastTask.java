@@ -15,7 +15,7 @@ import com.google.android.gms.gcm.TaskParams;
 public class PeriodicalForecastTask extends GcmTaskService {
     private static final String TAG = PeriodicalForecastTask.class.getSimpleName();
     public static final String TAG_TASK_PERIODIC = "PeriodicalForecastTask";
-    boolean isResultOK = false;
+    boolean isForecastResultOK = false;
 
     @Override
     public int onRunTask(TaskParams taskParams) {
@@ -27,7 +27,7 @@ public class PeriodicalForecastTask extends GcmTaskService {
 
         ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_BACKGROUND);
 
-        if (!isResultOK) {
+        if (!isForecastResultOK) {
             return GcmNetworkManager.RESULT_FAILURE;
         } else {
             return GcmNetworkManager.RESULT_SUCCESS;
@@ -37,7 +37,7 @@ public class PeriodicalForecastTask extends GcmTaskService {
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            isResultOK = intent.getBooleanExtra("isResultOK", false);
+            isForecastResultOK = intent.getBooleanExtra("isForecastResultOK", false);
         }
     };
 }

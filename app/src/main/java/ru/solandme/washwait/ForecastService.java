@@ -39,6 +39,8 @@ public class ForecastService extends IntentService {
     private CurrWeather currWeather;
     private boolean isForecastResultOK;
     private boolean isCurrWeatherResultOK;
+    private boolean isFinishedCurrWeather;
+    private boolean isFinishedForecast;
     private boolean isRunFromBackground;
     private SharedPreferences sharedPref;
 
@@ -48,9 +50,6 @@ public class ForecastService extends IntentService {
     public static final boolean RUN_FROM_BACKGROUND = true;
     public static final double DEFAULT_LONGITUDE = 40.716667F;
     public static final double DEFAULT_LATITUDE = -74F;
-    boolean isFinishedCurrWeather;
-    boolean isFinishedForecast;
-
 
     public ForecastService() {
         super(TAG);
@@ -97,16 +96,16 @@ public class ForecastService extends IntentService {
 
                     for (int i = 0; i < size; i++) {
                         weatherForecast.getList().get(i).setImageRes(getWeatherPicture(weatherForecast.getList().get(i).getWeather().get(0).getIcon()));
+                        weatherForecast.getList().get(i).setDirtyCounter(getDirtyCounter(i));
                     }
 
                     saveForecastToDataBase(weatherForecast);
 
                     isForecastResultOK = true;
-                    isFinishedForecast = true;
                 } else {
                     isForecastResultOK = false;
-                    isFinishedForecast = true;
                 }
+                isFinishedForecast = true;
                 publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
             }
 
@@ -131,12 +130,11 @@ public class ForecastService extends IntentService {
                     currWeather.setImageRes(getWeatherPicture(currWeather.getWeather().get(0).getIcon()));
 
                     isCurrWeatherResultOK = true;
-                    isFinishedCurrWeather = true;
                 } else {
                     Log.e(TAG, "onError: current");
                     isCurrWeatherResultOK = false;
-                    isFinishedCurrWeather = true;
                 }
+                isFinishedCurrWeather = true;
                 publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
             }
 
@@ -222,7 +220,6 @@ public class ForecastService extends IntentService {
             intent.putExtra("TextForecast", textForWashForecast);
             intent.putExtra("Weather", weatherForecast);
             intent.putExtra("CurrWeather", currWeather);
-            intent.putExtra("DirtyCounter", getDirtyCounter());
         }
         intent.putExtra("isForecastResultOK", isForecastResultOK);
         intent.putExtra("isCurrWeatherResultOK", isCurrWeatherResultOK);
@@ -332,10 +329,10 @@ public class ForecastService extends IntentService {
         }
     }
 
-    public Double getDirtyCounter() {
-        Double rainCounter = 0.0, snowCounter = 0.0;
-        rainCounter = rainCounter + weatherForecast.getList().get(0).getRain();
-        snowCounter = snowCounter + weatherForecast.getList().get(0).getSnow();
+    public double getDirtyCounter(int position) {
+        double rainCounter = 0.0, snowCounter = 0.0;
+        rainCounter = rainCounter + weatherForecast.getList().get(position).getRain();
+        snowCounter = snowCounter + weatherForecast.getList().get(position).getSnow();
 
         Log.e(TAG, "dirtyCounter: " + (rainCounter + (snowCounter)) * 4);
         return (rainCounter + (snowCounter)) * 4;

@@ -45,12 +45,22 @@ public class CurrWeather implements Serializable {
 
     private int imageRes;
 
+    private double dirtyCounter;
+
     public int getImageRes() {
         return imageRes;
     }
 
     public void setImageRes(int imageRes) {
         this.imageRes = imageRes;
+    }
+
+    public double getDirtyCounter() {
+        return dirtyCounter;
+    }
+
+    public void setDirtyCounter(double dirtyCounter) {
+        this.dirtyCounter = dirtyCounter;
     }
 
     public Coord getCoord() {

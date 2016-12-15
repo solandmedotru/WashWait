@@ -52,7 +52,7 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/white_car_image"
                     android:scaleType="fitCenter"
-                    android:src="@mipmap/car10" />
+                    android:src="@drawable/car10" />
             </LinearLayout>
 
             <ProgressBar

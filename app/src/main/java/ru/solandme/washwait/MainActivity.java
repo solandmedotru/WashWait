@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private static final String TAG = "ru.solandme.washwait";
     private static final String TAG_ABOUT = "about";
     private static final String DEFAULT_UNITS = "metric";
-    public static final int PERIODICAL_TIMER = 43200;
+    public static final int PERIODICAL_TIMER = 43200; //21600
     public static final int FIRST_DAY_POSITION = 0;
     Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     double speedWind;
     int speedDirection;
     long dtLast;
+    double dirtyCounter;
 
 
     @Override
@@ -217,12 +218,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
     }
 
-    private void updateWashForecastUI(double dirtyCounter) {
+    private void updateCarImage(int position) {
 
-        dirtyMeter.setMax(40);
-        dirtyMeter.setProgress((int) (dirtyCounter * 5));
-
-        carImage.setImageResource(getCarPicture(dirtyCounter, weatherForecast.getList().get(0).getTemp().getMax()));
+        carImage.setImageResource(getCarPicture(weatherForecast.getList().get(position).getDirtyCounter(), weatherForecast.getList().get(position).getTemp().getMax()));
         Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
@@ -256,14 +254,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
-        if (temp < -10) return R.mipmap.car10;
-        if (dirtyCounter <= 0) return R.mipmap.car10;
-        if (dirtyCounter > 0 && dirtyCounter < 1) return R.mipmap.car2;
-        if (dirtyCounter >= 1 && dirtyCounter < 10) return R.mipmap.car3;
-        if (dirtyCounter >= 10 && dirtyCounter < 30) return R.mipmap.car4;
-        if (dirtyCounter >= 30) return R.mipmap.car5;
+        if (temp < -7) return R.drawable.car10;
+        if (dirtyCounter > 0 && dirtyCounter < 2) return R.drawable.car1;
+        if (dirtyCounter >= 2 && dirtyCounter < 14) return R.drawable.car2;
+        if (dirtyCounter >= 14 && dirtyCounter < 40) return R.drawable.car3;
+        if (dirtyCounter >= 40) return R.drawable.car4;
 
-        return R.mipmap.car10;
+        return R.drawable.car10;
     }
 
     @Override
@@ -332,9 +329,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         @Override
         public void onReceive(Context context, Intent intent) {
             swipeRefreshLayout.setRefreshing(false);
+
             Bundle bundle = intent.getExtras();
             boolean isForecastResultOK = intent.getBooleanExtra("isForecastResultOK", false);
             boolean isCurrWeatherResultOK = intent.getBooleanExtra("isCurrWeatherResultOK", false);
+
             if (isForecastResultOK && isCurrWeatherResultOK) {
                 String textForecast = bundle.getString("TextForecast");
                 forecastMessage.setText(textForecast);
@@ -355,7 +354,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 });
 
                 adapter.notifyDataSetChanged();
-                updateWashForecastUI(bundle.getDouble("DirtyCounter"));
+                updateCarImage(FIRST_DAY_POSITION);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.error_from_response, Toast.LENGTH_SHORT).show();
             }
@@ -377,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             speedWind = currWeather.getWind().getSpeed();
             speedDirection = (int) currWeather.getWind().getDeg();
             dtLast = currWeather.getDt() * 1000;
+
         } else {
             maxTemp = weatherForecast.getList().get(position).getTemp().getMax();
             minTemp = weatherForecast.getList().get(position).getTemp().getMin();
@@ -388,6 +388,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             speedWind = weatherForecast.getList().get(position).getSpeed();
             speedDirection = weatherForecast.getList().get(position).getDeg();
             dtLast = weatherForecast.getList().get(0).getDt() * 1000;
+
         }
 
         fillTitle(city, getDataWithFormat(new Date(dt)));
@@ -398,10 +399,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         barometerField.setText(getStringBarometer(barometer, units));
         speedWindField.setText(getStringWind(speedDirection, speedWind, units));
 
+        dirtyCounter = weatherForecast.getList().get(position).getDirtyCounter();
+        dirtyMeter.setMax(50);
+        dirtyMeter.setProgress((int) (dirtyCounter * 2));
+
         detailsField.setText(description);
         weatherIconDay0.setImageResource(icon);
 
-
+        updateCarImage(position);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
         String updatedOn = dateFormat.format(new Date(dtLast));
 
