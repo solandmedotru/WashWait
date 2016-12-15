@@ -52,8 +52,8 @@ public class ForecastApiHelper {
                 if (!isNetworkAvailable(context)) {
                     request = new Request.Builder()
                             .cacheControl(new CacheControl.Builder()
-                                    .maxAge(6, TimeUnit.HOURS)
-                                    .maxStale(6, TimeUnit.HOURS)
+                                    .maxAge(10, TimeUnit.DAYS)
+                                    .maxStale(10, TimeUnit.DAYS)
                                     .build())
                             .url(request.url())
                             .build();
@@ -62,6 +62,7 @@ public class ForecastApiHelper {
                     request = new Request.Builder()
                             .cacheControl(new CacheControl.Builder()
                                     .maxStale(1, TimeUnit.HOURS)
+                                    .maxAge(0, TimeUnit.DAYS)
                                     .build())
                             .url(request.url())
                             .build();

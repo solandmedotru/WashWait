@@ -6,13 +6,29 @@
     android:id="@+id/container_days_forecast"
     android:padding="@dimen/_6sdp">
 
-    <ImageView
-        android:id="@+id/weather_icon_day"
-        android:layout_width="@dimen/_48sdp"
-        android:layout_height="@dimen/_48sdp"
-        android:layout_gravity="center"
-        android:scaleType="fitCenter"
-        android:src="@mipmap/few_clouds_d" />
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center">
+        <ImageView
+            android:id="@+id/weather_icon_day"
+            android:layout_width="@dimen/_48sdp"
+            android:layout_height="@dimen/_48sdp"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@mipmap/few_clouds_d" />
+        <TextView
+            android:id="@+id/smallTempText"
+            android:layout_alignEnd="@+id/weather_icon_day"
+            android:padding="@dimen/_2sdp"
+            android:textColor="@color/textColor"
+            android:background="@drawable/background"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-2"
+            android:layout_alignRight="@+id/weather_icon_day" />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/date"

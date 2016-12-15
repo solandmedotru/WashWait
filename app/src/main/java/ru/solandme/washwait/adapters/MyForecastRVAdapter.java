@@ -32,11 +32,13 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
         TextView date1;
         ImageView image1;
+        TextView temp;
 
         ViewHolder(View v) {
             super(v);
             date1 = (TextView) v.findViewById(R.id.date);
             image1 = (ImageView) v.findViewById(R.id.weather_icon_day);
+            temp = (TextView) v.findViewById(R.id.smallTempText);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -70,7 +72,14 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
         holder.date1.setText(dateFormat.format(weatherForecast.getList().get(position).getDt() * 1000));
         holder.image1.setImageResource(weatherForecast.getList().get(position).getImageRes());
+        holder.temp.setText(getMiddleTemp(position));
 
+    }
+
+    private String getMiddleTemp(int position) {
+        double max = weatherForecast.getList().get(position).getTemp().getMax();
+        double min = weatherForecast.getList().get(position).getTemp().getMin();
+        return String.valueOf((int)(max + min)/2);
     }
 
     @Override

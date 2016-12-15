@@ -418,7 +418,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 windUnits = String.format("%s", getString(R.string.miles_per_h));
                 break;
             default:
-                windUnits = String.format("%s", getWindRes(speedDirection));
+                windUnits = String.format("%s", getString(R.string.meter_per_sec));
                 break;
         }
         return String.format("%s %s %s",
