@@ -4,7 +4,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -12,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.map.POJO.Result;
+import ru.solandme.washwait.POJO.map.Result;
 
 
 public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.ViewHolder> {

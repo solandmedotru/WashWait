@@ -4,26 +4,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ListViewCompat;
 import android.text.Html;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import ru.solandme.washwait.places.POJO.Result;
-import ru.solandme.washwait.places.POJO.Review;
+import ru.solandme.washwait.POJO.places.Result;
+import ru.solandme.washwait.adapters.ReviewsAdapter;
 import ru.solandme.washwait.utils.Utils;
 
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {

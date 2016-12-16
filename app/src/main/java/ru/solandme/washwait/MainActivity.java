@@ -38,9 +38,9 @@ import java.util.Locale;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.data.WeatherContract;
 import ru.solandme.washwait.data.WeatherDbHelper;
-import ru.solandme.washwait.forecast.POJO.WeatherForecast;
+import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 import ru.solandme.washwait.utils.Utils;
-import ru.solandme.washwait.weather.POJO.CurrWeather;
+import ru.solandme.washwait.POJO.weather.CurrWeather;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 

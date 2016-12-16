@@ -9,13 +9,11 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.map.POJO.PlacesResponse;
-import ru.solandme.washwait.places.POJO.PlaceInfo;
+import ru.solandme.washwait.POJO.map.PlacesResponse;
+import ru.solandme.washwait.POJO.places.PlaceInfo;
 
 public class PlacesApiHelper {
-    private static final String TAG = PlacesApiHelper.class.getSimpleName();
-    public static final String GOOGLEAPIS_BASE_URL = "https://maps.googleapis.com";
-    private final PlacesApiHelper self = this;
+    private static final String GOOGLEAPIS_BASE_URL = "https://maps.googleapis.com";
 
     private Context mContext;
     private static Retrofit retrofit = null;
@@ -24,12 +22,12 @@ public class PlacesApiHelper {
         mContext = context;
     }
 
-    public static Retrofit getInstance() {
+    private static Retrofit getInstance() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(GOOGLEAPIS_BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    .build();;
+                    .build();
         }
         return retrofit;
     }
@@ -48,20 +46,20 @@ public class PlacesApiHelper {
         call.enqueue(callback);
     }
 
-    public void requestNextPlaces(String pagetoken, Callback<PlacesResponse> callback) {
+//    public void requestNextPlaces(String pageToken, Callback<PlacesResponse> callback) {
+//
+//        PlaceApiService service = getInstance().create(PlaceApiService.class);
+//
+//        Call<PlacesResponse> call = service.requestNextPlaces(pageToken,
+//                mContext.getString(R.string.google_maps_key));
+//        call.enqueue(callback);
+//    }
+
+    public void requestPlaceInfo(String placeId, String lang, Callback<PlaceInfo> callback) {
 
         PlaceApiService service = getInstance().create(PlaceApiService.class);
 
-        Call<PlacesResponse> call = service.requestNextPlaces(pagetoken,
-                mContext.getString(R.string.google_maps_key));
-        call.enqueue(callback);
-    }
-
-    public void requestPlaceInfo(String placeid, String lang, Callback<PlaceInfo> callback) {
-
-        PlaceApiService service = getInstance().create(PlaceApiService.class);
-
-        Call<PlaceInfo> call = service.requestPlaceInfo(placeid, lang,
+        Call<PlaceInfo> call = service.requestPlaceInfo(placeId, lang,
                 mContext.getString(R.string.google_maps_key));
         call.enqueue(callback);
     }

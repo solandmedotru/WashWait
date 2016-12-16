@@ -10,7 +10,7 @@ import android.util.Log;
 
 import ru.solandme.washwait.data.WeatherContract.LocationEntry;
 import ru.solandme.washwait.data.WeatherContract.WeatherEntry;
-import ru.solandme.washwait.forecast.POJO.WeatherForecast;
+import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 
 
 public class WeatherDbHelper extends SQLiteOpenHelper {

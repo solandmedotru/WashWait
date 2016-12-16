@@ -53,15 +53,11 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     private GoogleApiClient mGoogleApiClient;
     private GoogleApiClient locationClient;
-    LocationManager locationManager;
-    private LocationRequest mLocationRequest;
+    private LocationManager locationManager;
     private PlaceAutocompleteAdapter mAdapter;
-    private AppCompatAutoCompleteTextView mAutocompleteView;
 
-    private ImageView actionLocation;
     private float lat;
     private float lon;
-    private String city;
     private SharedPreferences sharedPref;
 
 
@@ -79,10 +75,10 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                 .build();
 
         setContentView(R.layout.activity_choose_city);
-        mAutocompleteView = (AppCompatAutoCompleteTextView) findViewById(R.id.autocomplete_places);
+        AppCompatAutoCompleteTextView mAutocompleteView = (AppCompatAutoCompleteTextView) findViewById(R.id.autocomplete_places);
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
-        actionLocation = (ImageView) findViewById(R.id.action_location);
+        ImageView actionLocation = (ImageView) findViewById(R.id.action_location);
         actionLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -113,7 +109,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     protected synchronized void buildLocationClient() {
-        if(locationClient == null){
+        if (locationClient == null) {
             locationClient = new GoogleApiClient.Builder(this)
                     .enableAutoManage(this, 1 /* clientId */, this)
                     .addConnectionCallbacks(this)
@@ -150,10 +146,13 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
             final AutocompletePrediction item = mAdapter.getItem(position);
-            final String placeId = item.getPlaceId();
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+            final String placeId;
+            if (item != null) {
+                placeId = item.getPlaceId();
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                        .getPlaceById(mGoogleApiClient, placeId);
+                placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
+            }
         }
     };
 
@@ -170,7 +169,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             final Place place = places.get(0);
             lat = (float) place.getLatLng().latitude;
             lon = (float) place.getLatLng().longitude;
-            city = place.getName().toString().trim();
+            String city = place.getName().toString().trim();
 
             sharedPref.edit()
                     .putFloat("lat", lat)
@@ -215,7 +214,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MA_PERMISSIONS_REQUEST_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -236,7 +235,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                     // functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
+                break;
             }
         }
     }
@@ -266,7 +265,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);

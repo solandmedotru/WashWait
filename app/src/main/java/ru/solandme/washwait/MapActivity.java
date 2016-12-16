@@ -34,19 +34,15 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
-import ru.solandme.washwait.map.POJO.PlacesResponse;
-import ru.solandme.washwait.map.POJO.Result;
-import ru.solandme.washwait.places.POJO.PlaceInfo;
-import ru.solandme.washwait.places.POJO.Review;
+import ru.solandme.washwait.POJO.map.PlacesResponse;
+import ru.solandme.washwait.POJO.map.Result;
+import ru.solandme.washwait.POJO.places.PlaceInfo;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
 
@@ -150,7 +146,7 @@ public class MapActivity extends AppCompatActivity implements
                 results = response.body().getResults();
 
                 for (Result result : results) {
-                    ru.solandme.washwait.map.POJO.Location location = result.getGeometry().getLocation();
+                    ru.solandme.washwait.POJO.map.Location location = result.getGeometry().getLocation();
                     LatLng latLng = new LatLng(location.getLat(), location.getLng());
                     map.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -180,7 +176,7 @@ public class MapActivity extends AppCompatActivity implements
             @Override
             public void onResponse(Call<PlaceInfo> call, Response<PlaceInfo> response) {
 
-                ru.solandme.washwait.places.POJO.Result result = response.body().getResult();
+                ru.solandme.washwait.POJO.places.Result result = response.body().getResult();
 
                 Log.i(TAG, "Place found: " + result.getName());
 

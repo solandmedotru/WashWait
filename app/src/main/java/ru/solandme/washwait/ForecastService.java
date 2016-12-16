@@ -20,10 +20,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import ru.solandme.washwait.data.WeatherDbHelper;
-import ru.solandme.washwait.forecast.POJO.WeatherForecast;
+import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
-import ru.solandme.washwait.weather.POJO.CurrWeather;
+import ru.solandme.washwait.POJO.weather.CurrWeather;
 
 public class ForecastService extends IntentService {
 
