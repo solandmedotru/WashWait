@@ -3,27 +3,30 @@ package ru.solandme.washwait;
 import android.app.IntentService;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-
+import android.widget.RemoteViews;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.POJO.forecast.WeatherForecast;
+import ru.solandme.washwait.POJO.weather.CurrWeather;
+import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
-import ru.solandme.washwait.POJO.weather.CurrWeather;
+import ru.solandme.washwait.utils.WeatherUtils;
 
 public class ForecastService extends IntentService {
 
@@ -31,7 +34,6 @@ public class ForecastService extends IntentService {
     private static final String ACTION_GET_FORECAST = "ru.solandme.washwait.action.GET_FORECAST";
     private static final String DEFAULT_FORECAST_DISTANCE = "2";
     private static final String CNT = "16";
-    private static final String DEFAULT_UNITS = "metric";
     private static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     private static final int NOTIFICATION_ID = 1981;
     private String forecastDistance;
@@ -50,6 +52,7 @@ public class ForecastService extends IntentService {
     public static final boolean RUN_FROM_BACKGROUND = true;
     public static final double DEFAULT_LONGITUDE = 40.716667F;
     public static final double DEFAULT_LATITUDE = -74F;
+    public static final String DEFAULT_UNITS = "metric";
 
     public ForecastService() {
         super(TAG);
@@ -131,7 +134,7 @@ public class ForecastService extends IntentService {
 
                     isCurrWeatherResultOK = true;
                 } else {
-                    Log.e(TAG, "onError: current");
+                    Log.e(TAG, "onElse: current");
                     isCurrWeatherResultOK = false;
                 }
                 isFinishedCurrWeather = true;
@@ -140,7 +143,7 @@ public class ForecastService extends IntentService {
 
             @Override
             public void onFailure(Call<CurrWeather> call, Throwable t) {
-                Log.e(TAG, "onError: " + t);
+                Log.e(TAG, "onError: current" + t);
                 isCurrWeatherResultOK = false;
                 isFinishedCurrWeather = true;
                 publishResults(isForecastResultOK, isCurrWeatherResultOK, isRunFromBackground);
@@ -208,6 +211,7 @@ public class ForecastService extends IntentService {
 
     private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
         Intent intent = new Intent(NOTIFICATION);
+        String units = sharedPref.getString("units", DEFAULT_UNITS);
         if (isForecastResultOK && isCurrWeatherResultOK) {
             int washDayNumber = getWashDayNumber();
 
@@ -220,11 +224,61 @@ public class ForecastService extends IntentService {
             intent.putExtra("TextForecast", textForWashForecast);
             intent.putExtra("Weather", weatherForecast);
             intent.putExtra("CurrWeather", currWeather);
+
+            Context context = this;
+            AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+            RemoteViews remoteViews =
+                new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
+            ComponentName thisWidget = new ComponentName(context, MeteoWashWidget.class);
+
+            double maxTemp = currWeather.getMain().getTempMax();
+            double minTemp = currWeather.getMain().getTempMin();
+            String description = currWeather.getWeather().get(0).getDescription();
+            int icon = currWeather.getImageRes();
+            int humidity = currWeather.getMain().getHumidity();
+            double barometer = currWeather.getMain().getPressure();
+            double speedWind = currWeather.getWind().getSpeed();
+            int speedDirection = (int) currWeather.getWind().getDeg();
+
+            sharedPref.edit().putString("pref_maxTemp_key", String.valueOf(maxTemp)).apply();
+            sharedPref.edit().putString("pref_minTemp_key", String.valueOf(minTemp)).apply();
+            sharedPref.edit().putString("pref_description_key", description).apply();
+            sharedPref.edit().putString("pref_icon_key", String.valueOf(icon)).apply();
+            sharedPref.edit().putString("pref_humidity_key", String.valueOf(humidity)).apply();
+            sharedPref.edit().putString("pref_barometer_key", String.valueOf(barometer)).apply();
+            sharedPref.edit().putString("pref_speedWind_key", String.valueOf(speedWind)).apply();
+            sharedPref.edit()
+                .putString("pref_speedDirection_key", String.valueOf(speedDirection))
+                .apply();
+            sharedPref.edit().putString("pref_text_to_wash_key", textForWashForecast).apply();
+
+            remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
+            remoteViews.setImageViewBitmap(R.id.max_t_field, WeatherUtils.getFontBitmap(this,
+                WeatherUtils.getStringTemperature(maxTemp, units, this), Color.WHITE, 34));
+            remoteViews.setImageViewBitmap(R.id.min_t_field, WeatherUtils.getFontBitmap(this,
+                WeatherUtils.getStringTemperature(minTemp, units, this), Color.WHITE, 34));
+            remoteViews.setImageViewBitmap(R.id.barometer_field, WeatherUtils.getFontBitmap(this,
+                WeatherUtils.getStringBarometer(barometer, units, this), Color.WHITE, 14));
+            remoteViews.setImageViewBitmap(R.id.speed_wind_field, WeatherUtils.getFontBitmap(this,
+                WeatherUtils.getStringWind(speedDirection, speedWind, units, this), Color.WHITE,
+                14));
+            remoteViews.setImageViewBitmap(R.id.humidity_field, WeatherUtils.getFontBitmap(this,
+                (getString(R.string.wi_humidity) + " " + humidity + "%"), Color.WHITE, 14));
+            remoteViews.setImageViewBitmap(R.id.details_field,
+                WeatherUtils.getFontBitmap(this, description, Color.WHITE, 14));
+            remoteViews.setImageViewBitmap(R.id.forecast_message,
+                WeatherUtils.getFontBitmap(this, textForWashForecast, Color.WHITE, 14));
+
+            appWidgetManager.updateAppWidget(thisWidget, remoteViews);
         }
         intent.putExtra("isForecastResultOK", isForecastResultOK);
         intent.putExtra("isCurrWeatherResultOK", isCurrWeatherResultOK);
 
-        if(isFinishedCurrWeather && isFinishedForecast) LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        if (isFinishedCurrWeather && isFinishedForecast) {
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        }
+
+
     }
 
     private void sendNotification(String textForWashForecast) {
