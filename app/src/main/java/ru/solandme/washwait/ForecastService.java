@@ -49,8 +49,8 @@ public class ForecastService extends IntentService {
     public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
     public static final boolean RUN_FROM_ACTIVITY = false;
     public static final boolean RUN_FROM_BACKGROUND = true;
-    public static final double DEFAULT_LONGITUDE = 55.45;
-    public static final double DEFAULT_LATITUDE = 37.61;
+    public static final double DEFAULT_LONGITUDE = 37.6155600;
+    public static final double DEFAULT_LATITUDE = 55.7522200;
     public static final String DEFAULT_UNITS = "metric";
 
     public ForecastService() {
