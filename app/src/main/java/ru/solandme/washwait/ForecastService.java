@@ -49,8 +49,8 @@ public class ForecastService extends IntentService {
     public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
     public static final boolean RUN_FROM_ACTIVITY = false;
     public static final boolean RUN_FROM_BACKGROUND = true;
-    public static final float DEFAULT_LONGITUDE = 40;
-    public static final float DEFAULT_LATITUDE = 44;
+    public static final double DEFAULT_LONGITUDE = 55.45;
+    public static final double DEFAULT_LATITUDE = 37.61;
     public static final String DEFAULT_UNITS = "metric";
 
     public ForecastService() {
@@ -79,8 +79,8 @@ public class ForecastService extends IntentService {
     private void handleForecast() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = Locale.getDefault().getLanguage();
-        float lat = sharedPref.getFloat("lat", DEFAULT_LATITUDE);
-        float lon = sharedPref.getFloat("lon", DEFAULT_LONGITUDE);
+        float lat = sharedPref.getFloat("lat", (float) DEFAULT_LATITUDE);
+        float lon = sharedPref.getFloat("lon", (float) DEFAULT_LONGITUDE);
         String units = sharedPref.getString("units", DEFAULT_UNITS);
         forecastDistance = sharedPref.getString(getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
 
@@ -264,8 +264,6 @@ public class ForecastService extends IntentService {
         if (isFinishedCurrWeather && isFinishedForecast) {
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
-
-
     }
 
     private void sendNotification(String textForWashForecast) {
