@@ -76,7 +76,6 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/dry"
-                    android:textAllCaps="true"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_12ssp" />
 
@@ -87,7 +86,6 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/normal"
-                    android:textAllCaps="true"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_12ssp" />
 
@@ -98,7 +96,6 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:text="@string/wet"
-                    android:textAllCaps="true"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_12ssp" />
             </LinearLayout>
@@ -116,6 +113,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:textAlignment="center"
+                android:gravity="center"
                 android:textColor="@color/textColor"
                 android:textSize="@dimen/_12ssp" />
         </RelativeLayout>

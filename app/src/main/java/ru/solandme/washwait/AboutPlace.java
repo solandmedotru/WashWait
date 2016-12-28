@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.view.View;
 import android.widget.ImageButton;
@@ -11,10 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
-
 import ru.solandme.washwait.POJO.places.Result;
 import ru.solandme.washwait.adapters.ReviewsAdapter;
 import ru.solandme.washwait.utils.Utils;
@@ -140,9 +139,11 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnMakeCallPlace:
+              if (isTelephonyEnabled()) {
                 Intent callIntent = new Intent(Intent.ACTION_DIAL);
                 callIntent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
                 startActivity(callIntent);
+              }
                 break;
             case R.id.btnWebSite:
                 if (!webUrl.startsWith("http://") && !webUrl.startsWith("https://"))
@@ -160,5 +161,10 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
                 break;
         }
         finish();
+    }
+
+  private boolean isTelephonyEnabled() {
+    TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+    return tm != null && tm.getSimState() == TelephonyManager.SIM_STATE_READY;
     }
 }

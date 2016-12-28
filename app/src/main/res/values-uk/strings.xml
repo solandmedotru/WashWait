@@ -16,7 +16,7 @@
     <string name="city_name_settings">Місто або індекс (приклад Київ або 01000)</string>
     <string name="clear_period">Дней без осадков</string>
     <string name="about_app">Про програму</string>
-    <string name="author">Автор програми</string>
+  <string name="author">Автор</string>
     <string name="designer">Дизайнер</string>
     <string name="author_name">Соломин Андрей</string>
     <string name="address">Адреса:</string>

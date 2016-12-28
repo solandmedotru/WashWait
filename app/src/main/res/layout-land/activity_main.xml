@@ -46,7 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_above="@+id/precipitation_meter"
                     android:layout_below="@+id/forecastCard"
-                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
                     android:gravity="bottom"
                     android:orientation="vertical">
 
@@ -65,7 +65,7 @@
                     android:id="@+id/precipitation_meter"
                     style="@android:style/Widget.ProgressBar.Horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_6sdp"
+                    android:layout_height="@dimen/_4sdp"
                     android:layout_above="@+id/progressLabel"/>
 
                 <LinearLayout
@@ -81,9 +81,9 @@
                         android:gravity="center"
                         android:maxLines="1"
                         android:text="@string/dry"
-                        android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_12ssp" />
+                        android:textSize="@dimen/_10ssp"
+                        />
 
                     <TextView
                         android:layout_width="0dp"
@@ -92,9 +92,9 @@
                         android:gravity="center"
                         android:maxLines="1"
                         android:text="@string/normal"
-                        android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_12ssp" />
+                        android:textSize="@dimen/_10ssp"
+                        />
 
                     <TextView
                         android:layout_width="0dp"
@@ -103,9 +103,9 @@
                         android:gravity="center"
                         android:maxLines="1"
                         android:text="@string/wet"
-                        android:textAllCaps="true"
                         android:textColor="@color/textColor"
-                        android:textSize="@dimen/_12ssp" />
+                        android:textSize="@dimen/_10ssp"
+                        />
                 </LinearLayout>
 
                 <TextView
@@ -115,7 +115,8 @@
                     android:layout_alignParentBottom="true"
                     android:textAlignment="center"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/_12ssp" />
+                    android:textSize="@dimen/_8ssp"
+                    />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView

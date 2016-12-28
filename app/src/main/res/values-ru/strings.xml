@@ -16,7 +16,7 @@
     <string name="city_name_settings">Город или индекс (пример Moscow,RU или 101000)</string>
     <string name="clear_period">Дней без осадков</string>
     <string name="about_app">О приложении</string>
-    <string name="author">Автор приложения</string>
+  <string name="author">Автор</string>
     <string name="designer">Дизайнер</string>
     <string name="author_name">Соломин Андрей</string>
     <string name="address">Адрес:</string>

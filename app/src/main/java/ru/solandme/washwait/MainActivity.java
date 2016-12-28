@@ -26,21 +26,18 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-
+import ru.solandme.washwait.POJO.forecast.WeatherForecast;
+import ru.solandme.washwait.POJO.weather.CurrWeather;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.data.WeatherContract;
 import ru.solandme.washwait.data.WeatherDbHelper;
-import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 import ru.solandme.washwait.utils.Utils;
-import ru.solandme.washwait.POJO.weather.CurrWeather;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -58,7 +55,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private TextView curMinTempField;
     private TextView humidityField;
     private TextView barometerField;
-    private TextView speedWindField;
+
+  private TextView speedWindField;
     private ImageView weatherIconDay0;
     private ImageView carImage;
     private ImageView cityImage;

@@ -42,7 +42,8 @@
                     android:gravity="end"
                     android:text="10C"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/_34ssp" />
+                    android:textSize="@dimen/_24ssp"
+                    />
 
                 <View
                     android:layout_width="@dimen/_1sdp"
@@ -58,11 +59,12 @@
                     android:gravity="end"
                     android:text="12C"
                     android:textColor="@color/textColor"
-                    android:textSize="@dimen/_34ssp" />
+                    android:textSize="@dimen/_24ssp"
+                    />
 
                 <ImageView
                     android:id="@+id/weather_icon_day0"
-                    android:layout_width="@dimen/_40sdp"
+                    android:layout_width="@dimen/_30sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginStart="@dimen/_8sdp"
