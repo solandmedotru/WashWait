@@ -1,28 +1,28 @@
 package ru.solandme.washwait;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.support.annotation.ColorInt;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.EditText;
+import com.enrico.colorpicker.colorDialog;
 
-public class MeteoWashWidgetConfigureActivity extends Activity {
+public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
+    implements colorDialog.ColorSelectedListener {
 
-  private static final String PREFS_NAME = "ru.solandme.washwait.MeteoWashWidget";
-  private static final String PREF_PREFIX_KEY = "appwidget_";
   int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-  EditText mAppWidgetText;
+  Context context;
+  View colorBox;
+  SharedPreferences sharedPref;
+
   View.OnClickListener mOnClickListener = new View.OnClickListener() {
     public void onClick(View v) {
-      final Context context = MeteoWashWidgetConfigureActivity.this;
-
-      // When the button is clicked, store the string locally
-      String widgetText = mAppWidgetText.getText().toString();
-      saveTitlePref(context, mAppWidgetId, widgetText);
-
       // It is the responsibility of the configuration activity to update the app widget
       AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
       MeteoWashWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
@@ -39,41 +39,28 @@ public class MeteoWashWidgetConfigureActivity extends Activity {
     super();
   }
 
-  // Write the prefix to the SharedPreferences object for this widget
-  static void saveTitlePref(Context context, int appWidgetId, String text) {
-    SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-    prefs.putString(PREF_PREFIX_KEY + appWidgetId, text);
-    prefs.apply();
-  }
-
-  // Read the prefix from the SharedPreferences object for this widget.
-  // If there is no preference saved, get the default from a resource
-  static String loadTitlePref(Context context, int appWidgetId) {
-    SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-    String titleValue = prefs.getString(PREF_PREFIX_KEY + appWidgetId, null);
-    if (titleValue != null) {
-      return titleValue;
-    } else {
-      return context.getString(R.string.appwidget_text);
-    }
-  }
-
-  static void deleteTitlePref(Context context, int appWidgetId) {
-    SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
-    prefs.remove(PREF_PREFIX_KEY + appWidgetId);
-    prefs.apply();
-  }
 
   @Override public void onCreate(Bundle icicle) {
     super.onCreate(icicle);
+    context = MeteoWashWidgetConfigureActivity.this;
+    sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
     // Set the result to CANCELED.  This will cause the widget host to cancel
     // out of the widget placement if the user presses the back button.
     setResult(RESULT_CANCELED);
 
     setContentView(R.layout.meteo_wash_widget_configure);
-    mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
     findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
+
+    colorBox = findViewById(R.id.colorBox);
+    colorBox.setBackgroundColor(sharedPref.getInt("pref_textColor_key", Color.GRAY));
+
+    colorBox.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        final MeteoWashWidgetConfigureActivity activity = MeteoWashWidgetConfigureActivity.this;
+        colorDialog.showColorPicker(activity, 10);
+      }
+    });
 
     // Find the widget id from the intent.
     Intent intent = getIntent();
@@ -88,8 +75,12 @@ public class MeteoWashWidgetConfigureActivity extends Activity {
       finish();
       return;
     }
+  }
 
-    mAppWidgetText.setText(loadTitlePref(MeteoWashWidgetConfigureActivity.this, mAppWidgetId));
+  @Override
+  public void onColorSelection(DialogFragment dialogFragment, @ColorInt int selectedColor) {
+    sharedPref.edit().putInt("pref_textColor_key", selectedColor).apply();
+    colorBox.setBackgroundColor(selectedColor);
   }
 }
 

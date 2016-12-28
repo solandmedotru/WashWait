@@ -46,6 +46,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:10.0.1'
 
     compile 'com.squareup.picasso:picasso:2.5.2'
+  compile 'com.github.enricocid:cpl:1.0.1'
     testCompile 'junit:junit:4.12'
 
 }

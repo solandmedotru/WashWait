@@ -1,8 +1,10 @@
 package ru.solandme.washwait;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
@@ -13,9 +15,15 @@ public class MeteoWashWidget extends AppWidgetProvider {
 
   static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+    int textColor = sharedPref.getInt("pref_textColor_key", Color.GRAY);
 
     // Construct the RemoteViews object
     RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
+
+    Intent intent = new Intent(context, MainActivity.class);
+    PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+    remoteViews.setOnClickPendingIntent(R.id.widgetContent, pendingIntent);
+
 
     String units = sharedPref.getString("units", ForecastService.DEFAULT_UNITS);
     double maxTemp = Double.parseDouble(sharedPref.getString("pref_maxTemp_key", "0"));
@@ -29,24 +37,34 @@ public class MeteoWashWidget extends AppWidgetProvider {
     int speedDirection = Integer.parseInt(sharedPref.getString("pref_speedDirection_key", "0"));
     String textForWashForecast = sharedPref.getString("pref_text_to_wash_key", "");
 
-    remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
-    remoteViews.setImageViewBitmap(R.id.max_t_field, WeatherUtils.getFontBitmap(context,
-        WeatherUtils.getStringTemperature(maxTemp, units, context), Color.WHITE, 34));
-    remoteViews.setImageViewBitmap(R.id.min_t_field, WeatherUtils.getFontBitmap(context,
-        WeatherUtils.getStringTemperature(minTemp, units, context), Color.WHITE, 34));
-    remoteViews.setImageViewBitmap(R.id.barometer_field, WeatherUtils.getFontBitmap(context,
-        WeatherUtils.getStringBarometer(barometer, units, context), Color.WHITE, 14));
-    remoteViews.setImageViewBitmap(R.id.speed_wind_field, WeatherUtils.getFontBitmap(context,
-        WeatherUtils.getStringWind(speedDirection, speedWind, units, context), Color.WHITE, 14));
-    remoteViews.setImageViewBitmap(R.id.humidity_field, WeatherUtils.getFontBitmap(context,
-        (context.getString(R.string.wi_humidity) + " " + humidity + "%"), Color.WHITE, 14));
-    remoteViews.setImageViewBitmap(R.id.details_field,
-        WeatherUtils.getFontBitmap(context, description, Color.WHITE, 14));
-    remoteViews.setImageViewBitmap(R.id.forecast_message,
-        WeatherUtils.getFontBitmap(context, textForWashForecast, Color.WHITE, 14));
+    fillWidget(context, textColor, remoteViews, units, maxTemp, minTemp, description, icon,
+        humidity, barometer, speedWind, speedDirection, textForWashForecast);
 
     // Instruct the widget manager to update the widget
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
+  }
+
+  public static void fillWidget(Context context, int textColor, RemoteViews remoteViews,
+      String units, double maxTemp, double minTemp, String description, int icon, int humidity,
+      double barometer, double speedWind, int speedDirection, String textForWashForecast) {
+    remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
+    remoteViews.setImageViewBitmap(R.id.max_t_field, WeatherUtils.getFontBitmap(context,
+        WeatherUtils.getStringTemperature(maxTemp, units, context), textColor, 42));
+    remoteViews.setImageViewBitmap(R.id.separator,
+        WeatherUtils.getFontBitmap(context, " | ", textColor, 24));
+    remoteViews.setImageViewBitmap(R.id.min_t_field, WeatherUtils.getFontBitmap(context,
+        WeatherUtils.getStringTemperature(minTemp, units, context), textColor, 42));
+    remoteViews.setImageViewBitmap(R.id.barometer_field, WeatherUtils.getFontBitmap(context,
+        WeatherUtils.getStringBarometer(barometer, units, context), textColor, 14));
+    remoteViews.setImageViewBitmap(R.id.speed_wind_field, WeatherUtils.getFontBitmap(context,
+        WeatherUtils.getStringWind(speedDirection, speedWind, units, context), textColor, 14));
+    remoteViews.setImageViewBitmap(R.id.humidity_field, WeatherUtils.getFontBitmap(context,
+        (context.getString(R.string.wi_humidity) + " " + humidity + "%"), textColor, 14));
+
+    remoteViews.setTextViewText(R.id.details_field, description);
+    remoteViews.setTextColor(R.id.details_field, textColor);
+    remoteViews.setTextViewText(R.id.forecast_message, textForWashForecast);
+    remoteViews.setTextColor(R.id.forecast_message, textColor);
   }
 
   @Override
@@ -55,13 +73,6 @@ public class MeteoWashWidget extends AppWidgetProvider {
     ForecastService.startActionGetForecast(context, ForecastService.RUN_FROM_ACTIVITY);
     for (int appWidgetId : appWidgetIds) {
       updateAppWidget(context, appWidgetManager, appWidgetId);
-    }
-  }
-
-  @Override public void onDeleted(Context context, int[] appWidgetIds) {
-    // When the user deletes the widget, delete the preference associated with it.
-    for (int appWidgetId : appWidgetIds) {
-      MeteoWashWidgetConfigureActivity.deleteTitlePref(context, appWidgetId);
     }
   }
 

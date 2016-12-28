@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:id="@+id/widgetContent"
     android:layout_height="match_parent"
     android:padding="@dimen/_8sdp"
     >
@@ -31,13 +32,12 @@
           android:gravity="end"
           />
 
-      <TextView
+      <ImageView
+          android:id="@+id/separator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:gravity="end"
-          android:text=" | "
-          android:textSize="@dimen/_18ssp"
           />
 
       <ImageView
@@ -50,7 +50,7 @@
 
       <ImageView
           android:id="@+id/weather_icon_day0"
-          android:layout_width="@dimen/_40sdp"
+          android:layout_width="@dimen/_50sdp"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"
           android:layout_marginStart="@dimen/_16sdp"
@@ -62,13 +62,15 @@
           />
     </LinearLayout>
 
-    <ImageView
+    <TextView
         android:id="@+id/details_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/weatherCard"
         android:layout_gravity="end"
         android:gravity="center"
+        android:text="rain"
+        android:textSize="@dimen/_14ssp"
         />
 
     <LinearLayout
@@ -105,12 +107,18 @@
     </LinearLayout>
   </RelativeLayout>
 
-  <ImageView
+  <TextView
       android:id="@+id/forecast_message"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/cardContent"
       android:gravity="center"
+      android:padding="@dimen/_6sdp"
+      android:layout_marginTop="@dimen/_4ssp"
+      android:background="@color/colorDarken"
+      android:text="@string/can_wash"
+      android:textAlignment="center"
+      android:textSize="@dimen/_14ssp"
       />
 
 </RelativeLayout>

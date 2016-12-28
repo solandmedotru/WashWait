@@ -26,7 +26,6 @@ import ru.solandme.washwait.POJO.weather.CurrWeather;
 import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
-import ru.solandme.washwait.utils.WeatherUtils;
 
 public class ForecastService extends IntentService {
 
@@ -212,6 +211,7 @@ public class ForecastService extends IntentService {
     private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
         Intent intent = new Intent(NOTIFICATION);
         String units = sharedPref.getString("units", DEFAULT_UNITS);
+        int textColor = sharedPref.getInt("pref_textColor_key", Color.GRAY);
         if (isForecastResultOK && isCurrWeatherResultOK) {
             int washDayNumber = getWashDayNumber();
 
@@ -252,22 +252,9 @@ public class ForecastService extends IntentService {
                 .apply();
             sharedPref.edit().putString("pref_text_to_wash_key", textForWashForecast).apply();
 
-            remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
-            remoteViews.setImageViewBitmap(R.id.max_t_field, WeatherUtils.getFontBitmap(this,
-                WeatherUtils.getStringTemperature(maxTemp, units, this), Color.WHITE, 34));
-            remoteViews.setImageViewBitmap(R.id.min_t_field, WeatherUtils.getFontBitmap(this,
-                WeatherUtils.getStringTemperature(minTemp, units, this), Color.WHITE, 34));
-            remoteViews.setImageViewBitmap(R.id.barometer_field, WeatherUtils.getFontBitmap(this,
-                WeatherUtils.getStringBarometer(barometer, units, this), Color.WHITE, 14));
-            remoteViews.setImageViewBitmap(R.id.speed_wind_field, WeatherUtils.getFontBitmap(this,
-                WeatherUtils.getStringWind(speedDirection, speedWind, units, this), Color.WHITE,
-                14));
-            remoteViews.setImageViewBitmap(R.id.humidity_field, WeatherUtils.getFontBitmap(this,
-                (getString(R.string.wi_humidity) + " " + humidity + "%"), Color.WHITE, 14));
-            remoteViews.setImageViewBitmap(R.id.details_field,
-                WeatherUtils.getFontBitmap(this, description, Color.WHITE, 14));
-            remoteViews.setImageViewBitmap(R.id.forecast_message,
-                WeatherUtils.getFontBitmap(this, textForWashForecast, Color.WHITE, 14));
+            MeteoWashWidget.fillWidget(context, textColor, remoteViews, units, maxTemp, minTemp,
+                description, icon, humidity, barometer, speedWind, speedDirection,
+                textForWashForecast);
 
             appWidgetManager.updateAppWidget(thisWidget, remoteViews);
         }
