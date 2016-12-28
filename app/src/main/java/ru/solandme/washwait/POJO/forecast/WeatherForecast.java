@@ -3,116 +3,63 @@ package ru.solandme.washwait.POJO.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
-import java.util.ArrayList;
 
+public class WeatherForecast implements Serializable{
 
-public class WeatherForecast implements Serializable {
-
-    @SerializedName("city")
-    @Expose
-    private City city;
     @SerializedName("cod")
     @Expose
     private String cod;
     @SerializedName("message")
     @Expose
-    private double message;
+    private String message;
+    @SerializedName("city")
+    @Expose
+    private City city;
     @SerializedName("cnt")
     @Expose
     private int cnt;
     @SerializedName("list")
     @Expose
-    private java.util.List<List> list = new ArrayList<List>();
+    private java.util.List<ru.solandme.washwait.POJO.forecast.List> list = null;
 
-    /**
-     * 
-     * @return
-     *     The city
-     */
-    public City getCity() {
-        return city;
-    }
-
-    /**
-     * 
-     * @param city
-     *     The city
-     */
-    public void setCity(City city) {
-        this.city = city;
-    }
-
-    /**
-     * 
-     * @return
-     *     The cod
-     */
     public String getCod() {
         return cod;
     }
 
-    /**
-     * 
-     * @param cod
-     *     The cod
-     */
     public void setCod(String cod) {
         this.cod = cod;
     }
 
-    /**
-     * 
-     * @return
-     *     The message
-     */
-    public double getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    /**
-     * 
-     * @param message
-     *     The message
-     */
-    public void setMessage(double message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 
-    /**
-     * 
-     * @return
-     *     The cnt
-     */
+    public City getCity() {
+        return city;
+    }
+
+    public void setCity(City city) {
+        this.city = city;
+    }
+
     public int getCnt() {
         return cnt;
     }
 
-    /**
-     * 
-     * @param cnt
-     *     The cnt
-     */
     public void setCnt(int cnt) {
         this.cnt = cnt;
     }
 
-    /**
-     * 
-     * @return
-     *     The list
-     */
-    public java.util.List<List> getList() {
+    public java.util.List<ru.solandme.washwait.POJO.forecast.List> getList() {
         return list;
     }
 
-    /**
-     * 
-     * @param list
-     *     The list
-     */
-    public void setList(java.util.List<List> list) {
+    public void setList(java.util.List<ru.solandme.washwait.POJO.forecast.List> list) {
         this.list = list;
     }
 

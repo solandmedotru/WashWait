@@ -66,7 +66,5 @@
   <string name="route">Route</string>
   <string name="theme_night">Night Theme</string>
   <string name="clear_cache">Clear weather cache</string>
-  <string name="appwidget_text">EXAMPLE</string>
-  <string name="configure">Configure</string>
   <string name="add_widget">Add widget</string>
 </resources>

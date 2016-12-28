@@ -4,111 +4,93 @@ package ru.solandme.washwait.POJO.forecast;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-
 public class City {
 
-    @SerializedName("id")
+    @SerializedName("geoname_id")
     @Expose
-    private int id;
+    private int geonameId;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("coord")
+    @SerializedName("lat")
     @Expose
-    private Coord coord;
+    private double lat;
+    @SerializedName("lon")
+    @Expose
+    private double lon;
     @SerializedName("country")
     @Expose
     private String country;
+    @SerializedName("iso2")
+    @Expose
+    private String iso2;
+    @SerializedName("type")
+    @Expose
+    private String type;
     @SerializedName("population")
     @Expose
     private int population;
 
-    /**
-     * 
-     * @return
-     *     The id
-     */
-    public int getId() {
-        return id;
+    public int getGeonameId() {
+        return geonameId;
     }
 
-    /**
-     * 
-     * @param id
-     *     The id
-     */
-    public void setId(int id) {
-        this.id = id;
+    public void setGeonameId(int geonameId) {
+        this.geonameId = geonameId;
     }
 
-    /**
-     * 
-     * @return
-     *     The name
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * 
-     * @param name
-     *     The name
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * 
-     * @return
-     *     The coord
-     */
-    public Coord getCoord() {
-        return coord;
+    public double getLat() {
+        return lat;
     }
 
-    /**
-     * 
-     * @param coord
-     *     The coord
-     */
-    public void setCoord(Coord coord) {
-        this.coord = coord;
+    public void setLat(double lat) {
+        this.lat = lat;
     }
 
-    /**
-     * 
-     * @return
-     *     The country
-     */
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
     public String getCountry() {
         return country;
     }
 
-    /**
-     * 
-     * @param country
-     *     The country
-     */
     public void setCountry(String country) {
         this.country = country;
     }
 
-    /**
-     * 
-     * @return
-     *     The population
-     */
+    public String getIso2() {
+        return iso2;
+    }
+
+    public void setIso2(String iso2) {
+        this.iso2 = iso2;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     public int getPopulation() {
         return population;
     }
 
-    /**
-     * 
-     * @param population
-     *     The population
-     */
     public void setPopulation(int population) {
         this.population = population;
     }

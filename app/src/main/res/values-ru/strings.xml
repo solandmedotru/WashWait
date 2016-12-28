@@ -54,6 +54,7 @@
     <string name="route">Маршрут</string>
     <string name="theme_night">Темная</string>
     <string name="clear_cache">Очистить кэш приложения</string>
+  <string name="add_widget">Добавить</string>
 
 
 </resources>

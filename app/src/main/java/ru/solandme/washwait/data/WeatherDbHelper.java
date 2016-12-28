@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.util.Log;
-
+import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 import ru.solandme.washwait.data.WeatherContract.LocationEntry;
 import ru.solandme.washwait.data.WeatherContract.WeatherEntry;
-import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 
 
 public class WeatherDbHelper extends SQLiteOpenHelper {
@@ -90,7 +89,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                 LocationEntry.TABLE_NAME,
                 null,
                 LocationEntry.COLUMN_CITY_ID + " = ?",
-                new String[]{String.valueOf(weather.getCity().getId())},
+                new String[]{String.valueOf(weather.getCity().getGeonameId())},
                 null,
                 null,
                 null);
@@ -101,7 +100,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
             int id = cursor.getInt(cursor.getColumnIndex(LocationEntry._ID));
             delete = db.delete(LocationEntry.TABLE_NAME,
                     LocationEntry.COLUMN_CITY_ID + " = ?",
-                    new String[]{String.valueOf(weather.getCity().getId())});
+                    new String[]{String.valueOf(weather.getCity().getGeonameId())});
             Log.e(TAG, "deleteLocations count: " + delete);
 
             delete = db.delete(WeatherEntry.TABLE_NAME,
@@ -124,9 +123,9 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
 
         ContentValues values = new ContentValues();
         values.put(LocationEntry.COLUMN_CITY_NAME, weather.getCity().getName());
-        values.put(LocationEntry.COLUMN_CITY_ID, weather.getCity().getId());
-        values.put(LocationEntry.COLUMN_COORD_LAT, weather.getCity().getCoord().getLat());
-        values.put(LocationEntry.COLUMN_COORD_LONG, weather.getCity().getCoord().getLon());
+        values.put(LocationEntry.COLUMN_CITY_ID, weather.getCity().getGeonameId());
+        values.put(LocationEntry.COLUMN_COORD_LAT, weather.getCity().getLat());
+        values.put(LocationEntry.COLUMN_COORD_LONG, weather.getCity().getLon());
         values.put(LocationEntry.COLUMN_COUNTRY, weather.getCity().getCountry());
         long id = db.insert(LocationEntry.TABLE_NAME, null, values);
 

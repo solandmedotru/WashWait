@@ -26,6 +26,7 @@
             android:background="@drawable/background"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/_10ssp"
             android:text="-2"
             android:layout_alignRight="@+id/weather_icon_day" />
 
