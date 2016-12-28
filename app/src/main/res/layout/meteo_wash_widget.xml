@@ -2,6 +2,7 @@
     android:layout_width="match_parent"
     android:id="@+id/widgetContent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:padding="@dimen/_8sdp"
     >
 

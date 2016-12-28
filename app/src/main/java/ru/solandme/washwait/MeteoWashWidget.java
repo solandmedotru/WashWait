@@ -24,7 +24,6 @@ public class MeteoWashWidget extends AppWidgetProvider {
     PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
     remoteViews.setOnClickPendingIntent(R.id.widgetContent, pendingIntent);
 
-
     String units = sharedPref.getString("units", ForecastService.DEFAULT_UNITS);
     double maxTemp = Double.parseDouble(sharedPref.getString("pref_maxTemp_key", "0"));
     double minTemp = Double.parseDouble(sharedPref.getString("pref_minTemp_key", "0"));
