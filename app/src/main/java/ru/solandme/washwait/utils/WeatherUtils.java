@@ -6,6 +6,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.TypedValue;
+
 import ru.solandme.washwait.R;
 
 public class WeatherUtils {
@@ -99,7 +100,7 @@ public class WeatherUtils {
 
     int textWidth = (int) (paint.measureText(text) + pad * 2);
     int height = (int) (fontSizePX / 0.75);
-    Bitmap bitmap = Bitmap.createBitmap(textWidth, height, Bitmap.Config.ARGB_4444);
+    Bitmap bitmap = Bitmap.createBitmap(textWidth, height, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
     float xOriginal = pad;
     canvas.drawText(text, xOriginal, fontSizePX, paint);

@@ -4,93 +4,111 @@ package ru.solandme.washwait.POJO.forecast;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+
 public class City {
 
-    @SerializedName("geoname_id")
+    @SerializedName("id")
     @Expose
-    private int geonameId;
+    private int id;
     @SerializedName("name")
     @Expose
     private String name;
-    @SerializedName("lat")
+    @SerializedName("coord")
     @Expose
-    private double lat;
-    @SerializedName("lon")
-    @Expose
-    private double lon;
+    private Coord coord;
     @SerializedName("country")
     @Expose
     private String country;
-    @SerializedName("iso2")
-    @Expose
-    private String iso2;
-    @SerializedName("type")
-    @Expose
-    private String type;
     @SerializedName("population")
     @Expose
     private int population;
 
-    public int getGeonameId() {
-        return geonameId;
+    /**
+     * 
+     * @return
+     *     The id
+     */
+    public int getId() {
+        return id;
     }
 
-    public void setGeonameId(int geonameId) {
-        this.geonameId = geonameId;
+    /**
+     * 
+     * @param id
+     *     The id
+     */
+    public void setId(int id) {
+        this.id = id;
     }
 
+    /**
+     * 
+     * @return
+     *     The name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * 
+     * @param name
+     *     The name
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    public double getLat() {
-        return lat;
+    /**
+     * 
+     * @return
+     *     The coord
+     */
+    public Coord getCoord() {
+        return coord;
     }
 
-    public void setLat(double lat) {
-        this.lat = lat;
+    /**
+     * 
+     * @param coord
+     *     The coord
+     */
+    public void setCoord(Coord coord) {
+        this.coord = coord;
     }
 
-    public double getLon() {
-        return lon;
-    }
-
-    public void setLon(double lon) {
-        this.lon = lon;
-    }
-
+    /**
+     * 
+     * @return
+     *     The country
+     */
     public String getCountry() {
         return country;
     }
 
+    /**
+     * 
+     * @param country
+     *     The country
+     */
     public void setCountry(String country) {
         this.country = country;
     }
 
-    public String getIso2() {
-        return iso2;
-    }
-
-    public void setIso2(String iso2) {
-        this.iso2 = iso2;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
+    /**
+     * 
+     * @return
+     *     The population
+     */
     public int getPopulation() {
         return population;
     }
 
+    /**
+     * 
+     * @param population
+     *     The population
+     */
     public void setPopulation(int population) {
         this.population = population;
     }

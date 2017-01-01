@@ -16,8 +16,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
+
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -212,6 +214,7 @@ public class ForecastService extends IntentService {
         Intent intent = new Intent(NOTIFICATION);
         String units = sharedPref.getString("units", DEFAULT_UNITS);
         int textColor = sharedPref.getInt("pref_textColor_key", Color.GRAY);
+        int bgColor = sharedPref.getInt("pref_bgColor_key", Color.BLACK);
         if (isForecastResultOK && isCurrWeatherResultOK) {
             int washDayNumber = getWashDayNumber();
 
@@ -252,9 +255,8 @@ public class ForecastService extends IntentService {
                 .apply();
             sharedPref.edit().putString("pref_text_to_wash_key", textForWashForecast).apply();
 
-            MeteoWashWidget.fillWidget(context, textColor, remoteViews, units, maxTemp, minTemp,
-                description, icon, humidity, barometer, speedWind, speedDirection,
-                textForWashForecast);
+            remoteViews = MeteoWashWidget.fillWidget(context, textColor, bgColor, remoteViews, units, maxTemp, minTemp, description, icon,
+                    humidity, barometer, speedWind, speedDirection, textForWashForecast);
 
             appWidgetManager.updateAppWidget(thisWidget, remoteViews);
         }
