@@ -30,15 +30,15 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:gravity="end"
-          />
+          android:gravity="end" />
 
-      <ImageView
+      <TextView
           android:id="@+id/separator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
           android:gravity="end"
+          android:textSize="@dimen/_24ssp"
           />
 
       <ImageView
@@ -46,8 +46,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center"
-          android:gravity="end"
-          />
+          android:gravity="end" />
 
       <ImageView
           android:id="@+id/weather_icon_day0"
@@ -79,32 +78,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/details_field"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
-      <ImageView
+      <TextView
           android:id="@+id/humidity_field"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:gravity="center"
-          />
+          android:text="70%"
+          android:textSize="@dimen/_14ssp" />
 
-      <ImageView
+      <TextView
           android:id="@+id/barometer_field"
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
           android:gravity="center"
-          />
+          android:text="1008 mPa"
+          android:textSize="@dimen/_14ssp" />
 
-      <ImageView
+      <TextView
           android:id="@+id/speed_wind_field"
-          android:layout_width="match_parent"
+          android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:gravity="center"
-          />
+          android:text="5 m/s"
+          android:textSize="@dimen/_14ssp" />
     </LinearLayout>
   </RelativeLayout>
 
