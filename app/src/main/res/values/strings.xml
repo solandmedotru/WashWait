@@ -1,72 +1,72 @@
 <resources>
-  <string name="app_name">MeteoWash</string>
+    <string name="app_name">MeteoWash</string>
 
-  <string name="change_city">To change a city</string>
-  <string name="wash">I recommend to wash the car on\n%1$s</string>
-  <string name="not_wash">It is better not to wash a car during following two weeks.</string>
-  <string name="can_wash">Today is a good day to wash the car!</string>
-  <string name="last_update">"Last update: "</string>
-  <string name="settings">Settings</string>
-  <string name="error_from_response">Network Error!</string>
-  <string name="units_format_label">Units of measurement</string>
+    <string name="change_city">To change a city</string>
+    <string name="wash">I recommend to wash the car on\n%1$s</string>
+    <string name="not_wash">It is better not to wash a car during following two weeks.</string>
+    <string name="can_wash">Today is a good day to wash the car!</string>
+    <string name="last_update">"Last update: "</string>
+    <string name="settings">Settings</string>
+    <string name="error_from_response">Network Error!</string>
+    <string name="units_format_label">Units of measurement</string>
 
-  <string name="dry">weak</string>
-  <string name="wet">high</string>
-  <string name="normal">moderate</string>
-  <string name="city_name_settings">City or postal code (ex. Moscow)</string>
-  <string name="clear_period">Clear period</string>
-  <string name="author">Author</string>
-  <string name="author_name">Solomin Andrey</string>
-  <string name="author_email" translatable="false">solomin.andrey@gmail.com</string>
-  <string name="designer">Designer</string>
-  <string name="designer_name" translatable="false">Anar Ibrahimli</string>
-  <string name="designer_email" translatable="false">anar9222@gmail.com</string>
-  <string name="about_app">About Application</string>
-  <string name="title_activity_map">Map</string>
-  <string name="make_call">Call</string>
-  <string name="close">Close</string>
-  <string name="phone">Phone:</string>
-  <string name="address">Address:</string>
-  <string name="i_am_here">I am here</string>
-  <string name="pref_city_key" translatable="false">city</string>
-  <string name="pref_units_key" translatable="false">units</string>
-  <string name="pref_theme_color_key" translatable="false">theme</string>
-  <string name="pref_limit_key" translatable="false">2</string>
+    <string name="dry">weak</string>
+    <string name="wet">high</string>
+    <string name="normal">moderate</string>
+    <string name="city_name_settings">City or postal code (ex. Moscow)</string>
+    <string name="clear_period">Clear period</string>
+    <string name="author">Author</string>
+    <string name="author_name">Solomin Andrey</string>
+    <string name="author_email" translatable="false">solomin.andrey@gmail.com</string>
+    <string name="designer">Designer</string>
+    <string name="designer_name" translatable="false">Anar Ibrahimli</string>
+    <string name="designer_email" translatable="false">anar9222@gmail.com</string>
+    <string name="about_app">About Application</string>
+    <string name="title_activity_map">Map</string>
+    <string name="make_call">Call</string>
+    <string name="close">Close</string>
+    <string name="phone">Phone:</string>
+    <string name="address">Address:</string>
+    <string name="i_am_here">I am here</string>
+    <string name="pref_city_key" translatable="false">city</string>
+    <string name="pref_units_key" translatable="false">units</string>
+    <string name="pref_theme_color_key" translatable="false">theme</string>
+    <string name="pref_limit_key" translatable="false">2</string>
 
 
-  <string name="choose_location">To Choose Location</string>
-  <string name="wash_car">Car washes</string>
-  <string name="permission_danied">Permission denied. Part of the functions will not work</string>
-  <string name="current_position">Current Position</string>
-  <string name="latitude">"Lat: "</string>
-  <string name="longitude">" Lon: "</string>
-  <string name="click_to_find">Press to find</string>
-  <string name="enter_city">Fill in the city</string>
-  <string name="enter_location">Search location…</string>
-  <string name="example_city">For Example, London</string>
-  <string name="example_zip">For Example, 43140</string>
-  <string name="find_your_location">your location</string>
-  <string name="zip_or_index">Fill in Zip or Postal code</string>
-  <string name="theme_color">Select Theme</string>
-  <string name="theme_blue">Blue Theme</string>
-  <string name="theme_violet">Violet Theme</string>
-  <string name="theme">Theme</string>
-  <string name="theme_green">Green Theme</string>
-  <string name="pref_task_key" translatable="false">pref_task_key</string>
-  <string name="notification">Notification</string>
-  <string name="white_car_image" translatable="false">White car image</string>
-  <string name="weather_icon" translatable="false">Weather icon</string>
-  <string name="image_city">Image city</string>
-  <string name="meter_per_sec">m/s</string>
-  <string name="miles_per_h">mph</string>
-  <string name="m_hg">mmHg</string>
-  <string name="h_pa">hPa</string>
-  <string name="web_site">web site</string>
-  <string name="share">share</string>
-  <string name="route">Route</string>
-  <string name="theme_night">Night Theme</string>
-  <string name="clear_cache">Clear weather cache</string>
-  <string name="add_widget">Add widget</string>
+    <string name="choose_location">To Choose Location</string>
+    <string name="wash_car">Car washes</string>
+    <string name="permission_danied">Permission denied. Part of the functions will not work</string>
+    <string name="current_position">Current Position</string>
+    <string name="latitude">"Lat: "</string>
+    <string name="longitude">" Lon: "</string>
+    <string name="click_to_find">Press to find</string>
+    <string name="enter_city">Fill in the city</string>
+    <string name="enter_location">Search location…</string>
+    <string name="example_city">For Example, London</string>
+    <string name="example_zip">For Example, 43140</string>
+    <string name="find_your_location">your location</string>
+    <string name="zip_or_index">Fill in Zip or Postal code</string>
+    <string name="theme_color">Select Theme</string>
+    <string name="theme_blue">Blue Theme</string>
+    <string name="theme_violet">Violet Theme</string>
+    <string name="theme">Theme</string>
+    <string name="theme_green">Green Theme</string>
+    <string name="pref_task_key" translatable="false">pref_task_key</string>
+    <string name="notification">Notification</string>
+    <string name="white_car_image" translatable="false">White car image</string>
+    <string name="weather_icon" translatable="false">Weather icon</string>
+    <string name="image_city">Image city</string>
+    <string name="meter_per_sec">m/s</string>
+    <string name="miles_per_h">mph</string>
+    <string name="m_hg">mmHg</string>
+    <string name="h_pa">hPa</string>
+    <string name="web_site">web site</string>
+    <string name="share">share</string>
+    <string name="route">Route</string>
+    <string name="theme_night">Night Theme</string>
+    <string name="clear_cache">Clear weather cache</string>
+    <string name="add_widget">Add widget</string>
     <string name="background_color">Background color</string>
-  <string name="text_color">Text color</string>
+    <string name="text_color">Text color</string>
 </resources>

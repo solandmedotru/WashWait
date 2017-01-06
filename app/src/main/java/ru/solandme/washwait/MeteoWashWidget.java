@@ -50,16 +50,16 @@ public class MeteoWashWidget extends AppWidgetProvider {
                                          double barometer, double speedWind, int speedDirection, String textForWashForecast) {
         remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
         remoteViews.setImageViewBitmap(R.id.max_t_field, WeatherUtils.getFontBitmap(context,
-                WeatherUtils.getStringTemperature(maxTemp, units, context), textColor, 40));
+                WeatherUtils.getStringTemperature(maxTemp, units, context), textColor, 36));
         remoteViews.setTextViewText(R.id.separator, " | ");
         remoteViews.setTextColor(R.id.separator, textColor);
         remoteViews.setImageViewBitmap(R.id.min_t_field, WeatherUtils.getFontBitmap(context,
-                WeatherUtils.getStringTemperature(minTemp, units, context), textColor, 40));
+                WeatherUtils.getStringTemperature(minTemp, units, context), textColor, 36));
         remoteViews.setTextViewText(R.id.barometer_field, WeatherUtils.getStringBarometer(barometer, units, context).substring(1));
         remoteViews.setTextColor(R.id.barometer_field, textColor);
         remoteViews.setTextViewText(R.id.speed_wind_field, WeatherUtils.getStringWind(speedDirection, speedWind, units, context).substring(1));
         remoteViews.setTextColor(R.id.speed_wind_field, textColor);
-        remoteViews.setTextViewText(R.id.humidity_field, (context.getString(R.string.wi_humidity) + " " + humidity + "%").substring(1));
+        remoteViews.setTextViewText(R.id.humidity_field, (humidity + "%"));
         remoteViews.setTextColor(R.id.humidity_field, textColor);
         remoteViews.setTextViewText(R.id.details_field, description);
         remoteViews.setTextColor(R.id.details_field, textColor);
