@@ -38,6 +38,7 @@ import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.data.WeatherContract;
 import ru.solandme.washwait.data.WeatherDbHelper;
 import ru.solandme.washwait.utils.Utils;
+import ru.solandme.washwait.utils.WeatherUtils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -173,7 +174,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
 
             toolbar.setSubtitle(getDataWithFormat(new Date(dt)));
-            curMaxTempField.setText(getStringTemperature(maxTemp, units));
+          curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
             detailsField.setText(description);
         }
 
@@ -232,23 +233,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         });
     }
 
-    private String getStringTemperature(double maxTemp, String units) {
-        String unitTemperature;
-        switch (units) {
-            case "metric":
-                unitTemperature = String.format("%s", getString(R.string.wi_celsius));
-                break;
-            case "imperial":
-                unitTemperature = String.format("%s", getString(R.string.wi_fahrenheit));
-                break;
-            default:
-                unitTemperature = String.format("%sK", "\u00b0");
-                break;
-        }
-        return String.format("%s%s",
-                (int) Math.round(maxTemp),
-                unitTemperature);
-    }
+
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
 
@@ -304,8 +289,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void startWashCarActivity() {
-        float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
-        float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
+      float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
+      float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);
@@ -391,11 +376,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         fillTitle(city, getDataWithFormat(new Date(dt)));
 
-        curMaxTempField.setText(getStringTemperature(maxTemp, units));
-        curMinTempField.setText(getStringTemperature(minTemp, units));
+      curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
+      curMinTempField.setText(WeatherUtils.getStringTemperature(minTemp, units, this));
         humidityField.setText(getString(R.string.wi_humidity) + " " + humidity + "%");
-        barometerField.setText(getStringBarometer(barometer, units));
-        speedWindField.setText(getStringWind(speedDirection, speedWind, units));
+      barometerField.setText(WeatherUtils.getStringBarometer(barometer, units, this));
+      speedWindField.setText(WeatherUtils.getStringWind(speedDirection, speedWind, units, this));
 
         dirtyCounter = weatherForecast.getList().get(position).getDirtyCounter();
         dirtyMeter.setMax(50);
@@ -416,71 +401,5 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void fillTitle(String city, String dataWithFormat) {
         toolbar.setTitle(city);
         toolbar.setSubtitle(dataWithFormat);
-    }
-
-    @NonNull
-    private String getStringBarometer(double barometer, String units) {
-        String barUnits;
-        switch (units) {
-            case "metric":
-                barUnits = String.format("%s", getString(R.string.m_hg));
-                barometer = Math.round(barometer * 100 / 133.3224);
-                break;
-            case "imperial":
-                barUnits = String.format("%s", getString(R.string.h_pa));
-                break;
-            default:
-                barUnits = String.format("%s", getString(R.string.m_hg));
-                break;
-        }
-        return String.format("%s %s %s",
-                getString(R.string.wi_barometer),
-                (int) barometer,
-                barUnits);
-    }
-
-    @NonNull
-    private String getStringWind(int speedDirection, double speedWind, String units) {
-        String windUnits;
-        switch (units) {
-            case "metric":
-                windUnits = String.format("%s", getString(R.string.meter_per_sec));
-                break;
-            case "imperial":
-                windUnits = String.format("%s", getString(R.string.miles_per_h));
-                break;
-            default:
-                windUnits = String.format("%s", getString(R.string.meter_per_sec));
-                break;
-        }
-        return String.format("%s %s %s",
-                getString(getWindRes(speedDirection)),
-                (int) Math.round(speedWind),
-                windUnits);
-    }
-
-    private int getWindRes(int direction) {
-        int val = (int) Math.round(((double) direction % 360) / 45);
-        switch (val % 16) {
-            case 0:
-                return R.string.wi_wind_north;
-            case 1:
-                return R.string.wi_wind_north_east;
-            case 2:
-                return R.string.wi_wind_east;
-            case 3:
-                return R.string.wi_wind_south_east;
-            case 4:
-                return R.string.wi_wind_south;
-            case 5:
-                return R.string.wi_wind_south_west;
-            case 6:
-                return R.string.wi_wind_west;
-            case 7:
-                return R.string.wi_wind_north_west;
-            case 8:
-                return R.string.wi_wind_north;
-        }
-        return R.string.wi_wind_east;
     }
 }

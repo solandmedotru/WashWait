@@ -2,10 +2,12 @@ package ru.solandme.washwait;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -30,6 +32,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
@@ -39,10 +42,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.POJO.map.PlacesResponse;
 import ru.solandme.washwait.POJO.map.Result;
 import ru.solandme.washwait.POJO.places.PlaceInfo;
+import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
 
@@ -77,12 +80,13 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         bundle = getIntent().getExtras();
         currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
-        Log.e(TAG, "onCreate: " + currentLatLng.toString() );
+        Log.e(TAG, "onCreate: " + currentLatLng.toString());
         lang = bundle.getString("lang");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -116,6 +120,18 @@ public class MapActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sTheme = sharedPreferences.getString(getString(R.string.pref_theme_color_key), "1");
+        switch (sTheme) {
+            case Utils.THEME_MATERIAL_DAYNIGHT:
+                map.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.style_dark_json));
+                break;
+            default:
+                map.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.style_json));
+                break;
+        }
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -158,7 +174,7 @@ public class MapActivity extends AppCompatActivity implements
                 carWashList.setAdapter(adapter);
 
                 moveCameraToLocation(currentLatLng);
-                Log.e(TAG, "onResponse: " + currentLatLng.toString() );
+                Log.e(TAG, "onResponse: " + currentLatLng.toString());
             }
 
             @Override
@@ -209,7 +225,7 @@ public class MapActivity extends AppCompatActivity implements
         mCurrLocationMarker = map.addMarker(markerOptions);
 
         currentLatLng = latLng;
-        Log.e(TAG, "onLocationChanged: " + currentLatLng.toString() );
+        Log.e(TAG, "onLocationChanged: " + currentLatLng.toString());
         requestPlacesNearCurrentLocation();
         //stop location updates
         if (map != null) {

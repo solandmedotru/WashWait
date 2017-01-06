@@ -2,64 +2,78 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.solandme.washwait">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+  <uses-permission android:name="android.permission.INTERNET" />
+  <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location.gps"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.location.network"
-        android:required="false" />
+  <uses-feature
+      android:name="android.hardware.location"
+      android:required="false" />
+  <uses-feature
+      android:name="android.hardware.location.gps"
+      android:required="false" />
+  <uses-feature
+      android:name="android.hardware.location.network"
+      android:required="false" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+  <application
+      android:allowBackup="true"
+      android:icon="@mipmap/ic_launcher"
+      android:label="@string/app_name"
+      android:supportsRtl="true"
+      android:theme="@style/AppTheme">
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="@string/google_maps_key" />
 
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+    <activity android:name=".MainActivity">
+      <intent-filter>
+        <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".SettingsActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".MapActivity"
-            android:label="@string/title_activity_map">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="ru.solandme.washwait.MainActivity" />
-        </activity>
-        <activity android:name=".ChooseCityActivity" />
-        <activity android:name=".AboutPlace" />
+        <category android:name="android.intent.category.LAUNCHER" />
+      </intent-filter>
+    </activity>
+    <activity
+        android:name=".SettingsActivity"
+        android:parentActivityName=".MainActivity" />
+    <activity
+        android:name=".MapActivity"
+        android:label="@string/title_activity_map">
+      <meta-data
+          android:name="android.support.PARENT_ACTIVITY"
+          android:value="ru.solandme.washwait.MainActivity" />
+    </activity>
+    <activity android:name=".ChooseCityActivity" />
+    <activity android:name=".AboutPlace" />
 
-        <service
-            android:name=".ForecastService"
-            android:exported="false" />
+    <service
+        android:name=".ForecastService"
+        android:exported="false" />
+    <service
+        android:name=".PeriodicalForecastTask"
+        android:exported="true"
+        android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
+      <intent-filter>
+        <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
+      </intent-filter>
+    </service>
 
-        <service
-            android:name=".PeriodicalForecastTask"
-            android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.google.android.gms.gcm.ACTION_TASK_READY" />
-            </intent-filter>
-        </service>
+    <receiver android:name=".MeteoWashWidget">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+      </intent-filter>
 
-    </application>
+      <meta-data
+          android:name="android.appwidget.provider"
+          android:resource="@xml/meteo_wash_widget_info" />
+    </receiver>
+
+    <activity android:name=".MeteoWashWidgetConfigureActivity">
+      <intent-filter>
+        <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+      </intent-filter>
+    </activity>
+  </application>
 
 </manifest>

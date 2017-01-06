@@ -3,17 +3,16 @@ package ru.solandme.washwait.rest;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -38,11 +37,16 @@ public class ForecastApiHelper {
     private static OkHttpClient getOkHttpClient(final Context context) {
         OkHttpClient.Builder okClientBuilder = new OkHttpClient.Builder();
 
+
         File baseDir = context.getCacheDir();
         if (baseDir != null) {
             File cacheDir = new File(baseDir, "HttpResponseCache");
             okClientBuilder.cache(new Cache(cacheDir, HTTP_RESPONSE_DISK_CACHE_MAX_SIZE));
         }
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        okClientBuilder.addInterceptor(interceptor);
 
         okClientBuilder.addInterceptor(new Interceptor() {
             @Override
