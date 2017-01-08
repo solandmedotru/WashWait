@@ -37,6 +37,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -80,13 +81,11 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
         bundle = getIntent().getExtras();
         currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
-        Log.e(TAG, "onCreate: " + currentLatLng.toString());
         lang = bundle.getString("lang");
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -95,6 +94,10 @@ public class MapActivity extends AppCompatActivity implements
 
         carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
         carWashList.setHasFixedSize(true);
+
+        results = new ArrayList<>();
+        adapter = new MyPlacesRVAdapter(results, MapActivity.this);
+        carWashList.setAdapter(adapter);
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         carWashList.setLayoutManager(linearLayoutManager);
@@ -118,20 +121,8 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+        map = setMapStyle(googleMap);
 
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String sTheme = sharedPreferences.getString(getString(R.string.pref_theme_color_key), "1");
-        switch (sTheme) {
-            case Utils.THEME_MATERIAL_DAYNIGHT:
-                map.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                        this, R.raw.style_dark_json));
-                break;
-            default:
-                map.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                        this, R.raw.style_json));
-                break;
-        }
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -149,6 +140,22 @@ public class MapActivity extends AppCompatActivity implements
         requestPlacesNearCurrentLocation();
     }
 
+    private GoogleMap setMapStyle(GoogleMap map) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String appTheme = sharedPreferences.getString(getString(R.string.pref_theme_color_key), Utils.THEME_MATERIAL_BLUE);
+        switch (appTheme) {
+            case Utils.THEME_MATERIAL_DAYNIGHT:
+                map.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.style_dark_json));
+                break;
+            default:
+                map.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                        this, R.raw.style_json));
+                break;
+        }
+        return map;
+    }
+
 
     private void moveCameraToLocation(LatLng currentLatLng) {
         map.moveCamera(CameraUpdateFactory.newLatLng(currentLatLng));
@@ -159,7 +166,8 @@ public class MapActivity extends AppCompatActivity implements
         placesHelper.requestPlaces("car_wash", currentLatLng, lang, new Callback<PlacesResponse>() {
             @Override
             public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
-                results = response.body().getResults();
+
+                results.addAll(response.body().getResults());
 
                 for (Result result : results) {
                     ru.solandme.washwait.POJO.map.Location location = result.getGeometry().getLocation();
@@ -169,17 +177,13 @@ public class MapActivity extends AppCompatActivity implements
                             .snippet(result.getVicinity())
                             .title(result.getName()));
                 }
-
-                adapter = new MyPlacesRVAdapter(results, MapActivity.this);
-                carWashList.setAdapter(adapter);
-
                 moveCameraToLocation(currentLatLng);
-                Log.e(TAG, "onResponse: " + currentLatLng.toString());
+                adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<PlacesResponse> call, Throwable t) {
-
+                Toast.makeText(MapActivity.this, getString(R.string.error_from_response), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -194,17 +198,15 @@ public class MapActivity extends AppCompatActivity implements
 
                 ru.solandme.washwait.POJO.places.Result result = response.body().getResult();
 
-                Log.i(TAG, "Place found: " + result.getName());
-
                 Intent intent = new Intent(MapActivity.this, AboutPlace.class);
                 intent.putExtra(AboutPlace.RESULT_KEY, new Gson().toJson(result));
-
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(Call<PlaceInfo> call, Throwable t) {
-                Log.e(TAG, "Place not found");
+                Log.e(TAG, getString(R.string.place_not_found));
+                Toast.makeText(MapActivity.this, getString(R.string.place_not_found), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -225,7 +227,6 @@ public class MapActivity extends AppCompatActivity implements
         mCurrLocationMarker = map.addMarker(markerOptions);
 
         currentLatLng = latLng;
-        Log.e(TAG, "onLocationChanged: " + currentLatLng.toString());
         requestPlacesNearCurrentLocation();
         //stop location updates
         if (map != null) {

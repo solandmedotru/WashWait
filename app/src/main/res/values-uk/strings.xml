@@ -57,6 +57,7 @@
   <string name="add_widget">Добавить</string>
     <string name="background_color">Цвет фона</string>
     <string name="text_color">Цвет текста</string>
+    <string name="place_not_found">Мисто не найдено</string>
 
 
 </resources>
