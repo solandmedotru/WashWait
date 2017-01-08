@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        getLastWeatherFromDB(sharedPref.getInt("cityId", 2643743));
+        getLastWeatherFromDB(sharedPref.getInt(getString(R.string.pref_city_id_key), 2643743));
     }
 
     @Override
@@ -240,8 +240,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void startWashCarActivity() {
-        float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
-        float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
+        float lat = sharedPref.getFloat(getString(R.string.pref_lat_key), (float) ForecastService.DEFAULT_LATITUDE);
+        float lon = sharedPref.getFloat(getString(R.string.pref_lon_key), (float) ForecastService.DEFAULT_LONGITUDE);
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);

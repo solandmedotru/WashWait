@@ -58,6 +58,10 @@
     <string name="background_color">Цвет фона</string>
     <string name="text_color">Цвет текста</string>
     <string name="place_not_found">Место не найдено</string>
+    <string name="gps_disabled_message">\"Функция GPS отключена. Перейти в настройки для включения этой функции?\"</string>
+    <string name="googleApi_error">"Ошибка соединение с клиентом Google Api: "</string>
+    <string name="disconnected_message">Связь потеряна. Переподключитесь, пожалуйста.</string>
+    <string name="network_lost_message">Сеть потеряна. Переподключитесь снова, пожалуйста.</string>
 
 
 </resources>

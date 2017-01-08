@@ -13,9 +13,7 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         setTheme(R.style.Dialog);
         super.onCreate(savedInstanceState);
-
         getFragmentManager().beginTransaction().replace(android.R.id.content, new MyPreferenceFragment()).commit();
-
     }
 
     public static class MyPreferenceFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
@@ -27,7 +25,6 @@ public class SettingsActivity extends PreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_limit_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_task_key)));
-
         }
 
         private void bindPreferenceSummaryToValue(Preference preference) {
@@ -64,11 +61,7 @@ public class SettingsActivity extends PreferenceActivity {
             } else {
                 preference.setSummary(stringValue);
             }
-
-
             return true;
         }
-
-
     }
 }

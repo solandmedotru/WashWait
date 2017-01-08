@@ -17,6 +17,8 @@ import com.enrico.colorpicker.colorDialog;
 public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         implements colorDialog.ColorSelectedListener {
 
+    public static final int TAG_TEXT_COLOR = 1;
+    public static final int TAG_BG_COLOR = 2;
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
     Context context;
     View textColorBox;
@@ -56,16 +58,16 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 
         textColorBox = findViewById(R.id.textColorBox);
-        textColorBox.setBackgroundColor(sharedPref.getInt("pref_textColor_key", Color.GRAY));
+        textColorBox.setBackgroundColor(sharedPref.getInt(getString(R.string.pref_textColor_key), Color.GRAY));
 
         bgColorBox = findViewById(R.id.bgColorBox);
-        bgColorBox.setBackgroundColor(sharedPref.getInt("pref_bgColorBox_key", Color.BLACK));
+        bgColorBox.setBackgroundColor(sharedPref.getInt(getString(R.string.pref_bgColor_key), Color.BLACK));
 
         textColorBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final MeteoWashWidgetConfigureActivity activity = MeteoWashWidgetConfigureActivity.this;
-                colorDialog.showColorPicker(activity, 1);
+                colorDialog.showColorPicker(activity, TAG_TEXT_COLOR);
             }
         });
 
@@ -73,7 +75,7 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 final MeteoWashWidgetConfigureActivity activity = MeteoWashWidgetConfigureActivity.this;
-                colorDialog.showColorPicker(activity, 2);
+                colorDialog.showColorPicker(activity, TAG_BG_COLOR);
             }
         });
 
@@ -88,7 +90,6 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         // If this activity was started with an intent without an app widget ID, finish with an error.
         if (mAppWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
             finish();
-            return;
         }
     }
 
@@ -97,15 +98,14 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         int tag;
         tag = Integer.valueOf(dialogFragment.getTag());
         switch (tag) {
-            case 1:
-                sharedPref.edit().putInt("pref_textColor_key", selectedColor).apply();
+            case TAG_TEXT_COLOR:
+                sharedPref.edit().putInt(getString(R.string.pref_textColor_key), selectedColor).apply();
                 textColorBox.setBackgroundColor(selectedColor);
                 break;
-            case 2:
-                sharedPref.edit().putInt("pref_bgColor_key", selectedColor).apply();
+            case TAG_BG_COLOR:
+                sharedPref.edit().putInt(getString(R.string.pref_bgColor_key), selectedColor).apply();
                 bgColorBox.setBackgroundColor(selectedColor);
                 break;
-            case 3:
         }
     }
 }

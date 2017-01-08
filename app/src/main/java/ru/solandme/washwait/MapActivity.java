@@ -291,9 +291,9 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onConnectionSuspended(int i) {
         if (i == CAUSE_SERVICE_DISCONNECTED) {
-            Toast.makeText(this, "Disconnected. Please re-connect.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.disconnected_message, Toast.LENGTH_SHORT).show();
         } else if (i == CAUSE_NETWORK_LOST) {
-            Toast.makeText(this, "Network lost. Please re-connect.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.network_lost_message, Toast.LENGTH_SHORT).show();
         }
     }
 

@@ -40,11 +40,7 @@ public class ForecastService extends IntentService {
     private String forecastDistance;
     private WeatherForecast weatherForecast;
     private CurrWeather currWeather;
-    private boolean isForecastResultOK;
-    private boolean isCurrWeatherResultOK;
-    private boolean isFinishedCurrWeather;
-    private boolean isFinishedForecast;
-    private boolean isRunFromBackground;
+    private boolean isForecastResultOK, isCurrWeatherResultOK, isFinishedCurrWeather, isFinishedForecast, isRunFromBackground;
     private SharedPreferences sharedPref;
 
     public static final String RUN_FROM = "isRunFromBackground";
@@ -66,7 +62,6 @@ public class ForecastService extends IntentService {
         context.startService(intent);
     }
 
-
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
@@ -81,9 +76,9 @@ public class ForecastService extends IntentService {
     private void handleForecast() {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = Locale.getDefault().getLanguage();
-        float lat = sharedPref.getFloat("lat", (float) DEFAULT_LATITUDE);
-        float lon = sharedPref.getFloat("lon", (float) DEFAULT_LONGITUDE);
-        String units = sharedPref.getString("units", DEFAULT_UNITS);
+        float lat = sharedPref.getFloat(getString(R.string.pref_lat_key), (float) DEFAULT_LATITUDE);
+        float lon = sharedPref.getFloat(getString(R.string.pref_lon_key), (float) DEFAULT_LONGITUDE);
+        String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
         forecastDistance = sharedPref.getString(getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
@@ -212,9 +207,9 @@ public class ForecastService extends IntentService {
 
     private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
         Intent intent = new Intent(NOTIFICATION);
-        String units = sharedPref.getString("units", DEFAULT_UNITS);
-        int textColor = sharedPref.getInt("pref_textColor_key", Color.GRAY);
-        int bgColor = sharedPref.getInt("pref_bgColor_key", Color.BLACK);
+        String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
+        int textColor = sharedPref.getInt(getString(R.string.pref_textColor_key), Color.GRAY);
+        int bgColor = sharedPref.getInt(getString(R.string.pref_bgColor_key), Color.BLACK);
         if (isForecastResultOK && isCurrWeatherResultOK) {
             int washDayNumber = getWashDayNumber();
 
@@ -243,17 +238,15 @@ public class ForecastService extends IntentService {
             double speedWind = currWeather.getWind().getSpeed();
             int speedDirection = (int) currWeather.getWind().getDeg();
 
-            sharedPref.edit().putString("pref_maxTemp_key", String.valueOf(maxTemp)).apply();
-            sharedPref.edit().putString("pref_minTemp_key", String.valueOf(minTemp)).apply();
-            sharedPref.edit().putString("pref_description_key", description).apply();
-            sharedPref.edit().putString("pref_icon_key", String.valueOf(icon)).apply();
-            sharedPref.edit().putString("pref_humidity_key", String.valueOf(humidity)).apply();
-            sharedPref.edit().putString("pref_barometer_key", String.valueOf(barometer)).apply();
-            sharedPref.edit().putString("pref_speedWind_key", String.valueOf(speedWind)).apply();
-            sharedPref.edit()
-                .putString("pref_speedDirection_key", String.valueOf(speedDirection))
-                .apply();
-            sharedPref.edit().putString("pref_text_to_wash_key", textForWashForecast).apply();
+            sharedPref.edit().putString(getString(R.string.pref_maxTemp_key), String.valueOf(maxTemp)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_minTemp_key), String.valueOf(minTemp)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_description_key), description).apply();
+            sharedPref.edit().putString(getString(R.string.pref_icon_key), String.valueOf(icon)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_humidity_key), String.valueOf(humidity)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_barometer_key), String.valueOf(barometer)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_speedWind_key), String.valueOf(speedWind)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_speedDirection_key), String.valueOf(speedDirection)).apply();
+            sharedPref.edit().putString(getString(R.string.pref_text_to_wash_key), textForWashForecast).apply();
 
             remoteViews = MeteoWashWidget.fillWidget(context, textColor, bgColor, remoteViews, units, maxTemp, minTemp, description, icon,
                     humidity, barometer, speedWind, speedDirection, textForWashForecast);

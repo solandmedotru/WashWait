@@ -70,4 +70,23 @@
     <string name="background_color">Background color</string>
     <string name="text_color">Text color</string>
     <string name="place_not_found">Place not found</string>
+    <string name="gps_disabled_message">GPS is disabled in your device. Would you like to enable it?</string>
+    <string name="googleApi_error">Could not connect to Google API Client: Error</string>
+    <string name="pref_lat_key" translatable="false">lat</string>
+    <string name="pref_lon_key" translatable="false">lon</string>
+    <string name="pref_city_id_key" translatable="false">cityId</string>
+    <string name="pref_language_key" translatable="false">lang</string>
+    <string name="disconnected_message">Disconnected. Please re-connect.</string>
+    <string name="network_lost_message">Network lost. Please re-connect.</string>
+    <string name="pref_textColor_key" translatable="false">pref_textColor_key</string>
+    <string name="pref_bgColor_key" translatable="false">pref_bgColor_key</string>
+    <string name="pref_maxTemp_key" translatable="false">pref_maxTemp_key</string>
+    <string name="pref_minTemp_key" translatable="false">pref_minTemp_key</string>
+    <string name="pref_description_key" translatable="false">pref_description_key</string>
+    <string name="pref_icon_key" translatable="false">pref_icon_key</string>
+    <string name="pref_humidity_key" translatable="false">pref_humidity_key</string>
+    <string name="pref_barometer_key" translatable="false">pref_barometer_key</string>
+    <string name="pref_speedWind_key" translatable="false">pref_speedWind_key</string>
+    <string name="pref_speedDirection_key" translatable="false">pref_speedDirection_key</string>
+    <string name="pref_text_to_wash_key" translatable="false">pref_text_to_wash_key</string>
 </resources>

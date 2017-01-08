@@ -47,19 +47,15 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     private static final String TAG = ChooseCityActivity.class.getSimpleName();
     private static final int MA_PERMISSIONS_REQUEST_LOCATION = 90;
-
     private static final long INTERVAL = 1000 * 10;
     private static final long FASTEST_INTERVAL = 1000 * 5;
 
-    private GoogleApiClient mGoogleApiClient;
-    private GoogleApiClient locationClient;
+    private GoogleApiClient mGoogleApiClient, locationClient;
     private LocationManager locationManager;
     private PlaceAutocompleteAdapter mAdapter;
 
-    private float lat;
-    private float lon;
+    private float lat, lon;
     private SharedPreferences sharedPref;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,15 +118,15 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     private void showGPSDisabledAlertToUser() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        alertDialogBuilder.setMessage("GPS is disabled in your device. Would you like to enable it?")
+        alertDialogBuilder.setMessage(R.string.gps_disabled_message)
                 .setCancelable(false)
-                .setPositiveButton("Settings", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.settings), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
                         startActivity(callGPSSettingIntent);
                     }
                 });
-        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 dialog.cancel();
             }
@@ -172,9 +168,9 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             String city = place.getName().toString().trim();
 
             sharedPref.edit()
-                    .putFloat("lat", lat)
-                    .putFloat("lon", lon)
-                    .putString("city", city)
+                    .putFloat(getString(R.string.pref_lat_key), lat)
+                    .putFloat(getString(R.string.pref_lon_key), lon)
+                    .putString(getString(R.string.pref_city_key), city)
                     .apply();
             places.release();
             finish();
@@ -187,7 +183,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         Log.e(TAG, "onConnectionFailed: ConnectionResult.getErrorCode() = "
                 + connectionResult.getErrorCode());
         Toast.makeText(this,
-                "Could not connect to Google API Client: Error " + connectionResult.getErrorCode(),
+                getString(R.string.googleApi_error) + connectionResult.getErrorCode(),
                 Toast.LENGTH_SHORT).show();
     }
 
@@ -208,7 +204,6 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 showGPSDisabledAlertToUser();
             }
-
             return true;
         }
     }
@@ -233,7 +228,7 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.
-                    Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.permission_danied), Toast.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -302,9 +297,9 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         }
 
         sharedPref.edit()
-                .putFloat("lat", lat)
-                .putFloat("lon", lon)
-                .putString("city", city)
+                .putFloat(getString(R.string.pref_lat_key), lat)
+                .putFloat(getString(R.string.pref_lon_key), lon)
+                .putString(getString(R.string.pref_city_key), city)
                 .apply();
         if (locationClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
