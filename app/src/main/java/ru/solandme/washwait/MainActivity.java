@@ -10,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -108,33 +107,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getLastWeatherFromDB(sharedPref.getInt("cityId", 2643743));
     }
 
-    @NonNull
-    private String getFormattedDate(Date date) {
-        return new SimpleDateFormat("EEEE, dd MMM",
-                java.util.Locale.getDefault()).format(date).toUpperCase();
-    }
-
-    private void getLastWeatherFromDB(int cityId) {
-        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
-        Cursor cursor = dbHelper.getLastWeather(cityId);
-
-
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            detailsField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)));
-            curMaxTempField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
-            double maxTemp = Double.parseDouble(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
-            String description = cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC));
-            long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
-
-            toolbar.setSubtitle(getFormattedDate(new Date(dt)));
-            curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
-            detailsField.setText(description);
-        }
-        cursor.close();
-        dbHelper.close();
-    }
-
     @Override
     public void onResume() {
         city = sharedPref.getString(getString(R.string.pref_city_key), getResources().getString(R.string.choose_location));
@@ -154,6 +126,31 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    }
+
+    private void getLastWeatherFromDB(int cityId) {
+        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
+        Cursor cursor = dbHelper.getLastWeather(cityId);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            detailsField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)));
+            curMaxTempField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
+            double maxTemp = Double.parseDouble(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
+            String description = cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC));
+            long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
+
+            toolbar.setSubtitle(getFormattedDate(new Date(dt)));
+            curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
+            detailsField.setText(description);
+        }
+        cursor.close();
+        dbHelper.close();
+    }
+
+    private String getFormattedDate(Date date) {
+        return new SimpleDateFormat("EEEE, dd MMM",
+                java.util.Locale.getDefault()).format(date).toUpperCase();
     }
 
     private void checkTask() {

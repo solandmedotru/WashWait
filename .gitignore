@@ -1,9 +1,12 @@
 *.iml
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+.idea
 .DS_Store
 /build
 /captures
 .externalNativeBuild
+src/main/java/ru/solandme/washwait/forecast/
+src/main/java/ru/solandme/washwait/map/
+app/src/main/java/ru/solandme/washwait/forecast/
+app/src/main/java/ru/solandme/washwait/map/

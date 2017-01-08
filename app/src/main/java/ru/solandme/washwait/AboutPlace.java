@@ -12,37 +12,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
 import ru.solandme.washwait.POJO.places.Result;
 import ru.solandme.washwait.adapters.ReviewsAdapter;
 import ru.solandme.washwait.utils.Utils;
 
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "AboutPlaceDialog";
     public static final String RESULT_KEY = "result";
 
-    TextView nameAboutPlace;
-    TextView phoneAboutPlace;
-    TextView addressAboutPlace;
-    TextView openHourAboutPlace;
-    ImageView photoAboutPlace;
-    RatingBar ratingBarAboutPlace;
-    LinearLayout reviews_list;
-
-    private String openHours = "";
-    private String placeName;
-    private String placePhone;
-    private String placeAddress;
-    private String photoRef;
-    private String webUrl;
+    private String openHours, placePhotoAttributes = "";
+    private String placeName, placePhone, placeAddress, photoRef, webUrl;
     private float placeRating;
-    private TextView ratingNumberAboutPlace;
-    private TextView photoAttributes;
-    private String placePhotoAttributes = "";
-
-    Bundle args;
-    Result result;
+    private Result result;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,8 +34,23 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about_place_dialog);
 
-        args = getIntent().getExtras();
+        ImageView photoAboutPlace = (ImageView) findViewById(R.id.place_photo);
+        RatingBar ratingBarAboutPlace = (RatingBar) findViewById(R.id.ratingBar);
+        TextView ratingNumberAboutPlace = (TextView) findViewById(R.id.ratingNumber);
+        TextView nameAboutPlace = (TextView) findViewById(R.id.place_name);
+        TextView phoneAboutPlace = (TextView) findViewById(R.id.place_phone);
+        TextView addressAboutPlace = (TextView) findViewById(R.id.place_address);
+        TextView openHourAboutPlace = (TextView) findViewById(R.id.place_open_hours);
+        TextView photoAttributes = (TextView) findViewById(R.id.photoAttributes);
+        LinearLayout reviews_list = (LinearLayout) findViewById(R.id.reviews_list);
+        ImageButton btnMakeCall = (ImageButton) findViewById(R.id.btnMakeCallPlace);
+        btnMakeCall.setOnClickListener(this);
+        ImageButton btnWebSite = (ImageButton) findViewById(R.id.btnWebSite);
+        btnWebSite.setOnClickListener(this);
+        ImageButton btnRoute = (ImageButton) findViewById(R.id.btnRoute);
+        btnRoute.setOnClickListener(this);
 
+        Bundle args = getIntent().getExtras();
         if (null != args) {
             result = new Gson().fromJson(args.getString(RESULT_KEY), Result.class);
             placeName = result.getName();
@@ -75,18 +74,7 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
             }
         }
 
-        photoAboutPlace = (ImageView) findViewById(R.id.place_photo);
-        ratingBarAboutPlace = (RatingBar) findViewById(R.id.ratingBar);
-        ratingNumberAboutPlace = (TextView) findViewById(R.id.ratingNumber);
-        nameAboutPlace = (TextView) findViewById(R.id.place_name);
-        phoneAboutPlace = (TextView) findViewById(R.id.place_phone);
-        addressAboutPlace = (TextView) findViewById(R.id.place_address);
-        openHourAboutPlace = (TextView) findViewById(R.id.place_open_hours);
-        photoAttributes = (TextView) findViewById(R.id.photoAttributes);
-
-        reviews_list = (LinearLayout) findViewById(R.id.reviews_list);
-
-        if(null != result.getReviews()) {
+        if (null != result.getReviews()) {
             ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, result.getReviews());
             for (int i = 0; i < reviewsAdapter.getCount(); i++) {
                 View view = reviewsAdapter.getView(i, null, reviews_list);
@@ -94,17 +82,11 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
             }
         }
 
-        ImageButton btnMakeCall = (ImageButton) findViewById(R.id.btnMakeCallPlace);
-        btnMakeCall.setOnClickListener(this);
-        ImageButton btnWebSite = (ImageButton) findViewById(R.id.btnWebSite);
-        btnWebSite.setOnClickListener(this);
-        ImageButton btnRoute = (ImageButton) findViewById(R.id.btnRoute);
-        btnRoute.setOnClickListener(this);
-
-
         if (null == openHours || openHours.equals("")) openHourAboutPlace.setVisibility(View.GONE);
-        if (null == placeAddress || placeAddress.equals("")) addressAboutPlace.setVisibility(View.GONE);
-        if (null == placePhotoAttributes || placePhotoAttributes.equals("")) photoAttributes.setVisibility(View.GONE);
+        if (null == placeAddress || placeAddress.equals(""))
+            addressAboutPlace.setVisibility(View.GONE);
+        if (null == placePhotoAttributes || placePhotoAttributes.equals(""))
+            photoAttributes.setVisibility(View.GONE);
         if (null == placePhone || placePhone.equals("") || placePhone.equals("null")) {
             phoneAboutPlace.setVisibility(View.GONE);
             btnMakeCall.setClickable(false);
@@ -132,18 +114,17 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
                         + getResources().getString(R.string.google_maps_key))
                 .placeholder(R.mipmap.city8).fit()
                 .into(photoAboutPlace);
-
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnMakeCallPlace:
-              if (isTelephonyEnabled()) {
-                Intent callIntent = new Intent(Intent.ACTION_DIAL);
-                callIntent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
-                startActivity(callIntent);
-              }
+                if (isTelephonyEnabled()) {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:" + placePhone.replaceAll("[^0-9|\\+]", "")));
+                    startActivity(callIntent);
+                }
                 break;
             case R.id.btnWebSite:
                 if (!webUrl.startsWith("http://") && !webUrl.startsWith("https://"))
@@ -163,8 +144,8 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
         finish();
     }
 
-  private boolean isTelephonyEnabled() {
-    TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
-    return tm != null && tm.getSimState() == TelephonyManager.SIM_STATE_READY;
+    private boolean isTelephonyEnabled() {
+        TelephonyManager tm = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        return tm != null && tm.getSimState() == TelephonyManager.SIM_STATE_READY;
     }
 }
