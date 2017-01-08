@@ -3,9 +3,11 @@ package ru.solandme.washwait.rest;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
@@ -22,7 +24,6 @@ public class ForecastApiHelper {
     private static final long CONNECTION_TIMEOUT = 10;
     private static Retrofit retrofit = null;
 
-
     public static Retrofit requestForecast(Context context) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -37,7 +38,6 @@ public class ForecastApiHelper {
     private static OkHttpClient getOkHttpClient(final Context context) {
         OkHttpClient.Builder okClientBuilder = new OkHttpClient.Builder();
 
-
         File baseDir = context.getCacheDir();
         if (baseDir != null) {
             File cacheDir = new File(baseDir, "HttpResponseCache");
@@ -47,7 +47,6 @@ public class ForecastApiHelper {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         okClientBuilder.addInterceptor(interceptor);
-
         okClientBuilder.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {

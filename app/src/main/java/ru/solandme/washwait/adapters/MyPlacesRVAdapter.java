@@ -10,30 +10,24 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import ru.solandme.washwait.R;
 import ru.solandme.washwait.POJO.map.Result;
-
+import ru.solandme.washwait.R;
 
 public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.ViewHolder> {
 
     private List<Result> results = new ArrayList<>();
     private OnPlaceSelectedListener listener;
 
-
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView placeName;
+        TextView placeName, placeVicinity;
         RatingBar placeRating;
-        TextView placeVicinity;
-
         View placesContainer;
-
 
         ViewHolder(View v) {
             super(v);
             placeName = (TextView) v.findViewById(R.id.place_name);
             placeRating = (RatingBar) v.findViewById(R.id.ratingBar);
             placeVicinity = (TextView) v.findViewById(R.id.place_vicinity);
-
             placesContainer = v.findViewById(R.id.places_container);
 
         }
@@ -69,13 +63,6 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
         holder.placeName.setText(results.get(position).getName());
         holder.placeRating.setRating(rating);
         holder.placeVicinity.setText(results.get(position).getVicinity());
-
-//        holder.placesContainer.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                listener.onPlaceItemSelected(holder.getAdapterPosition(), results.get(holder.getAdapterPosition()));
-//            }
-//        });
     }
 
 
@@ -87,7 +74,6 @@ public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.Vi
             return results.size();
         }
     }
-
 
     public interface OnPlaceSelectedListener {
         void onPlaceItemSelected(int position, Result result);

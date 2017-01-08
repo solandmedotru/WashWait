@@ -8,9 +8,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.solandme.washwait.R;
 import ru.solandme.washwait.POJO.map.PlacesResponse;
 import ru.solandme.washwait.POJO.places.PlaceInfo;
+import ru.solandme.washwait.R;
 
 public class PlacesApiHelper {
     private static final String GOOGLEAPIS_BASE_URL = "https://maps.googleapis.com";
@@ -35,7 +35,6 @@ public class PlacesApiHelper {
     public void requestPlaces(String types, LatLng latLng, String lang, Callback<PlacesResponse> callback) {
 
         PlaceApiService service = getInstance().create(PlaceApiService.class);
-
         Call<PlacesResponse> call = service.requestPlaces(
                 types,
                 String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude),

@@ -26,17 +26,14 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
     }
 
     private static class ViewHolder {
-        TextView reviewer;
-        TextView reviewText;
-        TextView reviewNumber;
-        TextView reviewData;
+        TextView reviewer, reviewText, reviewNumber, reviewData;
         RatingBar reviewBar;
     }
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = null;
+        View view;
         if (convertView == null) {
             LayoutInflater inflator = context.getLayoutInflater();
             view = inflator.inflate(R.layout.review_row, null);
@@ -60,5 +57,4 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
         holder.reviewBar.setRating(reviews.get(position).getRating());
         return view;
     }
-
 }

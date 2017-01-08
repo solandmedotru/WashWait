@@ -11,7 +11,7 @@ import ru.solandme.washwait.R;
 
 public class WeatherUtils {
 
-  public static int getWindRes(int direction) {
+  private static int getWindRes(int direction) {
     int val = (int) Math.round(((double) direction % 360) / 45);
     switch (val % 16) {
       case 0:
@@ -102,14 +102,12 @@ public class WeatherUtils {
     int height = (int) (fontSizePX / 0.75);
     Bitmap bitmap = Bitmap.createBitmap(textWidth, height, Bitmap.Config.ARGB_8888);
     Canvas canvas = new Canvas(bitmap);
-    float xOriginal = pad;
-    canvas.drawText(text, xOriginal, fontSizePX, paint);
+    canvas.drawText(text, (float) pad, fontSizePX, paint);
     return bitmap;
   }
 
   private static int convertDiptoPix(Context context, float dip) {
-    int value = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,
+    return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dip,
         context.getResources().getDisplayMetrics());
-    return value;
   }
 }

@@ -10,8 +10,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import ru.solandme.washwait.R;
 import ru.solandme.washwait.POJO.forecast.WeatherForecast;
+import ru.solandme.washwait.R;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
@@ -30,9 +30,8 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        TextView date1;
+        TextView date1, temp;
         ImageView image1;
-        TextView temp;
 
         ViewHolder(View v) {
             super(v);
