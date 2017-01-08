@@ -121,13 +121,20 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                 WeatherEntry.COLUMN_DATE + " ASC");
         Log.e(TAG, "after_deleteWeather: " + cursor.getCount());
 
-
         ContentValues values = new ContentValues();
-        values.put(LocationEntry.COLUMN_CITY_NAME, weather.getCity().getName());
-        values.put(LocationEntry.COLUMN_CITY_ID, weather.getCity().getId());
-        values.put(LocationEntry.COLUMN_COORD_LAT, weather.getCity().getCoord().getLat());
-        values.put(LocationEntry.COLUMN_COORD_LONG, weather.getCity().getCoord().getLon());
-        values.put(LocationEntry.COLUMN_COUNTRY, weather.getCity().getCountry());
+        if (null != weather.getCity().getCoord()) {
+            values.put(LocationEntry.COLUMN_CITY_NAME, weather.getCity().getName());
+            values.put(LocationEntry.COLUMN_CITY_ID, weather.getCity().getId());
+            values.put(LocationEntry.COLUMN_COORD_LAT, weather.getCity().getCoord().getLat());
+            values.put(LocationEntry.COLUMN_COORD_LONG, weather.getCity().getCoord().getLon());
+            values.put(LocationEntry.COLUMN_COUNTRY, weather.getCity().getCountry());
+        } else {
+            values.put(LocationEntry.COLUMN_CITY_NAME, "");
+            values.put(LocationEntry.COLUMN_CITY_ID, "");
+            values.put(LocationEntry.COLUMN_COORD_LAT, "");
+            values.put(LocationEntry.COLUMN_COORD_LONG, "");
+            values.put(LocationEntry.COLUMN_COUNTRY, "");
+        }
         long id = db.insert(LocationEntry.TABLE_NAME, null, values);
 
         Log.e(TAG, "saveWeather: " + id);

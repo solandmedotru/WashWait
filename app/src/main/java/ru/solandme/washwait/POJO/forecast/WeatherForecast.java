@@ -16,9 +16,6 @@ public class WeatherForecast implements Serializable {
     @SerializedName("cod")
     @Expose
     private String cod;
-    @SerializedName("message")
-    @Expose
-    private double message;
     @SerializedName("cnt")
     @Expose
     private int cnt;
@@ -60,24 +57,6 @@ public class WeatherForecast implements Serializable {
      */
     public void setCod(String cod) {
         this.cod = cod;
-    }
-
-    /**
-     * 
-     * @return
-     *     The message
-     */
-    public double getMessage() {
-        return message;
-    }
-
-    /**
-     * 
-     * @param message
-     *     The message
-     */
-    public void setMessage(double message) {
-        this.message = message;
     }
 
     /**

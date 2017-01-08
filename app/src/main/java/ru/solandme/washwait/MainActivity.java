@@ -26,12 +26,15 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.PeriodicTask;
 import com.google.android.gms.gcm.Task;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
 import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 import ru.solandme.washwait.POJO.weather.CurrWeather;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
@@ -42,70 +45,30 @@ import ru.solandme.washwait.utils.WeatherUtils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    private static final String TAG = "ru.solandme.washwait";
-    private static final String TAG_ABOUT = "about";
-    private static final String DEFAULT_UNITS = "metric";
     public static final int PERIODICAL_TIMER = 43200; //21600
     public static final int FIRST_DAY_POSITION = 0;
-    Toolbar toolbar;
+    private static final String TAG_ABOUT = "about";
+    private static final String DEFAULT_UNITS = "metric";
+    private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
-
-    private TextView updatedField;
-    private TextView detailsField;
-    private TextView curMaxTempField;
-    private TextView curMinTempField;
-    private TextView humidityField;
-    private TextView barometerField;
-
-  private TextView speedWindField;
-    private ImageView weatherIconDay0;
-    private ImageView carImage;
-    private ImageView cityImage;
-    private TextView forecastMessage;
-
+    private TextView updatedField, detailsField, curMaxTempField, curMinTempField, humidityField, barometerField, speedWindField, forecastMessage;
+    private ImageView weatherIconDay0, carImage, cityImage;
     private ProgressBar dirtyMeter;
-
     private SharedPreferences sharedPref;
-
     private RecyclerView forecastRecyclerView;
-    private MyForecastRVAdapter adapter;
-
     private WeatherForecast weatherForecast;
     private CurrWeather currWeather;
-
     private GcmNetworkManager mGcmNetworkManager;
-    private String units;
-    private String city;
-    private int cityId;
-    private Typeface weatherFont;
-
-    double maxTemp;
-    double minTemp;
-    String description;
-    int icon;
-    long dt;
-    int humidity;
-    double barometer;
-    double speedWind;
-    int speedDirection;
-    long dtLast;
-    double dirtyCounter;
-
+    private String units, city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weatherFont.ttf");
-
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
-
-        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent);
@@ -113,31 +76,25 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         updatedField = (TextView) findViewById(R.id.updated_field);
         detailsField = (TextView) findViewById(R.id.details_field);
+        forecastMessage = (TextView) findViewById(R.id.forecast_message);
+        weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
+        carImage = (ImageView) findViewById(R.id.car_image);
+        cityImage = (ImageView) findViewById(R.id.city_image);
+        dirtyMeter = (ProgressBar) findViewById(R.id.precipitation_meter);
+        forecastRecyclerView = (RecyclerView) findViewById(R.id.rwForecast);
+        forecastRecyclerView.setHasFixedSize(true);
 
+        Typeface weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weatherFont.ttf");
         curMaxTempField = (TextView) findViewById(R.id.max_t_field);
         curMaxTempField.setTypeface(weatherFont);
         curMinTempField = (TextView) findViewById(R.id.min_t_field);
         curMinTempField.setTypeface(weatherFont);
-
         humidityField = (TextView) findViewById(R.id.humidity_field);
         humidityField.setTypeface(weatherFont);
         barometerField = (TextView) findViewById(R.id.barometer_field);
         barometerField.setTypeface(weatherFont);
         speedWindField = (TextView) findViewById(R.id.speed_wind_field);
         speedWindField.setTypeface(weatherFont);
-
-
-        forecastMessage = (TextView) findViewById(R.id.forecast_message);
-
-        weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
-
-        carImage = (ImageView) findViewById(R.id.car_image);
-        cityImage = (ImageView) findViewById(R.id.city_image);
-
-        dirtyMeter = (ProgressBar) findViewById(R.id.precipitation_meter);
-
-        forecastRecyclerView = (RecyclerView) findViewById(R.id.rwForecast);
-        forecastRecyclerView.setHasFixedSize(true);
 
         int orientation = getResources().getConfiguration().orientation;
         if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -146,46 +103,44 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         }
 
-        cityId = sharedPref.getInt("cityId", 2643743);
-
-        getLastWeatherFromDB(cityId);
+        mGcmNetworkManager = GcmNetworkManager.getInstance(this);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        getLastWeatherFromDB(sharedPref.getInt("cityId", 2643743));
     }
 
     @NonNull
-    private String getDataWithFormat(Date date) {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEEE, dd MMM",
-                java.util.Locale.getDefault());
-        return simpleDateFormat.format(date).toUpperCase();
+    private String getFormattedDate(Date date) {
+        return new SimpleDateFormat("EEEE, dd MMM",
+                java.util.Locale.getDefault()).format(date).toUpperCase();
     }
 
     private void getLastWeatherFromDB(int cityId) {
         WeatherDbHelper dbHelper = new WeatherDbHelper(this);
         Cursor cursor = dbHelper.getLastWeather(cityId);
 
+
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             detailsField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)));
             curMaxTempField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
-
-            units = sharedPref.getString("units", DEFAULT_UNITS);
-
             double maxTemp = Double.parseDouble(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
             String description = cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC));
             long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
 
-            toolbar.setSubtitle(getDataWithFormat(new Date(dt)));
-          curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
+            toolbar.setSubtitle(getFormattedDate(new Date(dt)));
+            curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
             detailsField.setText(description);
         }
-
         cursor.close();
         dbHelper.close();
     }
 
     @Override
     public void onResume() {
-        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
-        String currentData = getDataWithFormat(new Date());
+        city = sharedPref.getString(getString(R.string.pref_city_key), getResources().getString(R.string.choose_location));
+        units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
+
+        String currentData = getFormattedDate(new Date());
         fillTitle(city, currentData);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
@@ -232,7 +187,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
     }
-
 
 
     private int getCarPicture(Double dirtyCounter, Double temp) {
@@ -289,8 +243,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void startWashCarActivity() {
-      float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
-      float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
+        float lat = sharedPref.getFloat("lat", (float) ForecastService.DEFAULT_LATITUDE);
+        float lon = sharedPref.getFloat("lon", (float) ForecastService.DEFAULT_LONGITUDE);
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);
@@ -326,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
                 fillWeatherCard(FIRST_DAY_POSITION);
 
-                adapter = new MyForecastRVAdapter(weatherForecast);
+                MyForecastRVAdapter adapter = new MyForecastRVAdapter(weatherForecast);
                 forecastRecyclerView.setAdapter(adapter);
 
                 adapter.setOnItemClickListener(new MyForecastRVAdapter.OnItemClickListener() {
@@ -345,10 +299,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     };
 
     private void fillWeatherCard(int position) {
-        units = sharedPref.getString("units", DEFAULT_UNITS);
-        city = sharedPref.getString("city", getResources().getString(R.string.choose_location));
+        double maxTemp;
+        double minTemp;
+        String description;
+        int icon;
+        long dt;
+        long dtLast;
+        int humidity;
+        double barometer;
+        double speedWind;
+        int speedDirection;
 
-        if(position == FIRST_DAY_POSITION) {
+        if (position == FIRST_DAY_POSITION) {
             maxTemp = currWeather.getMain().getTempMax();
             minTemp = currWeather.getMain().getTempMin();
             description = currWeather.getWeather().get(0).getDescription();
@@ -374,15 +336,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         }
 
-        fillTitle(city, getDataWithFormat(new Date(dt)));
+        fillTitle(city, getFormattedDate(new Date(dt)));
 
-      curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
-      curMinTempField.setText(WeatherUtils.getStringTemperature(minTemp, units, this));
+        curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
+        curMinTempField.setText(WeatherUtils.getStringTemperature(minTemp, units, this));
         humidityField.setText(getString(R.string.wi_humidity) + " " + humidity + "%");
-      barometerField.setText(WeatherUtils.getStringBarometer(barometer, units, this));
-      speedWindField.setText(WeatherUtils.getStringWind(speedDirection, speedWind, units, this));
+        barometerField.setText(WeatherUtils.getStringBarometer(barometer, units, this));
+        speedWindField.setText(WeatherUtils.getStringWind(speedDirection, speedWind, units, this));
 
-        dirtyCounter = weatherForecast.getList().get(position).getDirtyCounter();
+        double dirtyCounter = weatherForecast.getList().get(position).getDirtyCounter();
         dirtyMeter.setMax(50);
         dirtyMeter.setProgress((int) (dirtyCounter * 2));
 

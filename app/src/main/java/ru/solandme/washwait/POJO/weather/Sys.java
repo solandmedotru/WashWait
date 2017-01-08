@@ -6,9 +6,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class Sys {
 
-    @SerializedName("message")
-    @Expose
-    private double message;
     @SerializedName("country")
     @Expose
     private String country;
@@ -18,14 +15,6 @@ public class Sys {
     @SerializedName("sunset")
     @Expose
     private long sunset;
-
-    public double getMessage() {
-        return message;
-    }
-
-    public void setMessage(double message) {
-        this.message = message;
-    }
 
     public String getCountry() {
         return country;
