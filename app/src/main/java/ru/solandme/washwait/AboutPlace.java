@@ -16,15 +16,19 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
-import ru.solandme.washwait.POJO.places.Result;
 import ru.solandme.washwait.adapters.ReviewsAdapter;
+import ru.solandme.washwait.model.pojo.places.Result;
 import ru.solandme.washwait.utils.Utils;
 
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
     public static final String RESULT_KEY = "result";
 
     private String openHours, placePhotoAttributes = "";
-    private String placeName, placePhone, placeAddress, photoRef, webUrl;
+    private String placeName;
+    private String placePhone;
+    private String placeAddress;
+    private String photoRef;
+    private String webUrl;
     private float placeRating;
     private Result result;
 

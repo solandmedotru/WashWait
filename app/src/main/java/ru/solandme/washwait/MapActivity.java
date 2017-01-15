@@ -43,10 +43,10 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.POJO.map.PlacesResponse;
-import ru.solandme.washwait.POJO.map.Result;
-import ru.solandme.washwait.POJO.places.PlaceInfo;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
+import ru.solandme.washwait.model.pojo.map.PlacesResponse;
+import ru.solandme.washwait.model.pojo.places.PlaceInfo;
+import ru.solandme.washwait.model.pojo.places.Result;
 import ru.solandme.washwait.rest.PlacesApiHelper;
 import ru.solandme.washwait.utils.Utils;
 
@@ -73,7 +73,7 @@ public class MapActivity extends AppCompatActivity implements
 
     MyPlacesRVAdapter adapter;
     RecyclerView carWashList;
-    List<Result> results;
+    List<ru.solandme.washwait.model.pojo.map.Result> results;
 
     PlacesApiHelper placesHelper;
     Bundle bundle;
@@ -169,8 +169,8 @@ public class MapActivity extends AppCompatActivity implements
 
                 results.addAll(response.body().getResults());
 
-                for (Result result : results) {
-                    ru.solandme.washwait.POJO.map.Location location = result.getGeometry().getLocation();
+                for (ru.solandme.washwait.model.pojo.map.Result result : results) {
+                    ru.solandme.washwait.model.pojo.map.Location location = result.getGeometry().getLocation();
                     LatLng latLng = new LatLng(location.getLat(), location.getLng());
                     map.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -190,13 +190,13 @@ public class MapActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onPlaceItemSelected(final int position, final Result result) {
+    public void onPlaceItemSelected(final int position, final ru.solandme.washwait.model.pojo.map.Result result) {
 
         placesHelper.requestPlaceInfo(result.getPlaceId(), lang, new Callback<PlaceInfo>() {
             @Override
             public void onResponse(Call<PlaceInfo> call, Response<PlaceInfo> response) {
 
-                ru.solandme.washwait.POJO.places.Result result = response.body().getResult();
+                Result result = response.body().getResult();
 
                 Intent intent = new Intent(MapActivity.this, AboutPlace.class);
                 intent.putExtra(AboutPlace.RESULT_KEY, new Gson().toJson(result));

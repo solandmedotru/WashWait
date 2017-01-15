@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ru.solandme.washwait.POJO.places.Review;
 import ru.solandme.washwait.R;
+import ru.solandme.washwait.model.pojo.places.Review;
 
 public class ReviewsAdapter extends ArrayAdapter<Review> {
 
@@ -32,11 +32,11 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
 
     @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         View view;
         if (convertView == null) {
-            LayoutInflater inflator = context.getLayoutInflater();
-            view = inflator.inflate(R.layout.review_row, null);
+            LayoutInflater inflater = context.getLayoutInflater();
+            view = inflater.inflate(R.layout.review_row, null);
             final ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.reviewer = (TextView) view.findViewById(R.id.reviewer);

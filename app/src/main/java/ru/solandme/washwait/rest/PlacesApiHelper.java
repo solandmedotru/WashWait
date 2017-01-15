@@ -8,9 +8,9 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import ru.solandme.washwait.POJO.map.PlacesResponse;
-import ru.solandme.washwait.POJO.places.PlaceInfo;
 import ru.solandme.washwait.R;
+import ru.solandme.washwait.model.pojo.map.PlacesResponse;
+import ru.solandme.washwait.model.pojo.places.PlaceInfo;
 
 public class PlacesApiHelper {
     private static final String GOOGLEAPIS_BASE_URL = "https://maps.googleapis.com";

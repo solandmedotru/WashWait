@@ -10,8 +10,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import ru.solandme.washwait.POJO.forecast.WeatherForecast;
 import ru.solandme.washwait.R;
+import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
@@ -38,8 +38,9 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
             date1 = (TextView) v.findViewById(R.id.date);
             image1 = (ImageView) v.findViewById(R.id.weather_icon_day);
             temp = (TextView) v.findViewById(R.id.smallTempText);
+            View container = v.findViewById(R.id.container_days_forecast);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            container.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     // Triggers click upwards to the adapter on click

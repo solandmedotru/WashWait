@@ -3,8 +3,8 @@ package ru.solandme.washwait.rest;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import ru.solandme.washwait.POJO.map.PlacesResponse;
-import ru.solandme.washwait.POJO.places.PlaceInfo;
+import ru.solandme.washwait.model.pojo.map.PlacesResponse;
+import ru.solandme.washwait.model.pojo.places.PlaceInfo;
 
 interface PlaceApiService {
     @GET("/maps/api/place/nearbysearch/json")

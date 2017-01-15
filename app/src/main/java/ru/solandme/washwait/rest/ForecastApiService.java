@@ -3,8 +3,8 @@ package ru.solandme.washwait.rest;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-import ru.solandme.washwait.POJO.forecast.WeatherForecast;
-import ru.solandme.washwait.POJO.weather.CurrWeather;
+import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
+import ru.solandme.washwait.model.pojo.weather.CurrWeather;
 
 public interface ForecastApiService {
 

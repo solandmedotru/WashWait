@@ -23,9 +23,9 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.POJO.forecast.WeatherForecast;
-import ru.solandme.washwait.POJO.weather.CurrWeather;
-import ru.solandme.washwait.data.WeatherDbHelper;
+import ru.solandme.washwait.model.WeatherDbHelper;
+import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
+import ru.solandme.washwait.model.pojo.weather.CurrWeather;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
 
@@ -217,7 +217,7 @@ public class ForecastService extends IntentService {
 
             if (washDayNumber == 0 && runFromService) sendNotification(textForWashForecast);
 
-            Log.e(TAG, "day: " + washDayNumber + " " + textForWashForecast);
+            Log.d(TAG, "day: " + washDayNumber + " " + textForWashForecast);
 
             intent.putExtra("TextForecast", textForWashForecast);
             intent.putExtra("Weather", weatherForecast);
