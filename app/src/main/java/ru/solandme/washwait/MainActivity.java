@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.database.Cursor;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,8 +34,6 @@ import java.util.Date;
 import java.util.Locale;
 
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
-import ru.solandme.washwait.model.WeatherContract;
-import ru.solandme.washwait.model.WeatherDbHelper;
 import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 import ru.solandme.washwait.model.pojo.weather.CurrWeather;
 import ru.solandme.washwait.utils.Utils;
@@ -113,7 +110,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        getLastWeatherFromDB(sharedPref.getInt(getString(R.string.pref_city_id_key), 2643743));
     }
 
     @Override
@@ -135,26 +131,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
-    }
-
-    private void getLastWeatherFromDB(int cityId) {
-        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
-        Cursor cursor = dbHelper.getLastWeather(cityId);
-
-        if (cursor.getCount() > 0) {
-            cursor.moveToFirst();
-            detailsField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC)));
-            curMaxTempField.setText(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
-            double maxTemp = Double.parseDouble(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP)));
-            String description = cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC));
-            long dt = Long.parseLong(cursor.getString(cursor.getColumnIndex(WeatherContract.WeatherEntry.COLUMN_DATE)));
-
-            toolbar.setSubtitle(getFormattedDate(new Date(dt)));
-            curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
-            detailsField.setText(description);
-        }
-        cursor.close();
-        dbHelper.close();
     }
 
     private String getFormattedDate(Date date) {
@@ -238,11 +214,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 break;
             case R.id.action_view_wash:
                 startWashCarActivity();
-                break;
-            case R.id.clear_cache:
-                WeatherDbHelper dbHelper = new WeatherDbHelper(this);
-                dbHelper.clearCache();
-                dbHelper.close();
                 break;
         }
         return true;

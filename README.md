@@ -12,14 +12,13 @@
 
 <a href='https://ko-fi.com/A036I5F' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://az743702.vo.msecnd.net/cdn/kofi4.png?v=f' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a> 
 
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru1.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru2.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru3.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru4.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru6.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru7.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru8.png" width="300">
-<img src="https://github.com/solandmedotru/WashWait/blob/master/img/ru9.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en1.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en2.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en3.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en4.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en6.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en7.png" width="300">
+<img src="https://github.com/solandmedotru/WashWait/blob/master/img/en8.png" width="300">
 
 
 This sample is available

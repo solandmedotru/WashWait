@@ -23,7 +23,6 @@ import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import ru.solandme.washwait.model.WeatherDbHelper;
 import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 import ru.solandme.washwait.model.pojo.weather.CurrWeather;
 import ru.solandme.washwait.rest.ForecastApiHelper;
@@ -97,8 +96,6 @@ public class ForecastService extends IntentService {
                         weatherForecast.getList().get(i).setImageRes(getWeatherPicture(weatherForecast.getList().get(i).getWeather().get(0).getIcon()));
                         weatherForecast.getList().get(i).setDirtyCounter(getDirtyCounter(i));
                     }
-
-                    saveForecastToDataBase(weatherForecast);
 
                     isForecastResultOK = true;
                 } else {
@@ -196,13 +193,6 @@ public class ForecastService extends IntentService {
             default:
                 return getResources().getString(R.string.not_wash);
         }
-    }
-
-    private void saveForecastToDataBase(WeatherForecast weatherForecast) {
-
-        WeatherDbHelper dbHelper = new WeatherDbHelper(this);
-        dbHelper.saveWeather(weatherForecast);
-        dbHelper.close();
     }
 
     private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
