@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -28,6 +31,7 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
     private static class ViewHolder {
         TextView reviewer, reviewText, reviewNumber, reviewData;
         RatingBar reviewBar;
+        ImageView profilePhoto;
     }
 
     @NonNull
@@ -44,6 +48,7 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
             viewHolder.reviewNumber = (TextView) view.findViewById(R.id.reviewNumber);
             viewHolder.reviewData = (TextView) view.findViewById(R.id.reviewData);
             viewHolder.reviewBar = (RatingBar) view.findViewById(R.id.reviewBar);
+            viewHolder.profilePhoto = (ImageView) view.findViewById(R.id.profilePhoto);
             view.setTag(viewHolder);
 
         } else {
@@ -55,6 +60,11 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
         holder.reviewData.setText(reviews.get(position).getRelativeTimeDescription());
         holder.reviewNumber.setText("("+String.valueOf(reviews.get(position).getRating())+")");
         holder.reviewBar.setRating(reviews.get(position).getRating());
+
+        Picasso.with(context).load(reviews.get(position).getProfilePhotoUrl())
+                .placeholder(R.drawable.round_shape)
+                .into(holder.profilePhoto);
+
         return view;
     }
 }

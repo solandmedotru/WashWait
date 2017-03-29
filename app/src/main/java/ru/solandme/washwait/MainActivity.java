@@ -101,8 +101,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         speedWindField = (TextView) findViewById(R.id.speed_wind_field);
         speedWindField.setTypeface(weatherFont);
 
-        int orientation = getResources().getConfiguration().orientation;
-        if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         } else {
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
@@ -143,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             Task task = new PeriodicTask.Builder()
                     .setService(PeriodicalForecastTask.class)
                     .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                    .setPeriod(PERIODICAL_TIMER) // two times per day period
+                    .setPeriod(PERIODICAL_TIMER)
                     .setTag(PeriodicalForecastTask.TAG_TASK_PERIODIC)
                     .setPersisted(true)
                     .setUpdateCurrent(true)

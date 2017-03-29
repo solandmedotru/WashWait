@@ -1,62 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/profilePhoto"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@drawable/round_shape"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="@dimen/_16sdp" />
 
     <TextView
         android:id="@+id/reviewer"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_6ssp"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/_16ssp" />
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_16sdp"
+        android:textSize="@dimen/_16ssp"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toRightOf="@+id/profilePhoto"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
-    <LinearLayout
+    <RatingBar
+        android:id="@+id/reviewBar"
+        style="@style/RatingBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:rating="3.5"
+        android:stepSize="0.1"
+        app:layout_constraintLeft_toRightOf="@+id/profilePhoto"
+        app:layout_constraintTop_toBottomOf="@+id/reviewer"
+        tools:layout_constraintLeft_creator="1" />
+
+    <TextView
+        android:id="@+id/reviewNumber"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_8sdp"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
         android:layout_marginTop="@dimen/_8sdp"
-        android:orientation="horizontal">
+        app:layout_constraintLeft_toRightOf="@+id/reviewBar"
+        app:layout_constraintTop_toBottomOf="@+id/reviewer"
+        tools:layout_constraintTop_creator="1" />
 
-        <RatingBar
-            android:id="@+id/reviewBar"
-            style="@style/RatingBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginRight="@dimen/_8sdp"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:rating="3.5"
-            android:stepSize="0.1" />
+    <TextView
+        android:id="@+id/reviewData"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:gravity="center_vertical"
+        app:layout_constraintLeft_toRightOf="@+id/reviewNumber"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewer" />
 
-        <TextView
-            android:id="@+id/reviewNumber"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_8sdp"
-            android:layout_marginRight="@dimen/_8sdp" />
-
-        <TextView
-            android:id="@+id/reviewData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical" />
-    </LinearLayout>
 
     <TextView
         android:id="@+id/reviewText"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/_6ssp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:gravity="center_vertical"
-        android:textSize="@dimen/_14ssp" />
+        android:textSize="@dimen/_14ssp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profilePhoto"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <View
-        android:layout_width="match_parent"
+        android:id="@+id/view"
+        android:layout_width="0dp"
         android:layout_height="@dimen/_1sdp"
-        android:background="@color/colorDarken" />
-</LinearLayout>
-
+        android:layout_marginTop="@dimen/_24sdp"
+        android:background="@color/colorDarken"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/reviewText"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+</android.support.constraint.ConstraintLayout>

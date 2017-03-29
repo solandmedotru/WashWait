@@ -62,6 +62,7 @@
     <string name="googleApi_error">\"Ошибка соединение с клиентом Google Api: \"</string>
     <string name="disconnected_message">Связь потеряна. Переподключитесь, пожалуйста.</string>
     <string name="network_lost_message">Сеть потеряна. Переподключитесь снова, пожалуйста.</string>
+    <string name="reviews">Отзывы:</string>
 
 
 </resources>

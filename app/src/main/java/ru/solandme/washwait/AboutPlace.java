@@ -23,7 +23,8 @@ import ru.solandme.washwait.utils.Utils;
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
     public static final String RESULT_KEY = "result";
 
-    private String openHours, placePhotoAttributes = "";
+    private String openHours = "";
+    private String placePhotoAttributes = "";
     private String placeName;
     private String placePhone;
     private String placeAddress;
@@ -116,7 +117,7 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
                 "https://maps.googleapis.com/maps/api/place/photo?maxwidth=1000&photoreference="
                         + photoRef + "&key="
                         + getResources().getString(R.string.google_maps_key))
-                .placeholder(R.mipmap.city8).fit()
+                .placeholder(R.mipmap.city8)
                 .into(photoAboutPlace);
     }
 

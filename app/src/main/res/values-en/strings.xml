@@ -64,4 +64,5 @@
     <string name="googleApi_error">Could not connect to Google API Client: Error</string>
     <string name="disconnected_message">Disconnected. Please re-connect.</string>
     <string name="network_lost_message">Network lost. Please re-connect.</string>
+    <string name="reviews">Reviews:</string>
 </resources>

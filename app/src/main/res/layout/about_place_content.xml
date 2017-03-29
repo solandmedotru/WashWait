@@ -195,7 +195,7 @@
             android:drawableStart="@drawable/ic_review"
             android:gravity="center_vertical"
             android:minHeight="@dimen/_45sdp"
-            android:text="Reviews:"
+            android:text="@string/reviews"
             android:textSize="@dimen/_14ssp" />
 
 
@@ -205,8 +205,4 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_10sdp" />
 </LinearLayout>
