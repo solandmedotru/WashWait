@@ -50,27 +50,26 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     private static final long INTERVAL = 1000 * 10;
     private static final long FASTEST_INTERVAL = 1000 * 5;
 
-    private GoogleApiClient mGoogleApiClient, locationClient;
+    private GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient locationClient;
     private LocationManager locationManager;
     private PlaceAutocompleteAdapter mAdapter;
 
-    private float lat, lon;
+    private float lat;
+    private float lon;
     private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        setContentView(R.layout.activity_choose_city);
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this, 0 /* clientId */, this)
-                .addApi(Places.GEO_DATA_API)
-                .build();
+        buildGoogleApiClient();
 
-        setContentView(R.layout.activity_choose_city);
         AppCompatAutoCompleteTextView mAutocompleteView = (AppCompatAutoCompleteTextView) findViewById(R.id.autocomplete_places);
         mAutocompleteView.setOnItemClickListener(mAutocompleteClickListener);
 
@@ -107,13 +106,21 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     protected synchronized void buildLocationClient() {
         if (locationClient == null) {
             locationClient = new GoogleApiClient.Builder(this)
-                    .enableAutoManage(this, 1 /* clientId */, this)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
                     .build();
         }
         locationClient.connect();
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        if (mGoogleApiClient == null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addApi(Places.GEO_DATA_API)
+                    .build();
+        }
+        mGoogleApiClient.connect();
     }
 
     private void showGPSDisabledAlertToUser() {
@@ -236,27 +243,30 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-
-        //stop location updates when Activity is no longer active
-        if (locationClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
+    protected void onResume() {
+        super.onResume();
+        if (locationClient != null && !locationClient.isConnected()) {
+            locationClient.connect();
         }
-        if (locationClient != null && locationClient.isConnected()) {
-            locationClient.stopAutoManage(this);
-            locationClient.disconnect();
+        if (mGoogleApiClient != null && !mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
         }
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
+
+        //stop location updates when Activity is no longer active
+        if (locationClient != null && locationClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
+            locationClient.disconnect();
+        }
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.stopAutoManage(this);
             mGoogleApiClient.disconnect();
         }
     }
+
 
     @Override
     public void onConnected(Bundle bundle) {

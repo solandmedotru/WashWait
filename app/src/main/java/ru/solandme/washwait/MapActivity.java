@@ -64,19 +64,15 @@ public class MapActivity extends AppCompatActivity implements
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
 
-    LocationRequest mLocationRequest;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
+    private Marker mCurrLocationMarker;
 
     private LatLng currentLatLng;
     private String lang;
 
-    MyPlacesRVAdapter adapter;
-    RecyclerView carWashList;
-    List<ru.solandme.washwait.model.pojo.map.Result> results;
+    private MyPlacesRVAdapter adapter;
+    private List<ru.solandme.washwait.model.pojo.map.Result> results;
 
-    PlacesApiHelper placesHelper;
-    Bundle bundle;
+    private PlacesApiHelper placesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +80,7 @@ public class MapActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
-        bundle = getIntent().getExtras();
+        Bundle bundle = getIntent().getExtras();
         currentLatLng = new LatLng(bundle.getFloat("lat"), bundle.getFloat("lon"));
         lang = bundle.getString("lang");
 
@@ -92,7 +88,7 @@ public class MapActivity extends AppCompatActivity implements
             checkLocationPermission();
         }
 
-        carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
+        RecyclerView carWashList = (RecyclerView) findViewById(R.id.rwCarWashPlaces);
         carWashList.setHasFixedSize(true);
 
         results = new ArrayList<>();
@@ -111,11 +107,14 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     protected synchronized void buildGoogleApiClient() {
-        googleApiClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
+
+        if (googleApiClient == null) {
+            googleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+        }
         googleApiClient.connect();
     }
 
@@ -137,7 +136,7 @@ public class MapActivity extends AppCompatActivity implements
         }
 
         placesHelper = new PlacesApiHelper(this);
-        requestPlacesNearCurrentLocation();
+        requestPlacesNearCurrentLocation(currentLatLng);
     }
 
     private GoogleMap setMapStyle(GoogleMap map) {
@@ -162,12 +161,13 @@ public class MapActivity extends AppCompatActivity implements
         map.animateCamera(CameraUpdateFactory.zoomTo(13));
     }
 
-    private void requestPlacesNearCurrentLocation() {
+    private void requestPlacesNearCurrentLocation(final LatLng currentLatLng) {
         placesHelper.requestPlaces("car_wash", currentLatLng, lang, new Callback<PlacesResponse>() {
             @Override
             public void onResponse(Call<PlacesResponse> call, Response<PlacesResponse> response) {
-
+                results.clear();
                 results.addAll(response.body().getResults());
+                adapter.notifyDataSetChanged();
 
                 for (ru.solandme.washwait.model.pojo.map.Result result : results) {
                     ru.solandme.washwait.model.pojo.map.Location location = result.getGeometry().getLocation();
@@ -178,7 +178,7 @@ public class MapActivity extends AppCompatActivity implements
                             .title(result.getName()));
                 }
                 moveCameraToLocation(currentLatLng);
-                adapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -212,8 +212,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onLocationChanged(android.location.Location location) {
-        mLastLocation = location;
+    public void onLocationChanged(Location location) {
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
         }
@@ -227,7 +226,7 @@ public class MapActivity extends AppCompatActivity implements
         mCurrLocationMarker = map.addMarker(markerOptions);
 
         currentLatLng = latLng;
-        requestPlacesNearCurrentLocation();
+        requestPlacesNearCurrentLocation(latLng);
         //stop location updates
         if (map != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
@@ -277,7 +276,7 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(UPDATE_INTERVAL);
         mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -303,7 +302,7 @@ public class MapActivity extends AppCompatActivity implements
 
     @Override
     protected void onPause() {
-        if (googleApiClient != null) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
         }
         super.onPause();
@@ -312,9 +311,17 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         // only stop if it's connected, otherwise we crash
-        if (googleApiClient != null) {
+        if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (googleApiClient != null && !googleApiClient.isConnected()) {
+            googleApiClient.connect();
+        }
     }
 }
