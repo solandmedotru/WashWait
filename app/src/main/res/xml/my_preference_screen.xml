@@ -17,5 +17,4 @@
         android:defaultValue="false"
         android:title="@string/notification"
         android:key="@string/pref_task_key" />
-
 </PreferenceScreen>

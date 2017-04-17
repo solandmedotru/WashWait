@@ -36,6 +36,7 @@ public class ForecastService extends IntentService {
     private static final String CNT = "16";
     private static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     private static final int NOTIFICATION_ID = 1981;
+    private static final double DEFAULT_DIRTY_LIMIT = 0.1;
     private String forecastDistance;
     private WeatherForecast weatherForecast;
     private CurrWeather currWeather;
@@ -144,16 +145,17 @@ public class ForecastService extends IntentService {
         });
     }
 
-    boolean isBadConditions(int weatherId, double temperature) {
+    boolean isBadConditions(int weatherId, double temperature, double dirtyCounter) {
         String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
+        double dirtyLimit = sharedPref.getFloat(getString(R.string.pref_dirty_limit_key), (float) DEFAULT_DIRTY_LIMIT);
 
         switch (units) {
             case "metric":
-                return (weatherId < 600) || (weatherId < 700 && temperature > -7) || (temperature < -15);
+                return (weatherId < 600) || (weatherId < 700 && temperature > -7) || (temperature < -15) || (dirtyCounter > dirtyLimit);
             case "imperial":
-                return (weatherId < 600) || (weatherId < 700 && temperature > 19) || (temperature < 5);
+                return (weatherId < 600) || (weatherId < 700 && temperature > 19) || (temperature < 5) || (dirtyCounter > dirtyLimit);
             default:
-                return (weatherId < 600) || (weatherId < 700 && temperature > 266) || (temperature < 258);
+                return (weatherId < 600) || (weatherId < 700 && temperature > 266) || (temperature < 258) || (dirtyCounter > dirtyLimit);
         }
     }
 
@@ -216,7 +218,7 @@ public class ForecastService extends IntentService {
             Context context = this;
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             RemoteViews remoteViews =
-                new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
+                    new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
             ComponentName thisWidget = new ComponentName(context, MeteoWashWidget.class);
 
             double maxTemp = currWeather.getMain().getTempMax();
@@ -286,7 +288,7 @@ public class ForecastService extends IntentService {
             double maxTemp = weatherForecast.getList().get(i).getTemp().getMax();
 
             daysCounter++;
-            if (!isBadConditions(weatherId, maxTemp)) {
+            if (!isBadConditions(weatherId, maxTemp, getDirtyCounter(i))) {
                 clearDaysCounter++;
                 if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
                     if (washDayNumber == 15) {
