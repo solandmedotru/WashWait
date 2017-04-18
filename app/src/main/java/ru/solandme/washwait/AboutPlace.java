@@ -80,7 +80,7 @@ public class AboutPlace extends AppCompatActivity implements View.OnClickListene
         }
 
         if (null != result.getReviews()) {
-            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, result.getReviews());
+            ReviewsAdapter reviewsAdapter = new ReviewsAdapter(this, R.layout.review_row, result.getReviews());
             for (int i = 0; i < reviewsAdapter.getCount(); i++) {
                 View view = reviewsAdapter.getView(i, null, reviews_list);
                 reviews_list.addView(view);
