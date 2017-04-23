@@ -1,5 +1,5 @@
 
-package ru.solandme.washwait.model.pojo.forecast;
+package ru.solandme.washwait.repository.OpenWeather.pojo.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

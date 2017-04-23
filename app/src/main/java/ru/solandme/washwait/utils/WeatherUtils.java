@@ -36,6 +36,8 @@ public class WeatherUtils {
     return R.string.wi_wind_east;
   }
 
+
+
   public static String getStringWind(int speedDirection, double speedWind, String units,
       Context context) {
     String windUnits;

@@ -1,13 +1,12 @@
 
-package ru.solandme.washwait.model.pojo.weather;
+package ru.solandme.washwait.repository.OpenWeather.pojo.weather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class CurrWeather implements Serializable {
+public class OpenWeatherCurrent {
 
     @SerializedName("coord")
     @Expose
@@ -24,12 +23,18 @@ public class CurrWeather implements Serializable {
     @SerializedName("wind")
     @Expose
     private Wind wind;
+    @SerializedName("rain")
+    @Expose
+    private Rain rain;
+    @SerializedName("snow")
+    @Expose
+    private Snow snow;
     @SerializedName("clouds")
     @Expose
     private Clouds clouds;
     @SerializedName("dt")
     @Expose
-    private long dt;
+    private int dt;
     @SerializedName("sys")
     @Expose
     private Sys sys;
@@ -42,26 +47,6 @@ public class CurrWeather implements Serializable {
     @SerializedName("cod")
     @Expose
     private int cod;
-
-    private int imageRes;
-
-    private double dirtyCounter;
-
-    public int getImageRes() {
-        return imageRes;
-    }
-
-    public void setImageRes(int imageRes) {
-        this.imageRes = imageRes;
-    }
-
-    public double getDirtyCounter() {
-        return dirtyCounter;
-    }
-
-    public void setDirtyCounter(double dirtyCounter) {
-        this.dirtyCounter = dirtyCounter;
-    }
 
     public Coord getCoord() {
         return coord;
@@ -103,6 +88,22 @@ public class CurrWeather implements Serializable {
         this.wind = wind;
     }
 
+    public Rain getRain() {
+        return rain;
+    }
+
+    public void setRain(Rain rain) {
+        this.rain = rain;
+    }
+
+    public Snow getSnow() {
+        return snow;
+    }
+
+    public void setSnow(Snow snow) {
+        this.snow = snow;
+    }
+
     public Clouds getClouds() {
         return clouds;
     }
@@ -111,11 +112,11 @@ public class CurrWeather implements Serializable {
         this.clouds = clouds;
     }
 
-    public long getDt() {
+    public int getDt() {
         return dt;
     }
 
-    public void setDt(long dt) {
+    public void setDt(int dt) {
         this.dt = dt;
     }
 

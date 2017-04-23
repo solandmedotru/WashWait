@@ -1,5 +1,5 @@
 
-package ru.solandme.washwait.model.pojo.forecast;
+package ru.solandme.washwait.repository.OpenWeather.pojo.forecast;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class WeatherForecast implements Serializable {
+public class OpenWeatherForecast implements Serializable {
 
     @SerializedName("city")
     @Expose

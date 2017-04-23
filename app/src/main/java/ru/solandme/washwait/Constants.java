@@ -7,8 +7,6 @@ public class Constants {
     public static final double DEFAULT_LATITUDE = 55.7522200;
     public static final String DEFAULT_UNITS = "metric";
     public static final String DEFAULT_FORECAST_DISTANCE = "2";
-    public static final String CNT = "16";
-    public static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     public static final int NOTIFICATION_ID = 1981;
     public static final double DEFAULT_DIRTY_LIMIT = 0.1;
     public static final String RUN_FROM = "isRunFromBackground";

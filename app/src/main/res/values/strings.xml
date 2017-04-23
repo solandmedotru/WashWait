@@ -90,5 +90,5 @@
     <string name="pref_speedDirection_key" translatable="false">pref_speedDirection_key</string>
     <string name="pref_text_to_wash_key" translatable="false">pref_text_to_wash_key</string>
     <string name="reviews">Reviews:</string>
-    <string name="pref_dirty_limit_key">dirtyLimit</string>
+    <string name="pref_dirty_limit_key" translatable="false">dirtyLimit</string>
 </resources>

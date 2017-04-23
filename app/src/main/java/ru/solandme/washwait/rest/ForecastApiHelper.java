@@ -3,6 +3,7 @@ package ru.solandme.washwait.rest;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.support.annotation.NonNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class ForecastApiHelper {
     private static final long CONNECTION_TIMEOUT = 10;
     private static Retrofit retrofit = null;
 
-    public static Retrofit requestForecast(Context context) {
+    public static Retrofit requestForecast(@NonNull Context context) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
@@ -35,7 +36,7 @@ public class ForecastApiHelper {
         return retrofit;
     }
 
-    private static OkHttpClient getOkHttpClient(final Context context) {
+    private static OkHttpClient getOkHttpClient(@NonNull final Context context) {
         OkHttpClient.Builder okClientBuilder = new OkHttpClient.Builder();
 
         File baseDir = context.getCacheDir();

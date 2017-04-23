@@ -1,9 +1,8 @@
 
-package ru.solandme.washwait.model.pojo.forecast;
+package ru.solandme.washwait.repository.OpenWeather.pojo.weather;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-
 
 public class Coord {
 
@@ -14,38 +13,18 @@ public class Coord {
     @Expose
     private float lat;
 
-    /**
-     * 
-     * @return
-     *     The lon
-     */
-    public float getLon() {
+    public double getLon() {
         return lon;
     }
 
-    /**
-     * 
-     * @param lon
-     *     The lon
-     */
     public void setLon(float lon) {
         this.lon = lon;
     }
 
-    /**
-     * 
-     * @return
-     *     The lat
-     */
-    public float getLat() {
+    public double getLat() {
         return lat;
     }
 
-    /**
-     * 
-     * @param lat
-     *     The lat
-     */
     public void setLat(float lat) {
         this.lat = lat;
     }
