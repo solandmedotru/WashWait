@@ -2,7 +2,6 @@ package ru.solandme.washwait;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,7 +9,6 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 
 import ru.solandme.washwait.adapters.PlaceAutocompleteAdapter;
+import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
 
 public class ChooseCityActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleApiClient.ConnectionCallbacks {
@@ -55,10 +54,6 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
     private LocationManager locationManager;
     private PlaceAutocompleteAdapter mAdapter;
 
-    private float lat;
-    private float lon;
-    private SharedPreferences sharedPref;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
@@ -66,7 +61,6 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
         setContentView(R.layout.activity_choose_city);
 
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         buildGoogleApiClient();
 
@@ -170,19 +164,22 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             }
             // Get the Place object from the buffer.
             final Place place = places.get(0);
-            lat = (float) place.getLatLng().latitude;
-            lon = (float) place.getLatLng().longitude;
+            float lat = (float) place.getLatLng().latitude;
+            float lon = (float) place.getLatLng().longitude;
             String city = place.getName().toString().trim();
 
-            sharedPref.edit()
-                    .putFloat(getString(R.string.pref_lat_key), lat)
-                    .putFloat(getString(R.string.pref_lon_key), lon)
-                    .putString(getString(R.string.pref_city_key), city)
-                    .apply();
+            saveCity(city, lat, lon);
+
             places.release();
             finish();
         }
     };
+
+    private void saveCity(String city, float lat, float lon) {
+        SharedPrefsUtils.setFloatPreference(getApplicationContext(), getString(R.string.pref_lat_key), lat);
+        SharedPrefsUtils.setFloatPreference(getApplicationContext(), getString(R.string.pref_lon_key), lon);
+        SharedPrefsUtils.setStringPreference(getApplicationContext(), getString(R.string.pref_city_key), city);
+    }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
@@ -288,8 +285,8 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
 
     @Override
     public void onLocationChanged(Location location) {
-        lat = (float) location.getLatitude();
-        lon = (float) location.getLongitude();
+        float lat = (float) location.getLatitude();
+        float lon = (float) location.getLongitude();
         String city = "";
 
         try {
@@ -306,11 +303,8 @@ public class ChooseCityActivity extends AppCompatActivity implements GoogleApiCl
             Log.e(TAG, "Failed Geocoding.");
         }
 
-        sharedPref.edit()
-                .putFloat(getString(R.string.pref_lat_key), lat)
-                .putFloat(getString(R.string.pref_lon_key), lon)
-                .putString(getString(R.string.pref_city_key), city)
-                .apply();
+        saveCity(city, lat, lon);
+
         if (locationClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(locationClient, this);
         }

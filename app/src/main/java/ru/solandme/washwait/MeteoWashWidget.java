@@ -5,11 +5,10 @@ import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
 import android.widget.RemoteViews;
 
+import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.WeatherUtils;
 
 public class MeteoWashWidget extends AppWidgetProvider {
@@ -18,9 +17,8 @@ public class MeteoWashWidget extends AppWidgetProvider {
     public static final String DEFAULT_STRING = "";
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        int textColor = sharedPref.getInt(context.getString(R.string.pref_textColor_key), Color.GRAY);
-        int bgColor = sharedPref.getInt(context.getString(R.string.pref_bgColor_key), Color.BLACK);
+        int textColor = SharedPrefsUtils.getIntegerPreference(context, context.getString(R.string.pref_textColor_key), Color.GRAY);
+        int bgColor = SharedPrefsUtils.getIntegerPreference(context, context.getString(R.string.pref_bgColor_key), Color.BLACK);
 
         // Construct the RemoteViews object
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
@@ -29,17 +27,17 @@ public class MeteoWashWidget extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widgetContent, pendingIntent);
 
-        String units = sharedPref.getString(context.getString(R.string.pref_units_key), ForecastService.DEFAULT_UNITS);
-        double maxTemp = Double.parseDouble(sharedPref.getString(context.getString(R.string.pref_maxTemp_key), DEFAULT_NUMBER));
-        double minTemp = Double.parseDouble(sharedPref.getString(context.getString(R.string.pref_minTemp_key), DEFAULT_NUMBER));
-        String description = sharedPref.getString(context.getString(R.string.pref_description_key), DEFAULT_STRING);
+        String units = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_units_key), ForecastService.DEFAULT_UNITS);
+        double maxTemp = Double.parseDouble(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_maxTemp_key), DEFAULT_NUMBER));
+        double minTemp = Double.parseDouble(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_minTemp_key), DEFAULT_NUMBER));
+        String description = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_description_key), DEFAULT_STRING);
         int icon = Integer.parseInt(
-                sharedPref.getString(context.getString(R.string.pref_icon_key), String.valueOf(R.mipmap.broken_clouds)));
-        int humidity = Integer.parseInt(sharedPref.getString(context.getString(R.string.pref_humidity_key), DEFAULT_NUMBER));
-        double barometer = Double.parseDouble(sharedPref.getString(context.getString(R.string.pref_barometer_key), DEFAULT_NUMBER));
-        double speedWind = Double.parseDouble(sharedPref.getString(context.getString(R.string.pref_speedWind_key), DEFAULT_NUMBER));
-        int speedDirection = Integer.parseInt(sharedPref.getString(context.getString(R.string.pref_speedDirection_key), DEFAULT_NUMBER));
-        String textForWashForecast = sharedPref.getString(context.getString(R.string.pref_text_to_wash_key), DEFAULT_STRING);
+                SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_icon_key), String.valueOf(R.mipmap.broken_clouds)));
+        int humidity = Integer.parseInt(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_humidity_key), DEFAULT_NUMBER));
+        double barometer = Double.parseDouble(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_barometer_key), DEFAULT_NUMBER));
+        double speedWind = Double.parseDouble(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_speedWind_key), DEFAULT_NUMBER));
+        int speedDirection = Integer.parseInt(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_speedDirection_key), DEFAULT_NUMBER));
+        String textForWashForecast = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_text_to_wash_key), DEFAULT_STRING);
 
         remoteViews = fillWidget(context, textColor, bgColor, remoteViews, units, maxTemp, minTemp, description, icon,
                 humidity, barometer, speedWind, speedDirection, textForWashForecast);

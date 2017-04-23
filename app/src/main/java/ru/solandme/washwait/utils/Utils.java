@@ -2,14 +2,11 @@ package ru.solandme.washwait.utils;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import ru.solandme.washwait.R;
 
 public class Utils {
     private static String sTheme;
-    private static SharedPreferences sharedPreferences;
 
     public final static String THEME_MATERIAL_BLUE = "1";
     public final static String THEME_MATERIAL_VIOLET = "2";
@@ -20,9 +17,7 @@ public class Utils {
 
         sTheme = theme;
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(activity.getString(R.string.pref_theme_color_key), sTheme).apply();
+        SharedPrefsUtils.setStringPreference(activity, activity.getString(R.string.pref_theme_color_key), sTheme);
 
         activity.finish();
         activity.startActivity(new Intent(activity, activity.getClass()));
@@ -32,8 +27,7 @@ public class Utils {
     }
 
     public static void onActivityCreateSetTheme(Activity activity) {
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(activity);
-        sTheme = sharedPreferences.getString(activity.getString(R.string.pref_theme_color_key), "1");
+        sTheme = SharedPrefsUtils.getStringPreference(activity, activity.getString(R.string.pref_theme_color_key), "1");
         switch (sTheme) {
             default:
             case THEME_MATERIAL_BLUE:

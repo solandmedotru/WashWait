@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +35,7 @@ import java.util.Locale;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 import ru.solandme.washwait.model.pojo.weather.CurrWeather;
+import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
 import ru.solandme.washwait.utils.WeatherUtils;
 
@@ -60,22 +59,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ImageView carImage;
     private ImageView cityImage;
     private ProgressBar dirtyMeter;
-    private SharedPreferences sharedPref;
     private RecyclerView forecastRecyclerView;
     private WeatherForecast weatherForecast;
     private CurrWeather currWeather;
     private GcmNetworkManager mGcmNetworkManager;
     private String units, city;
 
-    private FirebaseAnalytics mFirebaseAnalytics;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
@@ -112,14 +106,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             forecastRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         }
 
+        FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+        mFirebaseAnalytics.setMinimumSessionDuration(20000);
+
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override
     public void onResume() {
-        city = sharedPref.getString(getString(R.string.pref_city_key), getResources().getString(R.string.choose_location));
-        units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
+        city = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_city_key), getResources().getString(R.string.choose_location));
+        units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), DEFAULT_UNITS);
 
         String currentData = getFormattedDate(new Date());
         fillTitle(city, currentData);
@@ -143,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void checkTask() {
-        if (sharedPref.getBoolean(getString(R.string.pref_task_key), false)) {
+        if (SharedPrefsUtils.getBooleanPreference(this, getString(R.string.pref_task_key), false)) {
             Task task = new PeriodicTask.Builder()
                     .setService(PeriodicalForecastTask.class)
                     .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
@@ -224,8 +221,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void startWashCarActivity() {
-        float lat = sharedPref.getFloat(getString(R.string.pref_lat_key), (float) ForecastService.DEFAULT_LATITUDE);
-        float lon = sharedPref.getFloat(getString(R.string.pref_lon_key), (float) ForecastService.DEFAULT_LONGITUDE);
+        float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) ForecastService.DEFAULT_LATITUDE);
+        float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) ForecastService.DEFAULT_LONGITUDE);
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);

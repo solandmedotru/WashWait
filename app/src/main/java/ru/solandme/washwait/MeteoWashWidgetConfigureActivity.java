@@ -3,16 +3,16 @@ package ru.solandme.washwait;
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.ColorInt;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.enrico.colorpicker.colorDialog;
+
+import ru.solandme.washwait.utils.SharedPrefsUtils;
 
 public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         implements colorDialog.ColorSelectedListener {
@@ -23,7 +23,6 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
     Context context;
     View textColorBox;
     View bgColorBox;
-    SharedPreferences sharedPref;
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
@@ -48,7 +47,6 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         context = MeteoWashWidgetConfigureActivity.this;
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if the user presses the back button.
@@ -58,10 +56,10 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
 
         textColorBox = findViewById(R.id.textColorBox);
-        textColorBox.setBackgroundColor(sharedPref.getInt(getString(R.string.pref_textColor_key), Color.GRAY));
+        textColorBox.setBackgroundColor(SharedPrefsUtils.getIntegerPreference(this, getString(R.string.pref_textColor_key), Color.GRAY));
 
         bgColorBox = findViewById(R.id.bgColorBox);
-        bgColorBox.setBackgroundColor(sharedPref.getInt(getString(R.string.pref_bgColor_key), Color.BLACK));
+        bgColorBox.setBackgroundColor(SharedPrefsUtils.getIntegerPreference(this, getString(R.string.pref_bgColor_key), Color.BLACK));
 
         textColorBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +97,11 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
         tag = Integer.valueOf(dialogFragment.getTag());
         switch (tag) {
             case TAG_TEXT_COLOR:
-                sharedPref.edit().putInt(getString(R.string.pref_textColor_key), selectedColor).apply();
+                SharedPrefsUtils.setIntegerPreference(this, getString(R.string.pref_textColor_key), selectedColor);
                 textColorBox.setBackgroundColor(selectedColor);
                 break;
             case TAG_BG_COLOR:
-                sharedPref.edit().putInt(getString(R.string.pref_bgColor_key), selectedColor).apply();
+                SharedPrefsUtils.setIntegerPreference(this, getString(R.string.pref_bgColor_key), selectedColor);
                 bgColorBox.setBackgroundColor(selectedColor);
                 break;
         }

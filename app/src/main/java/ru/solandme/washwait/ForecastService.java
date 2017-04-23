@@ -7,10 +7,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.NotificationCompat;
@@ -27,6 +25,7 @@ import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 import ru.solandme.washwait.model.pojo.weather.CurrWeather;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
+import ru.solandme.washwait.utils.SharedPrefsUtils;
 
 public class ForecastService extends IntentService {
 
@@ -41,7 +40,6 @@ public class ForecastService extends IntentService {
     private WeatherForecast weatherForecast;
     private CurrWeather currWeather;
     private boolean isForecastResultOK, isCurrWeatherResultOK, isFinishedCurrWeather, isFinishedForecast, isRunFromBackground;
-    private SharedPreferences sharedPref;
 
     public static final String RUN_FROM = "isRunFromBackground";
     public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
@@ -74,12 +72,11 @@ public class ForecastService extends IntentService {
     }
 
     private void handleForecast() {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         String lang = Locale.getDefault().getLanguage();
-        float lat = sharedPref.getFloat(getString(R.string.pref_lat_key), (float) DEFAULT_LATITUDE);
-        float lon = sharedPref.getFloat(getString(R.string.pref_lon_key), (float) DEFAULT_LONGITUDE);
-        String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
-        forecastDistance = sharedPref.getString(getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
+        float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) DEFAULT_LATITUDE);
+        float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) DEFAULT_LONGITUDE);
+        String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), DEFAULT_UNITS);
+        forecastDistance = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
@@ -146,8 +143,8 @@ public class ForecastService extends IntentService {
     }
 
     boolean isBadConditions(int weatherId, double temperature, double dirtyCounter) {
-        String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
-        double dirtyLimit = sharedPref.getFloat(getString(R.string.pref_dirty_limit_key), (float) DEFAULT_DIRTY_LIMIT);
+        String units = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_units_key), DEFAULT_UNITS);
+        double dirtyLimit = SharedPrefsUtils.getFloatPreference(this,getString(R.string.pref_dirty_limit_key), (float) DEFAULT_DIRTY_LIMIT);
 
         switch (units) {
             case "metric":
@@ -199,9 +196,9 @@ public class ForecastService extends IntentService {
 
     private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
         Intent intent = new Intent(NOTIFICATION);
-        String units = sharedPref.getString(getString(R.string.pref_units_key), DEFAULT_UNITS);
-        int textColor = sharedPref.getInt(getString(R.string.pref_textColor_key), Color.GRAY);
-        int bgColor = sharedPref.getInt(getString(R.string.pref_bgColor_key), Color.BLACK);
+        String units = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_units_key), DEFAULT_UNITS);
+        int textColor = SharedPrefsUtils.getIntegerPreference(this,getString(R.string.pref_textColor_key), Color.GRAY);
+        int bgColor = SharedPrefsUtils.getIntegerPreference(this,getString(R.string.pref_bgColor_key), Color.BLACK);
         if (isForecastResultOK && isCurrWeatherResultOK) {
             int washDayNumber = getWashDayNumber();
 
@@ -230,15 +227,15 @@ public class ForecastService extends IntentService {
             double speedWind = currWeather.getWind().getSpeed();
             int speedDirection = (int) currWeather.getWind().getDeg();
 
-            sharedPref.edit().putString(getString(R.string.pref_maxTemp_key), String.valueOf(maxTemp)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_minTemp_key), String.valueOf(minTemp)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_description_key), description).apply();
-            sharedPref.edit().putString(getString(R.string.pref_icon_key), String.valueOf(icon)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_humidity_key), String.valueOf(humidity)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_barometer_key), String.valueOf(barometer)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_speedWind_key), String.valueOf(speedWind)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_speedDirection_key), String.valueOf(speedDirection)).apply();
-            sharedPref.edit().putString(getString(R.string.pref_text_to_wash_key), textForWashForecast).apply();
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_maxTemp_key), String.valueOf(maxTemp));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_minTemp_key), String.valueOf(minTemp));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_description_key), description);
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_icon_key), String.valueOf(icon));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_humidity_key), String.valueOf(humidity));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_barometer_key), String.valueOf(barometer));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_speedWind_key), String.valueOf(speedWind));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_speedDirection_key), String.valueOf(speedDirection));
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_text_to_wash_key), textForWashForecast);
 
             remoteViews = MeteoWashWidget.fillWidget(context, textColor, bgColor, remoteViews, units, maxTemp, minTemp, description, icon,
                     humidity, barometer, speedWind, speedDirection, textForWashForecast);

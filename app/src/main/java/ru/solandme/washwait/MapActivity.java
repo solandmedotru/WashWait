@@ -2,12 +2,10 @@ package ru.solandme.washwait;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -48,6 +46,7 @@ import ru.solandme.washwait.model.pojo.map.PlacesResponse;
 import ru.solandme.washwait.model.pojo.places.PlaceInfo;
 import ru.solandme.washwait.model.pojo.places.Result;
 import ru.solandme.washwait.rest.PlacesApiHelper;
+import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
 
 public class MapActivity extends AppCompatActivity implements
@@ -140,8 +139,7 @@ public class MapActivity extends AppCompatActivity implements
     }
 
     private GoogleMap setMapStyle(GoogleMap map) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        String appTheme = sharedPreferences.getString(getString(R.string.pref_theme_color_key), Utils.THEME_MATERIAL_BLUE);
+        String appTheme = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_theme_color_key), Utils.THEME_MATERIAL_BLUE);
         switch (appTheme) {
             case Utils.THEME_MATERIAL_DAYNIGHT:
                 map.setMapStyle(MapStyleOptions.loadRawResourceStyle(

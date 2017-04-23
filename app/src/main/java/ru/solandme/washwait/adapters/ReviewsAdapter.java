@@ -19,11 +19,8 @@ import ru.solandme.washwait.model.pojo.places.Review;
 
 public class ReviewsAdapter extends ArrayAdapter<Review> {
 
-    private final List<Review> reviews;
-
     public ReviewsAdapter(Context context, int res, List<Review> reviews) {
         super(context, res, reviews);
-        this.reviews = reviews;
     }
 
     private static class ViewHolder {
@@ -36,8 +33,11 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
-            convertView = ((Activity)getContext()).getLayoutInflater().inflate(R.layout.review_row, parent, false);
-            final ViewHolder viewHolder = new ViewHolder();
+            convertView = ((Activity) getContext())
+                    .getLayoutInflater()
+                    .inflate(R.layout.review_row, parent, false);
+
+            ViewHolder viewHolder = new ViewHolder();
 
             viewHolder.reviewer = (TextView) convertView.findViewById(R.id.reviewer);
             viewHolder.reviewText = (TextView) convertView.findViewById(R.id.reviewText);
@@ -48,18 +48,19 @@ public class ReviewsAdapter extends ArrayAdapter<Review> {
             convertView.setTag(viewHolder);
 
         }
-
+        Review review = getItem(position);
         ViewHolder holder = (ViewHolder) convertView.getTag();
-        holder.reviewer.setText(reviews.get(position).getAuthorName());
-        holder.reviewText.setText(reviews.get(position).getText());
-        holder.reviewData.setText(reviews.get(position).getRelativeTimeDescription());
-        holder.reviewNumber.setText("("+String.valueOf(reviews.get(position).getRating())+")");
-        holder.reviewBar.setRating(reviews.get(position).getRating());
+        if (review != null) {
+            holder.reviewer.setText(review.getAuthorName());
+            holder.reviewText.setText(review.getText());
+            holder.reviewData.setText(review.getRelativeTimeDescription());
+            holder.reviewNumber.setText("(" + String.valueOf(review.getRating()) + ")");
+            holder.reviewBar.setRating(review.getRating());
 
-        Picasso.with(getContext()).load(reviews.get(position).getProfilePhotoUrl())
-                .placeholder(R.drawable.round_shape)
-                .into(holder.profilePhoto);
-
+            Picasso.with(getContext()).load(review.getProfilePhotoUrl())
+                    .placeholder(R.drawable.round_shape)
+                    .into(holder.profilePhoto);
+        }
         return convertView;
     }
 }
