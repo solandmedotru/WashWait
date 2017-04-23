@@ -40,7 +40,7 @@
             map:uiTiltGestures="true"
             map:uiZoomControls="true"
             map:uiZoomGestures="true"
-            tools:context="ru.solandme.washwait.MapActivity" />
+            tools:context="ru.solandme.washwait.ui.MapActivity" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

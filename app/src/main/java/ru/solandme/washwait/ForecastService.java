@@ -25,7 +25,9 @@ import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 import ru.solandme.washwait.model.pojo.weather.CurrWeather;
 import ru.solandme.washwait.rest.ForecastApiHelper;
 import ru.solandme.washwait.rest.ForecastApiService;
+import ru.solandme.washwait.ui.MainActivity;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
+import ru.solandme.washwait.widget.MeteoWashWidget;
 
 public class ForecastService extends IntentService {
 

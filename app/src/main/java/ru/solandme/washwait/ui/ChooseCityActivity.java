@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.ui;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.PlaceAutocompleteAdapter;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;

@@ -7,7 +7,7 @@
     android:padding="@dimen/_16sdp"
     android:rowCount="4"
     android:useDefaultMargins="true"
-    tools:context=".AboutAppDialog">
+    tools:context=".ui.AboutAppDialog">
 
     <TextView
         android:layout_width="wrap_content"

@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.widget;
 
 import android.appwidget.AppWidgetManager;
 import android.content.Context;
@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.enrico.colorpicker.colorDialog;
 
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 
 public class MeteoWashWidgetConfigureActivity extends AppCompatActivity

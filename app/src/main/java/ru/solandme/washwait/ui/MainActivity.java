@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -32,6 +32,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ru.solandme.washwait.ForecastService;
+import ru.solandme.washwait.PeriodicalForecastTask;
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
 import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
 import ru.solandme.washwait.model.pojo.weather.CurrWeather;

@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.ReviewsAdapter;
 import ru.solandme.washwait.model.pojo.places.Result;
 import ru.solandme.washwait.utils.Utils;

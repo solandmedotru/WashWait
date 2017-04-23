@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.ui;
 
 import android.Manifest;
 import android.content.Intent;
@@ -41,6 +41,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.model.pojo.map.PlacesResponse;
 import ru.solandme.washwait.model.pojo.places.PlaceInfo;

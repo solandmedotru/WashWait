@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.ui;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
+
+import ru.solandme.washwait.BuildConfig;
+import ru.solandme.washwait.R;
 
 public class AboutAppDialog extends DialogFragment implements
         DialogInterface.OnClickListener {

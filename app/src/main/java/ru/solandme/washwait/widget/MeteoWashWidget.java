@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.widget.RemoteViews;
 
+import ru.solandme.washwait.ForecastService;
+import ru.solandme.washwait.R;
+import ru.solandme.washwait.ui.MainActivity;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.WeatherUtils;
 

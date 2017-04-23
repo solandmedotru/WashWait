@@ -27,7 +27,7 @@
         android:name="com.google.android.geo.API_KEY"
         android:value="@string/google_maps_key" />
 
-    <activity android:name=".MainActivity">
+    <activity android:name=".ui.MainActivity">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
 
@@ -35,17 +35,17 @@
       </intent-filter>
     </activity>
     <activity
-        android:name=".SettingsActivity"
-        android:parentActivityName=".MainActivity" />
+        android:name=".ui.SettingsActivity"
+        android:parentActivityName=".ui.MainActivity" />
     <activity
-        android:name=".MapActivity"
+        android:name=".ui.MapActivity"
         android:label="@string/title_activity_map">
       <meta-data
           android:name="android.support.PARENT_ACTIVITY"
-          android:value="ru.solandme.washwait.MainActivity" />
+          android:value="ru.solandme.washwait.ui.MainActivity" />
     </activity>
-    <activity android:name=".ChooseCityActivity" />
-    <activity android:name=".AboutPlace" />
+    <activity android:name=".ui.ChooseCityActivity" />
+    <activity android:name=".ui.AboutPlace" />
 
     <service
         android:name=".ForecastService"
@@ -59,7 +59,7 @@
       </intent-filter>
     </service>
 
-    <receiver android:name=".MeteoWashWidget">
+    <receiver android:name=".widget.MeteoWashWidget">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
       </intent-filter>
@@ -69,7 +69,7 @@
           android:resource="@xml/meteo_wash_widget_info" />
     </receiver>
 
-    <activity android:name=".MeteoWashWidgetConfigureActivity">
+    <activity android:name=".widget.MeteoWashWidgetConfigureActivity">
       <intent-filter>
         <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
       </intent-filter>

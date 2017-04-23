@@ -1,4 +1,4 @@
-package ru.solandme.washwait;
+package ru.solandme.washwait.ui;
 
 import android.os.Bundle;
 import android.preference.ListPreference;
@@ -7,6 +7,8 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+
+import ru.solandme.washwait.R;
 
 public class SettingsActivity extends PreferenceActivity {
     @Override
