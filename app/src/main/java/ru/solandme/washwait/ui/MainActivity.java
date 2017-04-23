@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.ForecastService;
 import ru.solandme.washwait.PeriodicalForecastTask;
 import ru.solandme.washwait.R;
@@ -44,10 +45,7 @@ import ru.solandme.washwait.utils.WeatherUtils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
-    public static final int PERIODICAL_TIMER = 43200; //21600
-    public static final int FIRST_DAY_POSITION = 0;
-    private static final String TAG_ABOUT = "about";
-    private static final String DEFAULT_UNITS = "metric";
+
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView updatedField;
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         FirebaseAnalytics mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         mFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
-        mFirebaseAnalytics.setMinimumSessionDuration(20000);
+        mFirebaseAnalytics.setMinimumSessionDuration(Constants.MINIMUM_SESSION_DURATION);
 
         mGcmNetworkManager = GcmNetworkManager.getInstance(this);
     }
@@ -119,14 +117,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onResume() {
         city = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_city_key), getResources().getString(R.string.choose_location));
-        units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), DEFAULT_UNITS);
+        units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
 
         String currentData = getFormattedDate(new Date());
         fillTitle(city, currentData);
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
-                ForecastService.NOTIFICATION));
-        ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_ACTIVITY);
+                Constants.NOTIFICATION));
+        ForecastService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
         checkTask();
         super.onResume();
     }
@@ -147,8 +145,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             Task task = new PeriodicTask.Builder()
                     .setService(PeriodicalForecastTask.class)
                     .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                    .setPeriod(PERIODICAL_TIMER)
-                    .setTag(PeriodicalForecastTask.TAG_TASK_PERIODIC)
+                    .setPeriod(Constants.PERIODICAL_TIMER)
+                    .setTag(Constants.TAG_TASK_PERIODIC)
                     .setPersisted(true)
                     .setUpdateCurrent(true)
                     .build();
@@ -189,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-        ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_ACTIVITY);
+        ForecastService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override
@@ -199,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.about_app_menu_item:
-                new AboutAppDialog().show(getSupportFragmentManager(), TAG_ABOUT);
+                new AboutAppDialog().show(getSupportFragmentManager(), Constants.TAG_ABOUT);
                 break;
             case R.id.choose_location_action:
                 chooseCity();
@@ -224,8 +222,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     private void startWashCarActivity() {
-        float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) ForecastService.DEFAULT_LATITUDE);
-        float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) ForecastService.DEFAULT_LONGITUDE);
+        float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) Constants.DEFAULT_LATITUDE);
+        float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) Constants.DEFAULT_LONGITUDE);
         Intent intent = new Intent(MainActivity.this, MapActivity.class);
         intent.putExtra("lat", lat);
         intent.putExtra("lon", lon);
@@ -259,7 +257,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 weatherForecast = (WeatherForecast) bundle.get("Weather");
                 currWeather = (CurrWeather) bundle.get("CurrWeather");
 
-                fillWeatherCard(FIRST_DAY_POSITION);
+                fillWeatherCard(Constants.FIRST_DAY_POSITION);
 
                 MyForecastRVAdapter adapter = new MyForecastRVAdapter(weatherForecast);
                 forecastRecyclerView.setAdapter(adapter);
@@ -272,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 });
 
                 adapter.notifyDataSetChanged();
-                updateCarImage(FIRST_DAY_POSITION);
+                updateCarImage(Constants.FIRST_DAY_POSITION);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.error_from_response, Toast.LENGTH_SHORT).show();
             }
@@ -291,7 +289,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         double speedWind;
         int speedDirection;
 
-        if (position == FIRST_DAY_POSITION) {
+        if (position == Constants.FIRST_DAY_POSITION) {
             maxTemp = currWeather.getMain().getTempMax();
             minTemp = currWeather.getMain().getTempMin();
             description = currWeather.getWeather().get(0).getDescription();

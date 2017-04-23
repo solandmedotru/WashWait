@@ -41,6 +41,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.model.pojo.map.PlacesResponse;
@@ -58,9 +59,7 @@ public class MapActivity extends AppCompatActivity implements
         LocationListener {
 
     private static final String TAG = "MapActivity";
-    private static final int MA_PERMISSIONS_REQUEST_LOCATION = 99;
-    private static final long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
-    private static final long FASTEST_INTERVAL = 2000; /* 2 sec */
+
     private GoogleMap map;
     private GoogleApiClient googleApiClient;
 
@@ -241,12 +240,12 @@ public class MapActivity extends AppCompatActivity implements
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MA_PERMISSIONS_REQUEST_LOCATION);
+                        Constants.MA_PERMISSIONS_REQUEST_LOCATION);
             } else {
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MA_PERMISSIONS_REQUEST_LOCATION);
+                        Constants.MA_PERMISSIONS_REQUEST_LOCATION);
             }
             return false;
         } else {
@@ -257,7 +256,7 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
-            case MA_PERMISSIONS_REQUEST_LOCATION: {
+            case Constants.MA_PERMISSIONS_REQUEST_LOCATION: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if (ContextCompat.checkSelfPermission(this,
                             Manifest.permission.ACCESS_FINE_LOCATION)
@@ -276,8 +275,8 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         LocationRequest mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+        mLocationRequest.setInterval(Constants.UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(Constants.FASTEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)

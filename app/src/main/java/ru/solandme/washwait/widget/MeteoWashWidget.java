@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.widget.RemoteViews;
 
+import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.ForecastService;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.ui.MainActivity;
@@ -30,7 +31,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
         remoteViews.setOnClickPendingIntent(R.id.widgetContent, pendingIntent);
 
-        String units = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_units_key), ForecastService.DEFAULT_UNITS);
+        String units = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
         double maxTemp = Double.parseDouble(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_maxTemp_key), DEFAULT_NUMBER));
         double minTemp = Double.parseDouble(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_minTemp_key), DEFAULT_NUMBER));
         String description = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_description_key), DEFAULT_STRING);
@@ -77,7 +78,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        ForecastService.startActionGetForecast(context, ForecastService.RUN_FROM_ACTIVITY);
+        ForecastService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -86,7 +87,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-        ForecastService.startActionGetForecast(context, ForecastService.RUN_FROM_ACTIVITY);
+        ForecastService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override

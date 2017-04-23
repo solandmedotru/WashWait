@@ -14,7 +14,7 @@ import com.google.android.gms.gcm.TaskParams;
 
 public class PeriodicalForecastTask extends GcmTaskService {
     private static final String TAG = PeriodicalForecastTask.class.getSimpleName();
-    public static final String TAG_TASK_PERIODIC = "PeriodicalForecastTask";
+
     boolean isForecastResultOK = false;
 
     @Override
@@ -23,9 +23,9 @@ public class PeriodicalForecastTask extends GcmTaskService {
         Log.i(TAG, "onRunTask");
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
-                ForecastService.NOTIFICATION));
+                Constants.NOTIFICATION));
 
-        ForecastService.startActionGetForecast(this, ForecastService.RUN_FROM_BACKGROUND);
+        ForecastService.startActionGetForecast(this, Constants.RUN_FROM_BACKGROUND);
 
         if (!isForecastResultOK) {
             return GcmNetworkManager.RESULT_FAILURE;

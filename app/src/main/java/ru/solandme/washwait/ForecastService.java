@@ -32,24 +32,12 @@ import ru.solandme.washwait.widget.MeteoWashWidget;
 public class ForecastService extends IntentService {
 
     private static final String TAG = ForecastService.class.getSimpleName();
-    private static final String ACTION_GET_FORECAST = "ru.solandme.washwait.action.GET_FORECAST";
-    private static final String DEFAULT_FORECAST_DISTANCE = "2";
-    private static final String CNT = "16";
-    private static final String APPID = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-    private static final int NOTIFICATION_ID = 1981;
-    private static final double DEFAULT_DIRTY_LIMIT = 0.1;
+
+
     private String forecastDistance;
     private WeatherForecast weatherForecast;
     private CurrWeather currWeather;
     private boolean isForecastResultOK, isCurrWeatherResultOK, isFinishedCurrWeather, isFinishedForecast, isRunFromBackground;
-
-    public static final String RUN_FROM = "isRunFromBackground";
-    public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
-    public static final boolean RUN_FROM_ACTIVITY = false;
-    public static final boolean RUN_FROM_BACKGROUND = true;
-    public static final double DEFAULT_LONGITUDE = 37.6155600;
-    public static final double DEFAULT_LATITUDE = 55.7522200;
-    public static final String DEFAULT_UNITS = "metric";
 
     public ForecastService() {
         super(TAG);
@@ -57,8 +45,8 @@ public class ForecastService extends IntentService {
 
     public static void startActionGetForecast(Context context, boolean isRunFromBackground) {
         Intent intent = new Intent(context, ForecastService.class);
-        intent.setAction(ACTION_GET_FORECAST);
-        intent.putExtra(RUN_FROM, isRunFromBackground);
+        intent.setAction(Constants.ACTION_GET_FORECAST);
+        intent.putExtra(Constants.RUN_FROM, isRunFromBackground);
         context.startService(intent);
     }
 
@@ -66,8 +54,8 @@ public class ForecastService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            isRunFromBackground = intent.getBooleanExtra(RUN_FROM, ForecastService.RUN_FROM_ACTIVITY);
-            if (ACTION_GET_FORECAST.equals(action)) {
+            isRunFromBackground = intent.getBooleanExtra(Constants.RUN_FROM, Constants.RUN_FROM_ACTIVITY);
+            if (Constants.ACTION_GET_FORECAST.equals(action)) {
                 handleForecast();
             }
         }
@@ -75,14 +63,14 @@ public class ForecastService extends IntentService {
 
     private void handleForecast() {
         String lang = Locale.getDefault().getLanguage();
-        float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) DEFAULT_LATITUDE);
-        float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) DEFAULT_LONGITUDE);
-        String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), DEFAULT_UNITS);
-        forecastDistance = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_limit_key), DEFAULT_FORECAST_DISTANCE);
+        float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) Constants.DEFAULT_LATITUDE);
+        float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) Constants.DEFAULT_LONGITUDE);
+        String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
+        forecastDistance = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_limit_key), Constants.DEFAULT_FORECAST_DISTANCE);
 
         final ForecastApiService apiService = ForecastApiHelper.requestForecast(getApplicationContext()).create(ForecastApiService.class);
 
-        Call<WeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, CNT, APPID);
+        Call<WeatherForecast> weatherCall = apiService.getForecastByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, Constants.CNT, Constants.APPID);
         weatherCall.enqueue(new Callback<WeatherForecast>() {
             @Override
             public void onResponse(Call<WeatherForecast> call, Response<WeatherForecast> response) {
@@ -114,7 +102,7 @@ public class ForecastService extends IntentService {
             }
         });
 
-        Call<CurrWeather> currWeatherCall = apiService.getCurrentWeatherByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, APPID);
+        Call<CurrWeather> currWeatherCall = apiService.getCurrentWeatherByCoordinats(String.valueOf(lat), String.valueOf(lon), units, lang, Constants.APPID);
         currWeatherCall.enqueue(new Callback<CurrWeather>() {
             @Override
             public void onResponse(Call<CurrWeather> call, Response<CurrWeather> response) {
@@ -145,8 +133,8 @@ public class ForecastService extends IntentService {
     }
 
     boolean isBadConditions(int weatherId, double temperature, double dirtyCounter) {
-        String units = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_units_key), DEFAULT_UNITS);
-        double dirtyLimit = SharedPrefsUtils.getFloatPreference(this,getString(R.string.pref_dirty_limit_key), (float) DEFAULT_DIRTY_LIMIT);
+        String units = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
+        double dirtyLimit = SharedPrefsUtils.getFloatPreference(this,getString(R.string.pref_dirty_limit_key), (float) Constants.DEFAULT_DIRTY_LIMIT);
 
         switch (units) {
             case "metric":
@@ -197,8 +185,8 @@ public class ForecastService extends IntentService {
     }
 
     private void publishResults(boolean isForecastResultOK, boolean isCurrWeatherResultOK, boolean runFromService) {
-        Intent intent = new Intent(NOTIFICATION);
-        String units = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_units_key), DEFAULT_UNITS);
+        Intent intent = new Intent(Constants.NOTIFICATION);
+        String units = SharedPrefsUtils.getStringPreference(this,getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
         int textColor = SharedPrefsUtils.getIntegerPreference(this,getString(R.string.pref_textColor_key), Color.GRAY);
         int bgColor = SharedPrefsUtils.getIntegerPreference(this,getString(R.string.pref_bgColor_key), Color.BLACK);
         if (isForecastResultOK && isCurrWeatherResultOK) {
@@ -273,7 +261,7 @@ public class ForecastService extends IntentService {
                 .setWhen(System.currentTimeMillis()).build();
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(NOTIFICATION_ID, notification);
+        notificationManager.notify(Constants.NOTIFICATION_ID, notification);
     }
 
     private int getWashDayNumber() {
