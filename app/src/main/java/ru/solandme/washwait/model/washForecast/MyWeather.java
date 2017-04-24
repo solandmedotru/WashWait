@@ -20,15 +20,7 @@ public class MyWeather {
     public MyWeather() {
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public long getTime() {
+       public long getTime() {
         return time;
     }
 

@@ -24,6 +24,7 @@ public class DarkSkyClient implements IWeatherClient {
     private static final String TAG = DarkSkyClient.class.getSimpleName();
     private static final String BASE_URL = "https://api.darksky.net/forecast/";
     private static final String DARK_SKY_API_KEY = BuildConfig.DARK_SKY_API_KEY;
+    private static final int MAX_PERIOD = 8;
 
     private static final String OPTIONS_LANGUAGE = "lang";
     private static final String OPTIONS_UNIT = "units";
@@ -32,13 +33,14 @@ public class DarkSkyClient implements IWeatherClient {
     private MyWeatherForecast myWeatherForecast;
 
     public DarkSkyClient(Context context) {
-        myWeatherForecast = new MyWeatherForecast();
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(DarkSkyService.class);
     }
 
 
     @Override
     public MyWeatherForecast getWeatherForecast(float lat, float lon, String units, String lang) {
+        myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
+        myWeatherForecast.setUnits(units);
         return getWeather(lat, lon, units, lang);
     }
 
@@ -48,13 +50,13 @@ public class DarkSkyClient implements IWeatherClient {
                 DARK_SKY_API_KEY,
                 String.valueOf(lat),
                 String.valueOf(lon),
-                getQueryMapParameters(lang, "auto")
+                getQueryMapParameters(lang, units)
         );
 
         try {
             DarkSkyForecast darkSkyForecast = weatherCall.execute().body();
 
-            myWeatherForecast.setLastUpdate(darkSkyForecast.getCurrently().getTime());
+            myWeatherForecast.setLastUpdate(System.currentTimeMillis() / 1000);
             myWeatherForecast.setCityName(darkSkyForecast.getTimezone());
             myWeatherForecast.setCountry("");
             myWeatherForecast.setLatitude(darkSkyForecast.getLatitude());
@@ -65,13 +67,12 @@ public class DarkSkyClient implements IWeatherClient {
             for (int i = 0; i < darkSkyForecast.getDaily().getData().size(); i++) {
                 Datum__ item = darkSkyForecast.getDaily().getData().get(i);
                 MyWeather weather = new MyWeather();
-                weather.setId(0);
                 weather.setTime(item.getTime());
                 weather.setDescription(item.getSummary());
-                weather.setTempMin((float) item.getApparentTemperatureMin());
-                weather.setTempMax((float) item.getApparentTemperatureMax());
+                weather.setTempMin((float) item.getTemperatureMin());
+                weather.setTempMax((float) item.getTemperatureMax());
                 weather.setPressure((float) item.getPressure());
-                weather.setHumidity((float) item.getHumidity());
+                weather.setHumidity((float) item.getHumidity()*100);
                 weather.setWindSpeed((float) item.getWindSpeed());
                 weather.setWindDirection((float) item.getWindBearing());
                 weather.setRain((float) item.getPrecipIntensityMax());
@@ -90,7 +91,7 @@ public class DarkSkyClient implements IWeatherClient {
             currentWeather.setTempMin((float) item.getTemperature());
             currentWeather.setTempMax((float) item.getTemperature());
             currentWeather.setPressure((float) item.getPressure());
-            currentWeather.setHumidity((float) item.getHumidity());
+            currentWeather.setHumidity((float) item.getHumidity()*100);
             currentWeather.setWindSpeed((float) item.getWindSpeed());
             currentWeather.setWindDirection((float) item.getWindBearing());
             currentWeather.setRain((float)item.getPrecipIntensity());

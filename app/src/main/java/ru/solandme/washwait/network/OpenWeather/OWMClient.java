@@ -19,21 +19,24 @@ import ru.solandme.washwait.network.OpenWeather.model.weather.OpenWeatherCurrent
 
 public class OWMClient implements IWeatherClient {
     private static final String TAG = OWMClient.class.getSimpleName();
-    private static final String CNT = "16";
+
     private static final String OPEN_WEATHER_MAP_API_KEY = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
+    private static final int MAX_PERIOD = 16;
 
     private MyWeatherForecast myWeatherForecast;
     private final OWMService apiService;
 
     public OWMClient(Context context) {
-        myWeatherForecast = new MyWeatherForecast();
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(OWMService.class);
     }
 
+    @Override
     public MyWeatherForecast getWeatherForecast(float lat, float lon, String units, String lang) {
+        myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
         getWeather(lat, lon, units, lang);
         getCurrentWeather(lat, lon, units, lang);
+        myWeatherForecast.setUnits(units);
         return myWeatherForecast;
     }
 
@@ -77,7 +80,7 @@ public class OWMClient implements IWeatherClient {
                 String.valueOf(lon),
                 units,
                 lang,
-                CNT,
+                String.valueOf(MAX_PERIOD),
                 OPEN_WEATHER_MAP_API_KEY);
 
         try {
@@ -94,7 +97,6 @@ public class OWMClient implements IWeatherClient {
             for (int i = 0; i < weatherForecast.getList().size(); i++) {
                 ru.solandme.washwait.network.OpenWeather.model.forecast.List item = weatherForecast.getList().get(i);
                 MyWeather weather = new MyWeather();
-                weather.setId(item.getWeather().get(0).getId());
                 weather.setTime(item.getDt());
                 weather.setDescription(item.getWeather().get(0).getDescription());
                 weather.setTempMin((float) item.getTemp().getMin());

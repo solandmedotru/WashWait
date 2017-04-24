@@ -12,15 +12,30 @@ public class MyWeatherForecast implements Serializable{
     private double longitude;
     private boolean isForecastResultOK;
     private boolean isCurrWeatherResultOK;
+    private int maxPeriod;
+    private String units;
 
     private MyWeather currentWeather;
     private List<MyWeather> myWeatherList;
 
-    public MyWeatherForecast() {
+    public MyWeatherForecast(int maxPeriod) {
+        this.maxPeriod = maxPeriod;
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
     }
 
     public long getLastUpdate() {
         return lastUpdate;
+    }
+
+    public int getMaxPeriod() {
+        return maxPeriod;
     }
 
     public void setLastUpdate(long lastUpdate) {

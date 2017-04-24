@@ -289,28 +289,28 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         int speedDirection;
 
         if (position == Constants.FIRST_DAY_POSITION) {
-            maxTemp = myWeatherForecast.getCurrentWeather().getTempMax();
-            minTemp = myWeatherForecast.getCurrentWeather().getTempMin();
+            maxTemp = Math.round(myWeatherForecast.getCurrentWeather().getTempMax());
+            minTemp = Math.round(myWeatherForecast.getCurrentWeather().getTempMin());
             description = myWeatherForecast.getCurrentWeather().getDescription();
             icon = myWeatherForecast.getCurrentWeather().getImageRes();
             dt = myWeatherForecast.getCurrentWeather().getTime() * 1000;
-            humidity = (int) myWeatherForecast.getCurrentWeather().getHumidity();
+            humidity = Math.round(myWeatherForecast.getCurrentWeather().getHumidity());
             barometer = myWeatherForecast.getCurrentWeather().getPressure();
-            speedWind = myWeatherForecast.getCurrentWeather().getWindSpeed();
-            speedDirection = (int) myWeatherForecast.getCurrentWeather().getWindDirection();
-            dtLast = myWeatherForecast.getLastUpdate() * 1000;
+            speedWind = Math.round(myWeatherForecast.getCurrentWeather().getWindSpeed());
+            speedDirection = Math.round(myWeatherForecast.getCurrentWeather().getWindDirection());
+            dtLast = myWeatherForecast.getCurrentWeather().getTime() * 1000;
 
         } else {
-            maxTemp = myWeatherForecast.getMyWeatherList().get(position).getTempMax();
-            minTemp = myWeatherForecast.getMyWeatherList().get(position).getTempMin();
+            maxTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMax());
+            minTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMin());
             description = myWeatherForecast.getMyWeatherList().get(position).getDescription();
             icon = myWeatherForecast.getMyWeatherList().get(position).getImageRes();
             dt = myWeatherForecast.getMyWeatherList().get(position).getTime() * 1000;
-            humidity = (int) myWeatherForecast.getMyWeatherList().get(position).getHumidity();
+            humidity = Math.round(myWeatherForecast.getMyWeatherList().get(position).getHumidity());
             barometer = myWeatherForecast.getMyWeatherList().get(position).getPressure();
-            speedWind = myWeatherForecast.getMyWeatherList().get(position).getWindSpeed();
-            speedDirection = (int) myWeatherForecast.getMyWeatherList().get(position).getWindDirection();
-            dtLast = myWeatherForecast.getLastUpdate() * 1000;
+            speedWind = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindSpeed());
+            speedDirection = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindDirection());
+            dtLast = myWeatherForecast.getMyWeatherList().get(0).getTime() * 1000;
 
         }
 

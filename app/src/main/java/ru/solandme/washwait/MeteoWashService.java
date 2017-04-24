@@ -15,11 +15,12 @@ import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
+import ru.solandme.washwait.model.washForecast.WashForecast;
 import ru.solandme.washwait.network.IWeatherClient;
+import ru.solandme.washwait.network.OpenWeather.OWMClient;
 import ru.solandme.washwait.network.darksky.DarkSkyClient;
 import ru.solandme.washwait.ui.MainActivity;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
@@ -28,9 +29,7 @@ import ru.solandme.washwait.widget.MeteoWashWidget;
 public class MeteoWashService extends IntentService {
 
     private static final String TAG = MeteoWashService.class.getSimpleName();
-
     private MyWeatherForecast myWeatherForecast;
-
     private boolean isRunFromBackground;
 
     public MeteoWashService() {
@@ -61,83 +60,38 @@ public class MeteoWashService extends IntentService {
         float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) Constants.DEFAULT_LATITUDE);
         float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) Constants.DEFAULT_LONGITUDE);
         String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
+        String forecastDistance = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_limit_key), Constants.DEFAULT_FORECAST_DISTANCE);
 
 
         //TODO сделать выбор репозитория в зависимости от сохраненных параметров
-//        IWeatherClient weatherClient = new OWMClient(getApplicationContext());
-        IWeatherClient weatherClient = new DarkSkyClient(getApplicationContext());
-        myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, units, lang);
-        publishResults(myWeatherForecast, isRunFromBackground);
-    }
-
-    boolean isBadConditions(double temperature, double dirtyCounter) {
-        String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
-        double dirtyLimit = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_dirty_limit_key), (float) Constants.DEFAULT_DIRTY_LIMIT);
-
-        switch (units) {
-            case "metric":
-                return ((dirtyCounter > dirtyLimit) && temperature > -7) || (temperature < -15);
-            case "imperial":
-                return ((dirtyCounter > dirtyLimit) && temperature > 19) || (temperature < 5);
-            default:
-                return ((dirtyCounter > dirtyLimit) && temperature > 266) || (temperature < 258);
+        IWeatherClient weatherClient;
+        if (true) {
+            weatherClient = new DarkSkyClient(getApplicationContext());
+            if(units.equals("metric")) myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "si", lang);
+            if(units.equals("imperial")) myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "us", lang);
+        } else {
+            weatherClient = new OWMClient(getApplicationContext());
+            myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, units, lang);
         }
+
+        WashForecast washForecast = new WashForecast(this, myWeatherForecast, forecastDistance);
+        publishResults(myWeatherForecast, washForecast, isRunFromBackground);
     }
 
-    private String getTextForWashForecast(int washDayNumber, double dataToWash) {
-        String dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
-        switch (washDayNumber) {
-            case 0:
-                return getResources().getString(R.string.can_wash);
-            case 1:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 2:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 3:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 4:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 5:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 6:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 7:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 8:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 9:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 10:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 11:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 12:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 13:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 14:
-                return getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            default:
-                return getResources().getString(R.string.not_wash);
-        }
-    }
 
-    private void publishResults(MyWeatherForecast myWeatherForecast, boolean runFromService) {
+    private void publishResults(MyWeatherForecast myWeatherForecast, WashForecast washForecast, boolean runFromService) {
         Intent intent = new Intent(Constants.NOTIFICATION);
         String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
         int textColor = SharedPrefsUtils.getIntegerPreference(this, getString(R.string.pref_textColor_key), Color.GRAY);
         int bgColor = SharedPrefsUtils.getIntegerPreference(this, getString(R.string.pref_bgColor_key), Color.BLACK);
         if (myWeatherForecast.isForecastResultOK() && myWeatherForecast.isCurrWeatherResultOK()) {
-            int washDayNumber = getWashDayNumber();
 
-            String textForWashForecast = getTextForWashForecast(washDayNumber, getWashData(washDayNumber));
+            if (washForecast.getWashDayNumber() == Constants.FIRST_DAY_POSITION && runFromService)
+                sendNotification(washForecast.getText());
 
-            if (washDayNumber == Constants.FIRST_DAY_POSITION && runFromService)
-                sendNotification(textForWashForecast);
+            Log.d(TAG, "day: " + washForecast.getWashDayNumber() + " " + washForecast.getText());
 
-            Log.d(TAG, "day: " + washDayNumber + " " + textForWashForecast);
-
-            intent.putExtra("TextForecast", textForWashForecast);
+            intent.putExtra("TextForecast", washForecast.getText());
             intent.putExtra("Weather", myWeatherForecast);
 
             Context context = this;
@@ -163,10 +117,10 @@ public class MeteoWashService extends IntentService {
             SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_barometer_key), String.valueOf(barometer));
             SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_speedWind_key), String.valueOf(speedWind));
             SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_speedDirection_key), String.valueOf(speedDirection));
-            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_text_to_wash_key), textForWashForecast);
+            SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_text_to_wash_key), washForecast.getText());
 
             remoteViews = MeteoWashWidget.fillWidget(context, textColor, bgColor, remoteViews, units, maxTemp, minTemp, description, icon,
-                    humidity, barometer, speedWind, speedDirection, textForWashForecast);
+                    humidity, barometer, speedWind, speedDirection, washForecast.getText());
 
             appWidgetManager.updateAppWidget(thisWidget, remoteViews);
         }
@@ -199,45 +153,5 @@ public class MeteoWashService extends IntentService {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         notificationManager.notify(Constants.NOTIFICATION_ID, notification);
     }
-
-    private int getWashDayNumber() {
-
-        String forecastDistance = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_limit_key), Constants.DEFAULT_FORECAST_DISTANCE);
-        int washDayNumber = 15;
-        int firstDirtyDay = -1;
-        int clearDaysCounter = 0;
-        int daysCounter = 0;
-
-        for (int i = 0; i < myWeatherForecast.getMyWeatherList().size(); i++) {
-            int weatherId = myWeatherForecast.getMyWeatherList().get(i).getId();
-            double maxTemp = myWeatherForecast.getMyWeatherList().get(i).getTempMax();
-
-            daysCounter++;
-            if (!isBadConditions(maxTemp, myWeatherForecast.getMyWeatherList().get(i).getDirtyCounter())) {
-                clearDaysCounter++;
-                if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
-                    if (washDayNumber == 15) {
-                        washDayNumber = daysCounter - clearDaysCounter;
-                    }
-                }
-            } else {
-                clearDaysCounter = 0;
-            }
-        }
-
-        Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
-        return washDayNumber;
-    }
-
-    private double getWashData(int washDayNumber) {
-
-        if (washDayNumber >= myWeatherForecast.getMyWeatherList().size())
-            return myWeatherForecast.getMyWeatherList().get(myWeatherForecast.getMyWeatherList().size() - 1).getTime();
-        return myWeatherForecast.getMyWeatherList().get(washDayNumber).getTime();
-    }
-
-
-
-
 }
 
