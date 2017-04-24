@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.model.pojo.washForecast.MyWeatherForecast;
+import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 

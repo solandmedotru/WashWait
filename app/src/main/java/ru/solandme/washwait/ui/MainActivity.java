@@ -33,11 +33,11 @@ import java.util.Date;
 import java.util.Locale;
 
 import ru.solandme.washwait.Constants;
-import ru.solandme.washwait.ForecastService;
-import ru.solandme.washwait.PeriodicalForecastTask;
+import ru.solandme.washwait.MeteoWashService;
+import ru.solandme.washwait.PeriodicalMeteoWashTask;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
-import ru.solandme.washwait.model.pojo.washForecast.MyWeatherForecast;
+import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
 import ru.solandme.washwait.utils.WeatherUtils;
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 Constants.NOTIFICATION));
-        ForecastService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
         checkTask();
         super.onResume();
     }
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private void checkTask() {
         if (SharedPrefsUtils.getBooleanPreference(this, getString(R.string.pref_task_key), false)) {
             Task task = new PeriodicTask.Builder()
-                    .setService(PeriodicalForecastTask.class)
+                    .setService(PeriodicalMeteoWashTask.class)
                     .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
                     .setPeriod(Constants.PERIODICAL_TIMER)
                     .setTag(Constants.TAG_TASK_PERIODIC)
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     .build();
             mGcmNetworkManager.schedule(task);
         } else {
-            mGcmNetworkManager.cancelAllTasks(PeriodicalForecastTask.class);
+            mGcmNetworkManager.cancelAllTasks(PeriodicalMeteoWashTask.class);
         }
     }
 
@@ -186,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-        ForecastService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override

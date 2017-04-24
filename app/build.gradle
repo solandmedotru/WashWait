@@ -19,6 +19,7 @@ android {
     }
     buildTypes.each {
         it.buildConfigField 'String', 'OPEN_WEATHER_MAP_API_KEY', MyOpenWeatherMapApiKey
+        it.buildConfigField 'String', 'DARK_SKY_API_KEY', DarkSkyApiKey
     }
     dataBinding {
         enabled = true

@@ -8,11 +8,11 @@ public class Constants {
     public static final String DEFAULT_UNITS = "metric";
     public static final String DEFAULT_FORECAST_DISTANCE = "2";
     public static final int NOTIFICATION_ID = 1981;
-    public static final double DEFAULT_DIRTY_LIMIT = 0.1;
+    public static final double DEFAULT_DIRTY_LIMIT = 0.0;
     public static final String RUN_FROM = "isRunFromBackground";
     public static final String ACTION_GET_FORECAST = "ru.solandme.washwait.action.GET_FORECAST";
     public static final String NOTIFICATION = "ru.solandme.washwait.service.receiver";
-    public static final String TAG_TASK_PERIODIC = "PeriodicalForecastTask";
+    public static final String TAG_TASK_PERIODIC = "PeriodicalMeteoWashTask";
     public static final int FIRST_DAY_POSITION = 0;
     public static final int PERIODICAL_TIMER = 43200; //21600
     public static final String TAG_ABOUT = "about";

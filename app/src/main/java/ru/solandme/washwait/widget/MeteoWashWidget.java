@@ -9,7 +9,7 @@ import android.graphics.Color;
 import android.widget.RemoteViews;
 
 import ru.solandme.washwait.Constants;
-import ru.solandme.washwait.ForecastService;
+import ru.solandme.washwait.MeteoWashService;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.ui.MainActivity;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
@@ -78,7 +78,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        ForecastService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -87,7 +87,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-        ForecastService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override
