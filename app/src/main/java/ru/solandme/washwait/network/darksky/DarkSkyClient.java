@@ -6,6 +6,7 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,11 +47,11 @@ public class DarkSkyClient implements IWeatherClient {
 
     public DarkSkyClient(Context context) {
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(DarkSkyService.class);
-        mExcludeBlocks = new ArrayList<>();
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_HOURLY);
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_MINUTELY);
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_FLAGS);
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_ALERTS);
+        mExcludeBlocks = new ArrayList<>(Arrays.asList(
+                OPTIONS_EXCLUDE_HOURLY,
+                OPTIONS_EXCLUDE_MINUTELY,
+                OPTIONS_EXCLUDE_FLAGS,
+                OPTIONS_EXCLUDE_ALERTS));
 
     }
 

@@ -1,6 +1,9 @@
 package ru.solandme.washwait.model.washForecast;
 
-public class MyWeather {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MyWeather implements Parcelable {
 
     private int id;
     private long time;
@@ -115,4 +118,54 @@ public class MyWeather {
     public void setDirtyCounter(float dirtyCounter) {
         this.dirtyCounter = dirtyCounter;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeLong(this.time);
+        dest.writeString(this.description);
+        dest.writeFloat(this.tempMin);
+        dest.writeFloat(this.tempMax);
+        dest.writeFloat(this.pressure);
+        dest.writeFloat(this.humidity);
+        dest.writeFloat(this.windSpeed);
+        dest.writeFloat(this.windDirection);
+        dest.writeFloat(this.snow);
+        dest.writeFloat(this.rain);
+        dest.writeInt(this.imageRes);
+        dest.writeFloat(this.dirtyCounter);
+    }
+
+    protected MyWeather(Parcel in) {
+        this.id = in.readInt();
+        this.time = in.readLong();
+        this.description = in.readString();
+        this.tempMin = in.readFloat();
+        this.tempMax = in.readFloat();
+        this.pressure = in.readFloat();
+        this.humidity = in.readFloat();
+        this.windSpeed = in.readFloat();
+        this.windDirection = in.readFloat();
+        this.snow = in.readFloat();
+        this.rain = in.readFloat();
+        this.imageRes = in.readInt();
+        this.dirtyCounter = in.readFloat();
+    }
+
+    public static final Parcelable.Creator<MyWeather> CREATOR = new Parcelable.Creator<MyWeather>() {
+        @Override
+        public MyWeather createFromParcel(Parcel source) {
+            return new MyWeather(source);
+        }
+
+        @Override
+        public MyWeather[] newArray(int size) {
+            return new MyWeather[size];
+        }
+    };
 }

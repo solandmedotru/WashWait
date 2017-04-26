@@ -96,8 +96,7 @@ public class MeteoWashService extends IntentService {
 
             Context context = this;
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            RemoteViews remoteViews =
-                    new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
+            RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
             ComponentName thisWidget = new ComponentName(context, MeteoWashWidget.class);
 
             double maxTemp = myWeatherForecast.getCurrentWeather().getTempMax();
