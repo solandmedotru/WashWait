@@ -1,6 +1,7 @@
 package ru.solandme.washwait.network.darksky;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.IOException;
@@ -28,12 +29,29 @@ public class DarkSkyClient implements IWeatherClient {
 
     private static final String OPTIONS_LANGUAGE = "lang";
     private static final String OPTIONS_UNIT = "units";
+    private static final String OPTIONS_EXTEND = "extend";
+    private static final String OPTIONS_EXTEND_HOURLY = "hourly";
+    private static final String OPTIONS_EXCLUDE = "exclude";
+    private static final String OPTIONS_EXCLUDE_CURRENLY = "currently";
+    private static final String OPTIONS_EXCLUDE_MINUTELY = "minutely";
+    private static final String OPTIONS_EXCLUDE_HOURLY = "hourly";
+    private static final String OPTIONS_EXCLUDE_DAILY = "daily";
+    private static final String OPTIONS_EXCLUDE_ALERTS = "alerts";
+    private static final String OPTIONS_EXCLUDE_FLAGS = "flags";
 
     private final DarkSkyService apiService;
     private MyWeatherForecast myWeatherForecast;
 
+    private List<String> mExcludeBlocks;
+
     public DarkSkyClient(Context context) {
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(DarkSkyService.class);
+        mExcludeBlocks = new ArrayList<>();
+        mExcludeBlocks.add(OPTIONS_EXCLUDE_HOURLY);
+        mExcludeBlocks.add(OPTIONS_EXCLUDE_MINUTELY);
+        mExcludeBlocks.add(OPTIONS_EXCLUDE_FLAGS);
+        mExcludeBlocks.add(OPTIONS_EXCLUDE_ALERTS);
+
     }
 
 
@@ -50,7 +68,7 @@ public class DarkSkyClient implements IWeatherClient {
                 DARK_SKY_API_KEY,
                 String.valueOf(lat),
                 String.valueOf(lon),
-                getQueryMapParameters(lang, units)
+                getQueryMapParameters(lang, units, mExcludeBlocks, false)
         );
 
         try {
@@ -116,17 +134,25 @@ public class DarkSkyClient implements IWeatherClient {
         return (rainCounter + (snowCounter * 2)) * 4;
     }
 
-    private Map<String, String> getQueryMapParameters(String lang, String units) {
+    private Map<String, String> getQueryMapParameters(String language, String units, List<String> excludeBlocks,
+                                                      boolean extendHourly) {
+
         Map<String, String> queryMap = new HashMap<>();
-        if (lang != null) {
-            queryMap.put(OPTIONS_LANGUAGE, lang);
-        } else {
-            queryMap.put(OPTIONS_LANGUAGE, "en");
-        }
+        if (language != null) {
+            queryMap.put(OPTIONS_LANGUAGE, language);
+        } else queryMap.put(OPTIONS_LANGUAGE, "en");
+
         if (units != null) {
             queryMap.put(OPTIONS_UNIT, units);
-        } else {
-            queryMap.put(OPTIONS_UNIT, "auto");
+        } else queryMap.put(OPTIONS_UNIT, "auto");
+
+        if (excludeBlocks != null && !excludeBlocks.isEmpty()) {
+            String exclude = TextUtils.join(",", excludeBlocks);
+            queryMap.put(OPTIONS_EXCLUDE, exclude);
+        }
+
+        if (extendHourly) {
+            queryMap.put(OPTIONS_EXTEND, OPTIONS_EXTEND_HOURLY);
         }
         return queryMap;
     }
