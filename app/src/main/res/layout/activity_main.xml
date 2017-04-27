@@ -1,122 +1,136 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    tools:context=".ui.MainActivity">
 
-    <include layout="@layout/toolbar" />
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
+    <data>
+
+        <variable
+            name="weather"
+            type="ru.solandme.washwait.model.washForecast.MyWeatherForecast" />
+    </data>
+
+    <LinearLayout
+
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        tools:context=".ui.MainActivity">
 
-        <RelativeLayout
+        <include layout="@layout/toolbar" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="@dimen/_16sdp">
+            android:layout_height="match_parent">
 
-            <include
-                android:id="@+id/forecastCard"
-                layout="@layout/weather_card" />
-
-            <ImageView
-                android:id="@+id/city_image"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/precipitation_meter"
-                android:layout_below="@id/forecastCard"
-                android:contentDescription="@string/image_city"
-                android:scaleType="fitXY"
-                android:src="@mipmap/city8" />
+                android:padding="@dimen/_16sdp">
 
-
-            <LinearLayout
-                android:id="@+id/action_wash"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/precipitation_meter"
-                android:layout_below="@+id/forecastCard"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:gravity="bottom"
-                android:orientation="vertical">
-
+                <include
+                    android:id="@+id/forecastCard"
+                    layout="@layout/weather_card"
+                    bind:weather="@{weather}" />
+                
                 <ImageView
-                    android:id="@+id/car_image"
-                    android:layout_width="@dimen/_200sdp"
+                    android:id="@+id/city_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/precipitation_meter"
+                    android:layout_below="@id/forecastCard"
+                    android:contentDescription="@string/image_city"
+                    android:scaleType="fitXY"
+                    android:src="@mipmap/city8" />
+
+
+                <LinearLayout
+                    android:id="@+id/action_wash"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center|bottom"
-                    android:adjustViewBounds="true"
-                    android:contentDescription="@string/white_car_image"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/car10" />
-            </LinearLayout>
+                    android:layout_above="@+id/precipitation_meter"
+                    android:layout_below="@+id/forecastCard"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
 
-            <ProgressBar
-                android:id="@+id/precipitation_meter"
-                style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_6sdp"
-                android:layout_above="@+id/progressLabel"
-                android:layout_marginTop="@dimen/_2sdp" />
+                    <ImageView
+                        android:id="@+id/car_image"
+                        android:layout_width="@dimen/_200sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center|bottom"
+                        android:adjustViewBounds="true"
+                        android:contentDescription="@string/white_car_image"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/car10" />
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/progressLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/rwForecast">
+                <ProgressBar
+                    android:id="@+id/precipitation_meter"
+                    style="@android:style/Widget.ProgressBar.Horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_6sdp"
+                    android:layout_above="@+id/progressLabel"
+                    android:layout_marginTop="@dimen/_2sdp" />
+
+                <LinearLayout
+                    android:id="@+id/progressLabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/rwForecast">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/dry"
+                        android:textColor="@color/textColor"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/normal"
+                        android:textColor="@color/textColor"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:maxLines="1"
+                        android:text="@string/wet"
+                        android:textColor="@color/textColor"
+                        android:textSize="@dimen/_12ssp" />
+                </LinearLayout>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rwForecast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/updated_field"
+                    android:background="@drawable/transparent_bg" />
 
                 <TextView
-                    android:layout_width="0dp"
+                    android:id="@+id/updated_field"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_alignParentBottom="true"
                     android:gravity="center"
-                    android:maxLines="1"
-                    android:text="@string/dry"
+                    android:textAlignment="center"
                     android:textColor="@color/textColor"
                     android:textSize="@dimen/_12ssp" />
+            </RelativeLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
+    </LinearLayout>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text="@string/normal"
-                    android:textColor="@color/textColor"
-                    android:textSize="@dimen/_12ssp" />
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:maxLines="1"
-                    android:text="@string/wet"
-                    android:textColor="@color/textColor"
-                    android:textSize="@dimen/_12ssp" />
-            </LinearLayout>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rwForecast"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/updated_field"
-                android:background="@drawable/transparent_bg" />
-
-            <TextView
-                android:id="@+id/updated_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:textAlignment="center"
-                android:gravity="center"
-                android:textColor="@color/textColor"
-                android:textSize="@dimen/_12ssp" />
-        </RelativeLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
-</LinearLayout>
-
+</layout>

@@ -23,7 +23,15 @@ public class MyWeather implements Parcelable {
     public MyWeather() {
     }
 
-       public long getTime() {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public long getTime() {
         return time;
     }
 

@@ -109,6 +109,7 @@ public class MyWeatherForecast implements Parcelable {
         this.myWeatherList = myWeatherList;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -144,7 +145,7 @@ public class MyWeatherForecast implements Parcelable {
         in.readList(this.myWeatherList, MyWeather.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<MyWeatherForecast> CREATOR = new Parcelable.Creator<MyWeatherForecast>() {
+    public static final Creator<MyWeatherForecast> CREATOR = new Creator<MyWeatherForecast>() {
         @Override
         public MyWeatherForecast createFromParcel(Parcel source) {
             return new MyWeatherForecast(source);

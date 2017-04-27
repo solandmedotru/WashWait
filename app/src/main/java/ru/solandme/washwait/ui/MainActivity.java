@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -37,6 +38,7 @@ import ru.solandme.washwait.MeteoWashService;
 import ru.solandme.washwait.PeriodicalMeteoWashTask;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
+import ru.solandme.washwait.databinding.ActivityMainBinding;
 import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
@@ -65,11 +67,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private GcmNetworkManager mGcmNetworkManager;
     private String units, city;
 
+    ActivityMainBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
