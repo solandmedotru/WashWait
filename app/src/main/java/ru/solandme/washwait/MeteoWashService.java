@@ -66,7 +66,7 @@ public class MeteoWashService extends IntentService {
 
         //TODO сделать выбор репозитория в зависимости от сохраненных параметров
         IWeatherClient weatherClient;
-        if (true) {
+        if (false) {
             weatherClient = new DarkSkyClient(getApplicationContext());
             if(units.equals("metric")) myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "si", lang);
             if(units.equals("imperial")) myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "us", lang);
