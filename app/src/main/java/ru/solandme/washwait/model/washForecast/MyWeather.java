@@ -5,7 +5,6 @@ import android.os.Parcelable;
 
 public class MyWeather implements Parcelable {
 
-    private int id;
     private long time;
     private String description;
     private float tempMin;
@@ -18,17 +17,10 @@ public class MyWeather implements Parcelable {
     private float rain;
 
     private int imageRes;
-    private float dirtyCounter;
+    private float precipitation;
+    private int carPicture;
 
     public MyWeather() {
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public long getTime() {
@@ -119,12 +111,20 @@ public class MyWeather implements Parcelable {
         this.imageRes = imageRes;
     }
 
-    public float getDirtyCounter() {
-        return dirtyCounter;
+    public float getPrecipitation() {
+        return precipitation;
     }
 
-    public void setDirtyCounter(float dirtyCounter) {
-        this.dirtyCounter = dirtyCounter;
+    public void setPrecipitation(float dirtyCounter) {
+        this.precipitation = dirtyCounter;
+    }
+
+    public int getCarPicture() {
+        return carPicture;
+    }
+
+    public void setCarPicture(int carPicture) {
+        this.carPicture = carPicture;
     }
 
     @Override
@@ -134,7 +134,6 @@ public class MyWeather implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
         dest.writeLong(this.time);
         dest.writeString(this.description);
         dest.writeFloat(this.tempMin);
@@ -146,11 +145,11 @@ public class MyWeather implements Parcelable {
         dest.writeFloat(this.snow);
         dest.writeFloat(this.rain);
         dest.writeInt(this.imageRes);
-        dest.writeFloat(this.dirtyCounter);
+        dest.writeFloat(this.precipitation);
+        dest.writeInt(this.carPicture);
     }
 
     protected MyWeather(Parcel in) {
-        this.id = in.readInt();
         this.time = in.readLong();
         this.description = in.readString();
         this.tempMin = in.readFloat();
@@ -162,10 +161,11 @@ public class MyWeather implements Parcelable {
         this.snow = in.readFloat();
         this.rain = in.readFloat();
         this.imageRes = in.readInt();
-        this.dirtyCounter = in.readFloat();
+        this.precipitation = in.readFloat();
+        this.carPicture = in.readInt();
     }
 
-    public static final Parcelable.Creator<MyWeather> CREATOR = new Parcelable.Creator<MyWeather>() {
+    public static final Creator<MyWeather> CREATOR = new Creator<MyWeather>() {
         @Override
         public MyWeather createFromParcel(Parcel source) {
             return new MyWeather(source);

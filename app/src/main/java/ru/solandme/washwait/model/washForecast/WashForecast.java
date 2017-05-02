@@ -6,9 +6,7 @@ import android.util.Log;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.utils.SharedPrefsUtils;
 
 public class WashForecast {
     private static final String TAG = WashForecast.class.getSimpleName();
@@ -16,13 +14,11 @@ public class WashForecast {
     private int washDayNumber;
     private Context context;
     private MyWeatherForecast myWeatherForecast;
-    private double dirtyLimit;
 
-    public WashForecast(Context context, MyWeatherForecast myWeatherForecast, String forecastDistance) {
+    public WashForecast(Context context, MyWeatherForecast myWeatherForecast, String forecastDistance, float precipitationLimit) {
         this.context = context;
         this.myWeatherForecast = myWeatherForecast;
-        this.washDayNumber = getWashDayByDistance(forecastDistance);
-        this.dirtyLimit = SharedPrefsUtils.getFloatPreference(context, context.getString(R.string.pref_dirty_limit_key), (float) Constants.DEFAULT_DIRTY_LIMIT);
+        this.washDayNumber = getWashDayByDistance(forecastDistance, precipitationLimit);
         this.text = getTextForWashForecast(washDayNumber, getWashData(washDayNumber));
 //        this.units = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
     }
@@ -80,18 +76,19 @@ public class WashForecast {
         return myWeatherForecast.getMyWeatherList().get(washDayNumber).getTime();
     }
 
-    private int getWashDayByDistance(String forecastDistance) {
+    private int getWashDayByDistance(String forecastDistance, float precipitationLimit) {
 
-        int washDayNumber = myWeatherForecast.getMaxPeriod() - 1;
+        int washDayNumber = myWeatherForecast.getMaxPeriod()-1;
         int firstDirtyDay = -1;
         int clearDaysCounter = 0;
         int daysCounter = 0;
 
         for (int i = 0; i < myWeatherForecast.getMyWeatherList().size(); i++) {
             double maxTemp = myWeatherForecast.getMyWeatherList().get(i).getTempMax();
+            float precipitation = myWeatherForecast.getMyWeatherList().get(i).getPrecipitation();
 
             daysCounter++;
-            if (!isBadConditions(maxTemp, myWeatherForecast.getMyWeatherList().get(i).getDirtyCounter(), myWeatherForecast.getUnits())) {
+            if (!isBadConditions(maxTemp, precipitation, precipitationLimit, myWeatherForecast.getUnits())) {
                 clearDaysCounter++;
                 if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
                     if (washDayNumber == myWeatherForecast.getMaxPeriod() - 1) {
@@ -107,18 +104,17 @@ public class WashForecast {
         return washDayNumber;
     }
 
-    private boolean isBadConditions(double temperature, double dirtyCounter, String units) {
+    private boolean isBadConditions(double temperature, float precipitation, float precipitationLimit, String units) {
         switch (units) {
             case "metric":
-                return ((dirtyCounter > dirtyLimit) && temperature > -7) || (temperature < -15);
             case "si":
-                return ((dirtyCounter > dirtyLimit) && temperature > -7) || (temperature < -15);
             case "ca":
-                return ((dirtyCounter > dirtyLimit) && temperature > -7) || (temperature < -15);
+                return ((precipitation > precipitationLimit) && temperature > -7) || (temperature < -15);
             case "imperial":
-                return ((dirtyCounter > dirtyLimit) && temperature > 19) || (temperature < 5);
+            case "us":
+                return ((precipitation > precipitationLimit) && temperature > 19) || (temperature < 5);
             default:
-                return ((dirtyCounter > dirtyLimit) && temperature > 266) || (temperature < 258);
+                return ((precipitation > precipitationLimit) && temperature > 266) || (temperature < 258);
         }
     }
 }

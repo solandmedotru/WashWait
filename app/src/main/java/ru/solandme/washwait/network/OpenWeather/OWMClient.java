@@ -15,7 +15,6 @@ import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.network.ForecastApiHelper;
 import ru.solandme.washwait.network.IWeatherClient;
 import ru.solandme.washwait.network.OpenWeather.model.forecast.OpenWeatherForecast;
-import ru.solandme.washwait.network.OpenWeather.model.weather.OpenWeatherCurrent;
 
 public class OWMClient implements IWeatherClient {
     private static final String TAG = OWMClient.class.getSimpleName();
@@ -29,52 +28,11 @@ public class OWMClient implements IWeatherClient {
 
     public OWMClient(Context context) {
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(OWMService.class);
+        myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
     }
 
     @Override
     public MyWeatherForecast getWeatherForecast(float lat, float lon, String units, String lang) {
-        myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
-        getWeather(lat, lon, units, lang);
-        getCurrentWeather(lat, lon, units, lang);
-        myWeatherForecast.setUnits(units);
-        return myWeatherForecast;
-    }
-
-    private void getCurrentWeather(float lat, float lon, String units, String lang) {
-        Call<OpenWeatherCurrent> currWeatherCall = apiService.getCurrentWeatherByCoordinats(
-                String.valueOf(lat),
-                String.valueOf(lon),
-                units,
-                lang,
-                OPEN_WEATHER_MAP_API_KEY);
-
-        try {
-            OpenWeatherCurrent item = currWeatherCall.execute().body();
-            MyWeather currentWeather = new MyWeather();
-            currentWeather.setTime(item.getDt());
-            currentWeather.setDescription(item.getWeather().get(0).getDescription());
-            currentWeather.setTempMin((float) item.getMain().getTempMin());
-            currentWeather.setTempMax((float) item.getMain().getTempMax());
-            currentWeather.setPressure((float) item.getMain().getPressure());
-            currentWeather.setHumidity((float) item.getMain().getHumidity());
-            currentWeather.setWindSpeed((float) item.getWind().getSpeed());
-            currentWeather.setWindDirection((float) item.getWind().getDeg());
-            float rain = item.getRain() != null ? (float) item.getRain().get3h() : 0;
-            float snow = item.getSnow() != null ? (float) item.getSnow().get3h() : 0;
-            currentWeather.setRain(rain);
-            currentWeather.setSnow(snow);
-            currentWeather.setDirtyCounter(getDirtyCounter(rain, snow));
-            currentWeather.setImageRes(getWeatherPicture(item.getWeather().get(0).getIcon()));
-
-            myWeatherForecast.setCurrentWeather(currentWeather);
-            myWeatherForecast.setCurrWeatherResultOK(true);
-        } catch (IOException e) {
-            e.printStackTrace();
-            myWeatherForecast.setCurrWeatherResultOK(false);
-        }
-    }
-
-    private void getWeather(float lat, float lon, String units, String lang) {
         Call<OpenWeatherForecast> weatherCall = apiService.getForecastByCoordinats(
                 String.valueOf(lat),
                 String.valueOf(lon),
@@ -107,7 +65,7 @@ public class OWMClient implements IWeatherClient {
                 weather.setWindDirection((float) item.getDeg());
                 weather.setRain((float) item.getRain());
                 weather.setSnow((float) item.getSnow());
-                weather.setDirtyCounter(getDirtyCounter((float) item.getRain(), (float) item.getSnow()));
+                weather.setPrecipitation(calculatePrecipitation((float) item.getRain(), (float) item.getSnow()));
                 weather.setImageRes(getWeatherPicture(item.getWeather().get(0).getIcon()));
 
                 myWeatherList.add(weather);
@@ -115,15 +73,19 @@ public class OWMClient implements IWeatherClient {
 
             myWeatherForecast.setMyWeatherList(myWeatherList);
             myWeatherForecast.setForecastResultOK(true);
+            myWeatherForecast.setCurrWeatherResultOK(true);
         } catch (IOException e) {
             e.printStackTrace();
             myWeatherForecast.setForecastResultOK(false);
         }
+
+        myWeatherForecast.setUnits(units);
+        return myWeatherForecast;
     }
 
-    private float getDirtyCounter(float rainCounter, float snowCounter) {
-        Log.e(TAG, "dirtyCounter: " + (rainCounter + (snowCounter)) * 4);
-        return (rainCounter + (snowCounter * 2)) * 4;
+    private float calculatePrecipitation(float rain, float snow) {
+        Log.e(TAG, "dirtyCounter: " + (rain + (snow * 2)) * 4);
+        return (rain + (snow * 2)) * 4; //осадки за 12 часов, умножаем на 4 так, как приходят количество осадков за 3 часа
     }
 
     private int getWeatherPicture(String icon) {

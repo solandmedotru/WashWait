@@ -18,9 +18,9 @@ import ru.solandme.washwait.model.washForecast.MyWeather;
 import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.network.ForecastApiHelper;
 import ru.solandme.washwait.network.IWeatherClient;
-import ru.solandme.washwait.network.darksky.model.Currently;
 import ru.solandme.washwait.network.darksky.model.DarkSkyForecast;
 import ru.solandme.washwait.network.darksky.model.Datum__;
+import ru.solandme.washwait.utils.FormatUtils;
 
 public class DarkSkyClient implements IWeatherClient {
     private static final String TAG = DarkSkyClient.class.getSimpleName();
@@ -47,24 +47,13 @@ public class DarkSkyClient implements IWeatherClient {
 
     public DarkSkyClient(Context context) {
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(DarkSkyService.class);
-        mExcludeBlocks = new ArrayList<>(Arrays.asList(OPTIONS_EXCLUDE_HOURLY, OPTIONS_EXCLUDE_MINUTELY, OPTIONS_EXCLUDE_FLAGS));
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_HOURLY);
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_MINUTELY);
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_FLAGS);
-        mExcludeBlocks.add(OPTIONS_EXCLUDE_ALERTS);
-
+        mExcludeBlocks = new ArrayList<>(Arrays.asList(OPTIONS_EXCLUDE_HOURLY, OPTIONS_EXCLUDE_MINUTELY, OPTIONS_EXCLUDE_FLAGS, OPTIONS_EXCLUDE_ALERTS));
+        myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
     }
-
 
     @Override
     public MyWeatherForecast getWeatherForecast(float lat, float lon, String units, String lang) {
-        myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
         myWeatherForecast.setUnits(units);
-        return getWeather(lat, lon, units, lang);
-    }
-
-    private MyWeatherForecast getWeather(float lat, float lon, String units, String lang) {
-
         Call<DarkSkyForecast> weatherCall = apiService.getForecastByCoordinats(
                 DARK_SKY_API_KEY,
                 String.valueOf(lat),
@@ -91,34 +80,18 @@ public class DarkSkyClient implements IWeatherClient {
                 weather.setTempMin((float) item.getTemperatureMin());
                 weather.setTempMax((float) item.getTemperatureMax());
                 weather.setPressure((float) item.getPressure());
-                weather.setHumidity((float) item.getHumidity()*100);
+                weather.setHumidity((float) item.getHumidity() * 100);
                 weather.setWindSpeed((float) item.getWindSpeed());
                 weather.setWindDirection((float) item.getWindBearing());
                 weather.setRain((float) item.getPrecipIntensityMax());
                 weather.setSnow(0);
-                weather.setDirtyCounter(getDirtyCounter((float) item.getPrecipIntensityMax(), 0));
+                weather.setPrecipitation(calculatePrecipitation((float) item.getPrecipIntensity()));
                 weather.setImageRes(getWeatherPicture(item.getIcon()));
+                weather.setCarPicture(FormatUtils.getCarPicture(calculatePrecipitation((float) item.getPrecipIntensity()), (float) item.getTemperatureMin()));
 
                 myWeatherList.add(weather);
             }
 
-
-            MyWeather currentWeather = new MyWeather();
-            Currently item = darkSkyForecast.getCurrently();
-            currentWeather.setTime(item.getTime());
-            currentWeather.setDescription(item.getSummary());
-            currentWeather.setTempMin((float) item.getTemperature());
-            currentWeather.setTempMax((float) item.getTemperature());
-            currentWeather.setPressure((float) item.getPressure());
-            currentWeather.setHumidity((float) item.getHumidity()*100);
-            currentWeather.setWindSpeed((float) item.getWindSpeed());
-            currentWeather.setWindDirection((float) item.getWindBearing());
-            currentWeather.setRain((float)item.getPrecipIntensity());
-            currentWeather.setSnow(0);
-            currentWeather.setDirtyCounter(getDirtyCounter((float)item.getPrecipIntensity(), 0));
-            currentWeather.setImageRes(getWeatherPicture(item.getIcon()));
-
-            myWeatherForecast.setCurrentWeather(currentWeather);
             myWeatherForecast.setMyWeatherList(myWeatherList);
             myWeatherForecast.setForecastResultOK(true);
             myWeatherForecast.setCurrWeatherResultOK(true);
@@ -130,10 +103,12 @@ public class DarkSkyClient implements IWeatherClient {
         return myWeatherForecast;
     }
 
-    private float getDirtyCounter(float rainCounter, float snowCounter) {
-        Log.e(TAG, "dirtyCounter: " + (rainCounter + (snowCounter)) * 4);
-        return (rainCounter + (snowCounter * 2)) * 4;
+    //TODO сделать умную логику подсчета осадков основанную на интенсивности
+    private float calculatePrecipitation(float precipitation) {
+        Log.e(TAG, "dirtyCounter: " + precipitation * 12);
+        return precipitation * 12; //осадки за 12 часов, умножаем на 12 так, как приходят количество осадков за 1 час
     }
+
 
     private Map<String, String> getQueryMapParameters(String language, String units, List<String> excludeBlocks,
                                                       boolean extendHourly) {

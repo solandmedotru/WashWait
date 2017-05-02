@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.databinding.DataBindingUtil;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
@@ -38,14 +37,12 @@ import ru.solandme.washwait.MeteoWashService;
 import ru.solandme.washwait.PeriodicalMeteoWashTask;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
-import ru.solandme.washwait.databinding.ActivityMainBinding;
 import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
+import ru.solandme.washwait.utils.FormatUtils;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
-import ru.solandme.washwait.utils.WeatherUtils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
-
 
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -62,18 +59,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ImageView cityImage;
     private ProgressBar dirtyMeter;
     private RecyclerView forecastRecyclerView;
-    MyWeatherForecast myWeatherForecast;
+    private MyWeatherForecast myWeatherForecast;
 
     private GcmNetworkManager mGcmNetworkManager;
     private String units, city;
-
-    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Utils.onActivityCreateSetTheme(this);
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
         setSupportActionBar(toolbar);
@@ -161,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void updateCarImage(int position) {
 
-        carImage.setImageResource(getCarPicture(myWeatherForecast.getMyWeatherList().get(position).getDirtyCounter(), myWeatherForecast.getMyWeatherList().get(position).getTempMax()));
+        carImage.setImageResource(myWeatherForecast.getMyWeatherList().get(position).getCarPicture());
         Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
         carImage.startAnimation(moveFromLeft);
         Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
@@ -173,18 +168,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 startWashCarActivity();
             }
         });
-    }
-
-
-    private int getCarPicture(float dirtyCounter, float temp) {
-
-        if (temp < -7) return R.drawable.car10;
-        if (dirtyCounter > 0 && dirtyCounter < 2) return R.drawable.car1;
-        if (dirtyCounter >= 2 && dirtyCounter < 14) return R.drawable.car2;
-        if (dirtyCounter >= 14 && dirtyCounter < 40) return R.drawable.car3;
-        if (dirtyCounter >= 40) return R.drawable.car4;
-
-        return R.drawable.car10;
     }
 
     @Override
@@ -292,43 +275,29 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         double speedWind;
         int speedDirection;
 
-        if (position == Constants.FIRST_DAY_POSITION) {
-            maxTemp = Math.round(myWeatherForecast.getCurrentWeather().getTempMax());
-            minTemp = Math.round(myWeatherForecast.getCurrentWeather().getTempMin());
-            description = myWeatherForecast.getCurrentWeather().getDescription();
-            icon = myWeatherForecast.getCurrentWeather().getImageRes();
-            dt = myWeatherForecast.getCurrentWeather().getTime() * 1000;
-            humidity = Math.round(myWeatherForecast.getCurrentWeather().getHumidity());
-            barometer = myWeatherForecast.getCurrentWeather().getPressure();
-            speedWind = Math.round(myWeatherForecast.getCurrentWeather().getWindSpeed());
-            speedDirection = Math.round(myWeatherForecast.getCurrentWeather().getWindDirection());
-            dtLast = myWeatherForecast.getCurrentWeather().getTime() * 1000;
+        maxTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMax());
+        minTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMin());
+        description = myWeatherForecast.getMyWeatherList().get(position).getDescription();
+        icon = myWeatherForecast.getMyWeatherList().get(position).getImageRes();
+        dt = myWeatherForecast.getMyWeatherList().get(position).getTime() * 1000;
+        humidity = Math.round(myWeatherForecast.getMyWeatherList().get(position).getHumidity());
+        barometer = myWeatherForecast.getMyWeatherList().get(position).getPressure();
+        speedWind = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindSpeed());
+        speedDirection = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindDirection());
+        dtLast = myWeatherForecast.getMyWeatherList().get(0).getTime() * 1000;
 
-        } else {
-            maxTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMax());
-            minTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMin());
-            description = myWeatherForecast.getMyWeatherList().get(position).getDescription();
-            icon = myWeatherForecast.getMyWeatherList().get(position).getImageRes();
-            dt = myWeatherForecast.getMyWeatherList().get(position).getTime() * 1000;
-            humidity = Math.round(myWeatherForecast.getMyWeatherList().get(position).getHumidity());
-            barometer = myWeatherForecast.getMyWeatherList().get(position).getPressure();
-            speedWind = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindSpeed());
-            speedDirection = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindDirection());
-            dtLast = myWeatherForecast.getMyWeatherList().get(0).getTime() * 1000;
-
-        }
 
         fillTitle(city, getFormattedDate(new Date(dt)));
 
-        curMaxTempField.setText(WeatherUtils.getStringTemperature(maxTemp, units, this));
-        curMinTempField.setText(WeatherUtils.getStringTemperature(minTemp, units, this));
-        humidityField.setText(getString(R.string.wi_humidity) + " " + humidity + "%");
-        barometerField.setText(WeatherUtils.getStringBarometer(barometer, units, this));
-        speedWindField.setText(WeatherUtils.getStringWind(speedDirection, speedWind, units, this));
+        curMaxTempField.setText(FormatUtils.getStringTemperature(this, maxTemp, units));
+        curMinTempField.setText(FormatUtils.getStringTemperature(this, minTemp, units));
+        humidityField.setText(FormatUtils.getStringHumidity(this, humidity));
+        barometerField.setText(FormatUtils.getStringBarometer(this, barometer, units));
+        speedWindField.setText(FormatUtils.getStringWind(this, speedDirection, speedWind, units));
 
-        double dirtyCounter = myWeatherForecast.getMyWeatherList().get(position).getDirtyCounter();
-        dirtyMeter.setMax(50);
-        dirtyMeter.setProgress((int) (dirtyCounter * 2));
+        float precipitation = myWeatherForecast.getMyWeatherList().get(position).getPrecipitation();
+        dirtyMeter.setMax(300);
+        dirtyMeter.setProgress(Math.round(precipitation * 100));
 
         detailsField.setText(description);
         weatherIconDay0.setImageResource(icon);

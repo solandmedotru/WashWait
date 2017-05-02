@@ -61,6 +61,7 @@ public class MeteoWashService extends IntentService {
         float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) Constants.DEFAULT_LONGITUDE);
         String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
         String forecastDistance = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_limit_key), Constants.DEFAULT_FORECAST_DISTANCE);
+        float precipitationLimit = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_dirty_limit_key), (float) Constants.DEFAULT_DIRTY_LIMIT);
 
 
         //TODO сделать выбор репозитория в зависимости от сохраненных параметров
@@ -74,7 +75,7 @@ public class MeteoWashService extends IntentService {
             myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, units, lang);
         }
 
-        WashForecast washForecast = new WashForecast(this, myWeatherForecast, forecastDistance);
+        WashForecast washForecast = new WashForecast(this, myWeatherForecast, forecastDistance, precipitationLimit);
         publishResults(myWeatherForecast, washForecast, isRunFromBackground);
     }
 
@@ -99,14 +100,14 @@ public class MeteoWashService extends IntentService {
             RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.meteo_wash_widget);
             ComponentName thisWidget = new ComponentName(context, MeteoWashWidget.class);
 
-            double maxTemp = myWeatherForecast.getCurrentWeather().getTempMax();
-            double minTemp = myWeatherForecast.getCurrentWeather().getTempMin();
-            String description = myWeatherForecast.getCurrentWeather().getDescription();
-            int icon = myWeatherForecast.getCurrentWeather().getImageRes();
-            int humidity = (int) myWeatherForecast.getCurrentWeather().getHumidity();
-            double barometer = myWeatherForecast.getCurrentWeather().getPressure();
-            double speedWind = myWeatherForecast.getCurrentWeather().getWindSpeed();
-            int speedDirection = (int) myWeatherForecast.getCurrentWeather().getWindDirection();
+            double maxTemp = myWeatherForecast.getMyWeatherList().get(0).getTempMax();
+            double minTemp = myWeatherForecast.getMyWeatherList().get(0).getTempMin();
+            String description = myWeatherForecast.getMyWeatherList().get(0).getDescription();
+            int icon = myWeatherForecast.getMyWeatherList().get(0).getImageRes();
+            int humidity = (int) myWeatherForecast.getMyWeatherList().get(0).getHumidity();
+            double barometer = myWeatherForecast.getMyWeatherList().get(0).getPressure();
+            double speedWind = myWeatherForecast.getMyWeatherList().get(0).getWindSpeed();
+            int speedDirection = (int) myWeatherForecast.getMyWeatherList().get(0).getWindDirection();
 
             SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_maxTemp_key), String.valueOf(maxTemp));
             SharedPrefsUtils.setStringPreference(this, getString(R.string.pref_minTemp_key), String.valueOf(minTemp));
