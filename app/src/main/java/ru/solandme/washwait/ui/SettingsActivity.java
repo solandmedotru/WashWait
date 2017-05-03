@@ -26,6 +26,7 @@ public class SettingsActivity extends PreferenceActivity {
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_units_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_limit_key)));
             bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_task_key)));
+            bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_forecast_providers_key)));
         }
 
         private void bindPreferenceSummaryToValue(Preference preference) {

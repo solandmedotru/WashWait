@@ -65,4 +65,7 @@
     <string name="disconnected_message">Disconnected. Please re-connect.</string>
     <string name="network_lost_message">Network lost. Please re-connect.</string>
     <string name="reviews">Reviews:</string>
+    <string name="select_units_format">Select units format for weather conditions</string>
+    <string name="select_number_days_without_precipitation">Select number of days without precipitation in the weather forecast</string>
+    <string name="weather_provider">A weather forecast provider</string>
 </resources>

@@ -15,6 +15,7 @@ import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.network.ForecastApiHelper;
 import ru.solandme.washwait.network.IWeatherClient;
 import ru.solandme.washwait.network.OpenWeather.model.forecast.OpenWeatherForecast;
+import ru.solandme.washwait.utils.FormatUtils;
 
 public class OWMClient implements IWeatherClient {
     private static final String TAG = OWMClient.class.getSimpleName();
@@ -27,6 +28,7 @@ public class OWMClient implements IWeatherClient {
     private final OWMService apiService;
 
     public OWMClient(Context context) {
+        ForecastApiHelper.resetRetrofit();
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(OWMService.class);
         myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
     }
@@ -44,41 +46,43 @@ public class OWMClient implements IWeatherClient {
         try {
             OpenWeatherForecast weatherForecast = weatherCall.execute().body();
 
-            myWeatherForecast.setLastUpdate(System.currentTimeMillis() / 1000);
-            myWeatherForecast.setCityName(weatherForecast.getCity().getName());
-            myWeatherForecast.setCountry(weatherForecast.getCity().getCountry());
-            myWeatherForecast.setLatitude(weatherForecast.getCity().getCoord().getLat());
-            myWeatherForecast.setLongitude(weatherForecast.getCity().getCoord().getLon());
+            if (weatherForecast != null) {
+                myWeatherForecast.setLastUpdate(System.currentTimeMillis() / 1000);
+                myWeatherForecast.setCityName(weatherForecast.getCity().getName());
+                myWeatherForecast.setCountry(weatherForecast.getCity().getCountry());
+                myWeatherForecast.setLatitude(weatherForecast.getCity().getCoord().getLat());
+                myWeatherForecast.setLongitude(weatherForecast.getCity().getCoord().getLon());
 
-            List<MyWeather> myWeatherList = new ArrayList<>();
+                List<MyWeather> myWeatherList = new ArrayList<>();
 
-            for (int i = 0; i < weatherForecast.getList().size(); i++) {
-                ru.solandme.washwait.network.OpenWeather.model.forecast.List item = weatherForecast.getList().get(i);
-                MyWeather weather = new MyWeather();
-                weather.setTime(item.getDt());
-                weather.setDescription(item.getWeather().get(0).getDescription());
-                weather.setTempMin((float) item.getTemp().getMin());
-                weather.setTempMax((float) item.getTemp().getMax());
-                weather.setPressure((float) item.getPressure());
-                weather.setHumidity((float) item.getHumidity());
-                weather.setWindSpeed((float) item.getSpeed());
-                weather.setWindDirection((float) item.getDeg());
-                weather.setRain((float) item.getRain());
-                weather.setSnow((float) item.getSnow());
-                weather.setPrecipitation(calculatePrecipitation((float) item.getRain(), (float) item.getSnow()));
-                weather.setImageRes(getWeatherPicture(item.getWeather().get(0).getIcon()));
+                for (int i = 0; i < weatherForecast.getList().size(); i++) {
+                    ru.solandme.washwait.network.OpenWeather.model.forecast.List item = weatherForecast.getList().get(i);
+                    MyWeather weather = new MyWeather();
+                    weather.setTime(item.getDt());
+                    weather.setDescription(item.getWeather().get(0).getDescription());
+                    weather.setTempMin((float) item.getTemp().getMin());
+                    weather.setTempMax((float) item.getTemp().getMax());
+                    weather.setPressure((float) item.getPressure());
+                    weather.setHumidity((float) item.getHumidity());
+                    weather.setWindSpeed((float) item.getSpeed());
+                    weather.setWindDirection((float) item.getDeg());
+                    weather.setRain((float) item.getRain());
+                    weather.setSnow((float) item.getSnow());
+                    weather.setPrecipitation(calculatePrecipitation((float) item.getRain(), (float) item.getSnow()));
+                    weather.setImageRes(getWeatherPicture(item.getWeather().get(0).getIcon()));
+                    weather.setCarPicture(FormatUtils.getCarPicture(calculatePrecipitation((float) item.getRain(), (float) item.getSnow()), (float) item.getTemp().getMin()));
+                    myWeatherList.add(weather);
+                }
 
-                myWeatherList.add(weather);
+                myWeatherForecast.setMyWeatherList(myWeatherList);
+                myWeatherForecast.setForecastResultOK(true);
+                myWeatherForecast.setCurrWeatherResultOK(true);
+            } else {
+                myWeatherForecast.setForecastResultOK(false);
             }
-
-            myWeatherForecast.setMyWeatherList(myWeatherList);
-            myWeatherForecast.setForecastResultOK(true);
-            myWeatherForecast.setCurrWeatherResultOK(true);
         } catch (IOException e) {
             e.printStackTrace();
-            myWeatherForecast.setForecastResultOK(false);
         }
-
         myWeatherForecast.setUnits(units);
         return myWeatherForecast;
     }

@@ -20,4 +20,5 @@ public class Constants {
     public static final long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     public static final long FASTEST_INTERVAL = 2000; /* 2 sec */
     public static final int MINIMUM_SESSION_DURATION = 20000;
+    public static final String DEFAULT_WEATHER_PROVIDER = "OpenWeatherMap";
 }

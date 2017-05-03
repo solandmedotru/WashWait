@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,7 @@ public class ForecastApiHelper {
 
     private static final long HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 10 * 1024 * 1024;
     private static final long CONNECTION_TIMEOUT = 10;
+    private static final String TAG = ForecastApiHelper.class.getSimpleName();
     private static Retrofit retrofit = null;
 
     public static Retrofit requestForecast(@NonNull Context context, String url) {
@@ -34,6 +36,10 @@ public class ForecastApiHelper {
                     .build();
         }
         return retrofit;
+    }
+    public static void resetRetrofit(){
+        Log.d(TAG, "resetRetrofit: " );
+        retrofit = null;
     }
 
     private static OkHttpClient getOkHttpClient(@NonNull final Context context) {

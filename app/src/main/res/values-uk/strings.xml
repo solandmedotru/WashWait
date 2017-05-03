@@ -49,20 +49,23 @@
     <string name="miles_per_h">миль/ч</string>
     <string name="h_pa">гПа</string>
     <string name="m_hg">мм рт.ст.</string>
-    <string name="share">поделиться</string>
+    <string name="share">поділитися</string>
     <string name="web_site">Сайт</string>
     <string name="route">Маршрут</string>
     <string name="theme_night">Темна</string>
     <string name="clear_cache">Очистить кэш приложения</string>
   <string name="add_widget">Добавить</string>
     <string name="background_color">Цвет фона</string>
-    <string name="text_color">Цвет текста</string>
+    <string name="text_color">Колір тексту</string>
     <string name="place_not_found">Мисто не найдено</string>
     <string name="gps_disabled_message">\"Функция GPS отключена. Перейти в настройки для включения этой функции?\"</string>
     <string name="googleApi_error">\"Ошибка соединение с клиентом Google Api: \"</string>
     <string name="disconnected_message">Связь потеряна. Переподключитесь, пожалуйста.</string>
     <string name="network_lost_message">Сеть потеряна. Переподключитесь снова, пожалуйста.</string>
     <string name="reviews">Отзывы:</string>
+    <string name="select_units_format">Виберіть систему одиниць виміру для відображення погодних умов</string>
+    <string name="select_number_days_without_precipitation">Вкажіть потрібну кількість днів без опадів в прогнозі погоди</string>
+    <string name="weather_provider">Провайдер прогнозу погоди</string>
 
 
 </resources>

@@ -46,6 +46,7 @@ public class DarkSkyClient implements IWeatherClient {
     private List<String> mExcludeBlocks;
 
     public DarkSkyClient(Context context) {
+        ForecastApiHelper.resetRetrofit();
         apiService = ForecastApiHelper.requestForecast(context, BASE_URL).create(DarkSkyService.class);
         mExcludeBlocks = new ArrayList<>(Arrays.asList(OPTIONS_EXCLUDE_HOURLY, OPTIONS_EXCLUDE_MINUTELY, OPTIONS_EXCLUDE_FLAGS, OPTIONS_EXCLUDE_ALERTS));
         myWeatherForecast = new MyWeatherForecast(MAX_PERIOD);
@@ -63,38 +64,42 @@ public class DarkSkyClient implements IWeatherClient {
 
         try {
             DarkSkyForecast darkSkyForecast = weatherCall.execute().body();
+            if (darkSkyForecast != null) {
+                myWeatherForecast.setLastUpdate(System.currentTimeMillis() / 1000);
+                myWeatherForecast.setCityName(darkSkyForecast.getTimezone());
+                myWeatherForecast.setCountry("");
+                myWeatherForecast.setLatitude(darkSkyForecast.getLatitude());
+                myWeatherForecast.setLongitude(darkSkyForecast.getLongitude());
 
-            myWeatherForecast.setLastUpdate(System.currentTimeMillis() / 1000);
-            myWeatherForecast.setCityName(darkSkyForecast.getTimezone());
-            myWeatherForecast.setCountry("");
-            myWeatherForecast.setLatitude(darkSkyForecast.getLatitude());
-            myWeatherForecast.setLongitude(darkSkyForecast.getLongitude());
+                List<MyWeather> myWeatherList = new ArrayList<>();
 
-            List<MyWeather> myWeatherList = new ArrayList<>();
+                for (int i = 0; i < darkSkyForecast.getDaily().getData().size(); i++) {
+                    Datum__ item = darkSkyForecast.getDaily().getData().get(i);
+                    MyWeather weather = new MyWeather();
+                    weather.setTime(item.getTime());
+                    weather.setDescription(item.getSummary());
+                    weather.setTempMin((float) item.getTemperatureMin());
+                    weather.setTempMax((float) item.getTemperatureMax());
+                    weather.setPressure((float) item.getPressure());
+                    weather.setHumidity((float) item.getHumidity() * 100);
+                    weather.setWindSpeed((float) item.getWindSpeed());
+                    weather.setWindDirection((float) item.getWindBearing());
+                    weather.setRain((float) item.getPrecipIntensityMax());
+                    weather.setSnow(0);
+                    weather.setPrecipitation(calculatePrecipitation((float) item.getPrecipIntensity()));
+                    weather.setImageRes(getWeatherPicture(item.getIcon()));
+                    weather.setCarPicture(FormatUtils.getCarPicture(calculatePrecipitation((float) item.getPrecipIntensity()), (float) item.getTemperatureMin()));
 
-            for (int i = 0; i < darkSkyForecast.getDaily().getData().size(); i++) {
-                Datum__ item = darkSkyForecast.getDaily().getData().get(i);
-                MyWeather weather = new MyWeather();
-                weather.setTime(item.getTime());
-                weather.setDescription(item.getSummary());
-                weather.setTempMin((float) item.getTemperatureMin());
-                weather.setTempMax((float) item.getTemperatureMax());
-                weather.setPressure((float) item.getPressure());
-                weather.setHumidity((float) item.getHumidity() * 100);
-                weather.setWindSpeed((float) item.getWindSpeed());
-                weather.setWindDirection((float) item.getWindBearing());
-                weather.setRain((float) item.getPrecipIntensityMax());
-                weather.setSnow(0);
-                weather.setPrecipitation(calculatePrecipitation((float) item.getPrecipIntensity()));
-                weather.setImageRes(getWeatherPicture(item.getIcon()));
-                weather.setCarPicture(FormatUtils.getCarPicture(calculatePrecipitation((float) item.getPrecipIntensity()), (float) item.getTemperatureMin()));
+                    myWeatherList.add(weather);
+                }
 
-                myWeatherList.add(weather);
+                myWeatherForecast.setMyWeatherList(myWeatherList);
+                myWeatherForecast.setForecastResultOK(true);
+                myWeatherForecast.setCurrWeatherResultOK(true);
+            } else {
+                myWeatherForecast.setForecastResultOK(false);
+                myWeatherForecast.setCurrWeatherResultOK(false);
             }
-
-            myWeatherForecast.setMyWeatherList(myWeatherList);
-            myWeatherForecast.setForecastResultOK(true);
-            myWeatherForecast.setCurrWeatherResultOK(true);
         } catch (IOException e) {
             e.printStackTrace();
             myWeatherForecast.setForecastResultOK(false);

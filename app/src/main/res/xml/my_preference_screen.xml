@@ -1,20 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
     <ListPreference
         android:defaultValue="1"
+        android:dialogTitle="@string/select_units_format"
         android:entries="@array/unitsName"
         android:entryValues="@array/units"
         android:key="@string/pref_units_key"
         android:title="@string/units_format_label" />
     <ListPreference
         android:defaultValue="2"
+        android:dialogTitle="Укажите нужное количество дней без осадков в прогнозе погоды"
         android:entries="@array/forecastLimit"
         android:entryValues="@array/limit"
         android:key="@string/pref_limit_key"
         android:title="@string/clear_period" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:dialogTitle="@string/weather_provider"
+        android:entries="@array/forecastProviders"
+        android:entryValues="@array/forecastProviders"
+        android:key="@string/pref_forecast_providers_key"
+        android:title="@string/weather_provider" />
+
     <SwitchPreference
         android:defaultValue="false"
-        android:title="@string/notification"
-        android:key="@string/pref_task_key" />
+        android:key="@string/pref_task_key"
+        android:title="@string/notification" />
 </PreferenceScreen>

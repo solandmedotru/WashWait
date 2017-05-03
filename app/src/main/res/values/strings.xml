@@ -32,6 +32,7 @@
     <string name="pref_units_key" translatable="false">units</string>
     <string name="pref_theme_color_key" translatable="false">theme</string>
     <string name="pref_limit_key" translatable="false">2</string>
+    <string name="pref_forecast_providers_key" translatable="false">weather_provider</string>
 
 
     <string name="choose_location">To Choose Location</string>
@@ -91,4 +92,7 @@
     <string name="pref_text_to_wash_key" translatable="false">pref_text_to_wash_key</string>
     <string name="reviews">Reviews:</string>
     <string name="pref_dirty_limit_key" translatable="false">dirtyLimit</string>
+    <string name="select_units_format">Select units format for weather conditions</string>
+    <string name="select_number_days_without_precipitation">Select number of days without precipitation in the weather forecast</string>
+    <string name="weather_provider">A weather forecast provider</string>
 </resources>

@@ -66,13 +66,36 @@ public class MeteoWashService extends IntentService {
 
         //TODO сделать выбор репозитория в зависимости от сохраненных параметров
         IWeatherClient weatherClient;
-        if (false) {
-            weatherClient = new DarkSkyClient(getApplicationContext());
-            if(units.equals("metric")) myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "si", lang);
-            if(units.equals("imperial")) myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "us", lang);
-        } else {
-            weatherClient = new OWMClient(getApplicationContext());
-            myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, units, lang);
+        String weatherProvider = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_forecast_providers_key), Constants.DEFAULT_WEATHER_PROVIDER);
+        switch (weatherProvider) {
+            case "OpenWeatherMap":
+                weatherClient = new OWMClient(getApplicationContext());
+                myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, units, lang);
+                Log.e(TAG, "handleForecast: owm");
+                break;
+            case "DarkSky":
+                weatherClient = new DarkSkyClient(getApplicationContext());
+                Log.e(TAG, "handleForecast: ds");
+                switch (units) {
+                    case "metric":
+                        myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "si", lang);
+                        Log.e(TAG, "handleForecast: ds - metric");
+                        break;
+                    case "imperial":
+                        myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "us", lang);
+                        Log.e(TAG, "handleForecast: ds - imperial");
+                        break;
+                    default:
+                        myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, "auto", lang);
+                        Log.e(TAG, "handleForecast: ds - def");
+                        break;
+                }
+                break;
+            default:
+                weatherClient = new OWMClient(getApplicationContext());
+                myWeatherForecast = weatherClient.getWeatherForecast(lat, lon, units, lang);
+                Log.e(TAG, "handleForecast: def");
+                break;
         }
 
         WashForecast washForecast = new WashForecast(this, myWeatherForecast, forecastDistance, precipitationLimit);
