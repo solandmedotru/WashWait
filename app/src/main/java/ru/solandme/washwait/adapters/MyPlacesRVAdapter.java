@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.model.pojo.map.Result;
+import ru.solandme.washwait.map.pojo.map.Result;
 
 public class MyPlacesRVAdapter extends RecyclerView.Adapter<MyPlacesRVAdapter.ViewHolder> {
 

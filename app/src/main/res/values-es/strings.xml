@@ -59,7 +59,10 @@
     <string name="units_format_label">Unidades de medición</string>
     <string name="wash">Recomiendo lavar el coche en\n%1$s</string>
     <string name="wash_car">Lavado de coches</string>
-    <string name="web_site">sitio web</string>
+    <string name="web_site">web site</string>
     <string name="wet">alta</string>
     <string name="zip_or_index">Rellene el código Postal</string>
+    <string name="select_units_format">Seleccione el formato de unidades para condiciones meteorológicas</string>
+    <string name="select_number_days_without_precipitation">Seleccionar el número de días sin precipitación en el pronóstico del tiempo</string>
+    <string name="weather_provider">Un proveedor de pronóstico del tiempo</string>
 </resources>

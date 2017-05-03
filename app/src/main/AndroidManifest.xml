@@ -48,10 +48,10 @@
     <activity android:name=".ui.AboutPlace" />
 
     <service
-        android:name=".ForecastService"
+        android:name=".MeteoWashService"
         android:exported="false" />
     <service
-        android:name=".PeriodicalForecastTask"
+        android:name=".PeriodicalMeteoWashTask"
         android:exported="true"
         android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
       <intent-filter>

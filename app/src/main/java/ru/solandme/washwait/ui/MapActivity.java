@@ -44,10 +44,10 @@ import retrofit2.Response;
 import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
-import ru.solandme.washwait.model.pojo.map.PlacesResponse;
-import ru.solandme.washwait.model.pojo.places.PlaceInfo;
-import ru.solandme.washwait.model.pojo.places.Result;
-import ru.solandme.washwait.rest.PlacesApiHelper;
+import ru.solandme.washwait.map.PlacesApiHelper;
+import ru.solandme.washwait.map.pojo.map.PlacesResponse;
+import ru.solandme.washwait.map.pojo.places.PlaceInfo;
+import ru.solandme.washwait.map.pojo.places.Result;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
 
@@ -69,7 +69,7 @@ public class MapActivity extends AppCompatActivity implements
     private String lang;
 
     private MyPlacesRVAdapter adapter;
-    private List<ru.solandme.washwait.model.pojo.map.Result> results;
+    private List<ru.solandme.washwait.map.pojo.map.Result> results;
 
     private PlacesApiHelper placesHelper;
 
@@ -167,8 +167,8 @@ public class MapActivity extends AppCompatActivity implements
                 results.addAll(response.body().getResults());
                 adapter.notifyDataSetChanged();
 
-                for (ru.solandme.washwait.model.pojo.map.Result result : results) {
-                    ru.solandme.washwait.model.pojo.map.Location location = result.getGeometry().getLocation();
+                for (ru.solandme.washwait.map.pojo.map.Result result : results) {
+                    ru.solandme.washwait.map.pojo.map.Location location = result.getGeometry().getLocation();
                     LatLng latLng = new LatLng(location.getLat(), location.getLng());
                     map.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -188,7 +188,7 @@ public class MapActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onPlaceItemSelected(final int position, final ru.solandme.washwait.model.pojo.map.Result result) {
+    public void onPlaceItemSelected(final int position, final ru.solandme.washwait.map.pojo.map.Result result) {
 
         placesHelper.requestPlaceInfo(result.getPlaceId(), lang, new Callback<PlaceInfo>() {
             @Override

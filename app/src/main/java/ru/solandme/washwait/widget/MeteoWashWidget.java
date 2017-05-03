@@ -9,11 +9,11 @@ import android.graphics.Color;
 import android.widget.RemoteViews;
 
 import ru.solandme.washwait.Constants;
-import ru.solandme.washwait.ForecastService;
+import ru.solandme.washwait.MeteoWashService;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.ui.MainActivity;
+import ru.solandme.washwait.utils.FormatUtils;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
-import ru.solandme.washwait.utils.WeatherUtils;
 
 public class MeteoWashWidget extends AppWidgetProvider {
 
@@ -54,15 +54,15 @@ public class MeteoWashWidget extends AppWidgetProvider {
                                          String units, double maxTemp, double minTemp, String description, int icon, int humidity,
                                          double barometer, double speedWind, int speedDirection, String textForWashForecast) {
         remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
-        remoteViews.setImageViewBitmap(R.id.max_t_field, WeatherUtils.getFontBitmap(context,
-                WeatherUtils.getStringTemperature(maxTemp, units, context), textColor, 36));
+        remoteViews.setImageViewBitmap(R.id.max_t_field, FormatUtils.getFontBitmap(context,
+                FormatUtils.getStringTemperature(context, maxTemp, units), textColor, 36));
         remoteViews.setTextViewText(R.id.separator, " | ");
         remoteViews.setTextColor(R.id.separator, textColor);
-        remoteViews.setImageViewBitmap(R.id.min_t_field, WeatherUtils.getFontBitmap(context,
-                WeatherUtils.getStringTemperature(minTemp, units, context), textColor, 36));
-        remoteViews.setTextViewText(R.id.barometer_field, WeatherUtils.getStringBarometer(barometer, units, context).substring(1));
+        remoteViews.setImageViewBitmap(R.id.min_t_field, FormatUtils.getFontBitmap(context,
+                FormatUtils.getStringTemperature(context, minTemp, units), textColor, 36));
+        remoteViews.setTextViewText(R.id.barometer_field, FormatUtils.getStringBarometer(context, barometer, units).substring(1));
         remoteViews.setTextColor(R.id.barometer_field, textColor);
-        remoteViews.setTextViewText(R.id.speed_wind_field, WeatherUtils.getStringWind(speedDirection, speedWind, units, context).substring(1));
+        remoteViews.setTextViewText(R.id.speed_wind_field, FormatUtils.getStringWind(context, speedDirection, speedWind, units).substring(1));
         remoteViews.setTextColor(R.id.speed_wind_field, textColor);
         remoteViews.setTextViewText(R.id.humidity_field, (humidity + "%"));
         remoteViews.setTextColor(R.id.humidity_field, textColor);
@@ -78,7 +78,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        ForecastService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -87,7 +87,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-        ForecastService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override

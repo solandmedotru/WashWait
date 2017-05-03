@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.model.pojo.forecast.WeatherForecast;
+import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
 
 public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapter.ViewHolder> {
 
@@ -26,7 +26,7 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
-    private WeatherForecast weatherForecast;
+    private MyWeatherForecast myWeatherForecast;
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -55,8 +55,8 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
         }
     }
 
-    public MyForecastRVAdapter(WeatherForecast weatherForecast) {
-        this.weatherForecast = weatherForecast;
+    public MyForecastRVAdapter(MyWeatherForecast myWeatherForecast) {
+        this.myWeatherForecast = myWeatherForecast;
     }
 
     @Override
@@ -70,22 +70,22 @@ public class MyForecastRVAdapter extends RecyclerView.Adapter<MyForecastRVAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("EE, dd", Locale.getDefault());
-        holder.date1.setText(dateFormat.format(weatherForecast.getList().get(position).getDt() * 1000));
-        holder.image1.setImageResource(weatherForecast.getList().get(position).getImageRes());
+        holder.date1.setText(dateFormat.format(myWeatherForecast.getMyWeatherList().get(position).getTime() * 1000));
+        holder.image1.setImageResource(myWeatherForecast.getMyWeatherList().get(position).getImageRes());
         holder.temp.setText(getMiddleTemp(position));
 
     }
 
     private String getMiddleTemp(int position) {
-        double max = weatherForecast.getList().get(position).getTemp().getMax();
-        double min = weatherForecast.getList().get(position).getTemp().getMin();
+        double max = myWeatherForecast.getMyWeatherList().get(position).getTempMax();
+        double min = myWeatherForecast.getMyWeatherList().get(position).getTempMin();
         return String.valueOf((int)(max + min)/2);
     }
 
     @Override
     public int getItemCount() {
-        if (null == weatherForecast) return 0;
+        if (null == myWeatherForecast) return 0;
 
-        return weatherForecast.getList().size();
+        return myWeatherForecast.getMyWeatherList().size();
     }
 }

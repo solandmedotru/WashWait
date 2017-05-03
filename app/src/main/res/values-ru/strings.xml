@@ -63,6 +63,9 @@
     <string name="disconnected_message">Связь потеряна. Переподключитесь, пожалуйста.</string>
     <string name="network_lost_message">Сеть потеряна. Переподключитесь снова, пожалуйста.</string>
     <string name="reviews">Отзывы:</string>
+    <string name="select_units_format">Выбирите систему единиц измерения для отображения погодных условий</string>
+    <string name="select_number_days_without_precipitation">Укажите нужное количество дней без осадков в прогнозе погоды</string>
+    <string name="weather_provider">Провайдер прогноза погоды</string>
 
 
 </resources>

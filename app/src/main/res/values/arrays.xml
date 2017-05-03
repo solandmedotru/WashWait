@@ -44,4 +44,9 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="forecastProviders" translatable="false">
+        <item>OpenWeatherMap</item>
+        <item>DarkSky</item>
+    </string-array>
+
 </resources>

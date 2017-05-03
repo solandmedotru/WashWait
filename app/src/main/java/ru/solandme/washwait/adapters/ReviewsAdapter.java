@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import ru.solandme.washwait.R;
-import ru.solandme.washwait.model.pojo.places.Review;
+import ru.solandme.washwait.map.pojo.places.Review;
 
 public class ReviewsAdapter extends ArrayAdapter<Review> {
 
