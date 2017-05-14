@@ -59,7 +59,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private ImageView cityImage;
     private ProgressBar dirtyMeter;
     private RecyclerView forecastRecyclerView;
-    private MyWeatherForecast myWeatherForecast;
 
     private GcmNetworkManager mGcmNetworkManager;
     private String units, city;
@@ -117,12 +116,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         city = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_city_key), getResources().getString(R.string.choose_location));
         units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
 
-        String currentData = getFormattedDate(new Date());
-        fillTitle(city, currentData);
+        fillTitle(city, getFormattedDate(new Date()));
 
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 Constants.NOTIFICATION));
-        MeteoWashService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startServiceForGetForecast(this, Constants.RUN_FROM_ACTIVITY);
         checkTask();
         super.onResume();
     }
@@ -133,47 +131,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
-    private String getFormattedDate(Date date) {
-        return new SimpleDateFormat("EEEE, dd MMM",
-                java.util.Locale.getDefault()).format(date).toUpperCase();
-    }
-
-    private void checkTask() {
-        if (SharedPrefsUtils.getBooleanPreference(this, getString(R.string.pref_task_key), false)) {
-            Task task = new PeriodicTask.Builder()
-                    .setService(PeriodicalMeteoWashTask.class)
-                    .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
-                    .setPeriod(Constants.PERIODICAL_TIMER)
-                    .setTag(Constants.TAG_TASK_PERIODIC)
-                    .setPersisted(true)
-                    .setUpdateCurrent(true)
-                    .build();
-            mGcmNetworkManager.schedule(task);
-        } else {
-            mGcmNetworkManager.cancelAllTasks(PeriodicalMeteoWashTask.class);
-        }
-    }
-
-    private void updateCarImage(int position) {
-
-        carImage.setImageResource(myWeatherForecast.getMyWeatherList().get(position).getCarPicture());
-        Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
-        carImage.startAnimation(moveFromLeft);
-        Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
-        cityImage.startAnimation(moveFromRight);
-
-        carImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startWashCarActivity();
-            }
-        });
-    }
-
     @Override
     public void onRefresh() {
         swipeRefreshLayout.setRefreshing(true);
-        MeteoWashService.startActionGetForecast(this, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startServiceForGetForecast(this, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override
@@ -207,6 +168,97 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    private void fillTitle(String city, String dataWithFormat) {
+        toolbar.setTitle(city);
+        toolbar.setSubtitle(dataWithFormat);
+    }
+
+    private String getFormattedDate(Date date) {
+        return new SimpleDateFormat("EEEE, dd MMM",
+                java.util.Locale.getDefault()).format(date).toUpperCase();
+    }
+
+    private void checkTask() {
+        if (SharedPrefsUtils.getBooleanPreference(this, getString(R.string.pref_task_key), false)) {
+            Task task = new PeriodicTask.Builder()
+                    .setService(PeriodicalMeteoWashTask.class)
+                    .setRequiredNetwork(PeriodicTask.NETWORK_STATE_CONNECTED)
+                    .setPeriod(Constants.PERIODICAL_TIMER)
+                    .setTag(Constants.TAG_TASK_PERIODIC)
+                    .setPersisted(true)
+                    .setUpdateCurrent(true)
+                    .build();
+            mGcmNetworkManager.schedule(task);
+        } else {
+            mGcmNetworkManager.cancelAllTasks(PeriodicalMeteoWashTask.class);
+        }
+    }
+
+    private void fillWeatherCard(MyWeatherForecast myWeatherForecast, int position) {
+        double maxTemp;
+        double minTemp;
+        String description;
+        int icon;
+        long dt;
+        long dtLast;
+        int humidity;
+        double barometer;
+        double speedWind;
+        int speedDirection;
+        float precipitation;
+        maxTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMax());
+        minTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMin());
+        description = myWeatherForecast.getMyWeatherList().get(position).getDescription();
+        icon = myWeatherForecast.getMyWeatherList().get(position).getImageRes();
+        dt = myWeatherForecast.getMyWeatherList().get(position).getTime() * 1000;
+        humidity = Math.round(myWeatherForecast.getMyWeatherList().get(position).getHumidity());
+        barometer = myWeatherForecast.getMyWeatherList().get(position).getPressure();
+        speedWind = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindSpeed());
+        speedDirection = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindDirection());
+        dtLast = myWeatherForecast.getMyWeatherList().get(0).getTime() * 1000;
+
+        fillTitle(city, getFormattedDate(new Date(dt)));
+
+        curMaxTempField.setText(FormatUtils.getStringTemperature(this, maxTemp, units));
+        curMinTempField.setText(FormatUtils.getStringTemperature(this, minTemp, units));
+        humidityField.setText(FormatUtils.getStringHumidity(this, humidity));
+        barometerField.setText(FormatUtils.getStringBarometer(this, barometer, units));
+        speedWindField.setText(FormatUtils.getStringWind(this, speedDirection, speedWind, units));
+
+        precipitation = myWeatherForecast.getMyWeatherList().get(position).getPrecipitation();
+        dirtyMeter.setMax(300);
+        dirtyMeter.setProgress(Math.round(precipitation * 100));
+
+        detailsField.setText(description);
+        weatherIconDay0.setImageResource(icon);
+
+        updateCarImage(myWeatherForecast, position);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
+        String updatedOn = dateFormat.format(new Date(dtLast));
+
+        updatedField.setText(String.format("%s%s", getString(R.string.last_update), updatedOn));
+    }
+
+    private void updateCarImage(MyWeatherForecast myWeatherForecast, int position) {
+        carImage.setImageResource(myWeatherForecast.getMyWeatherList().get(position).getCarPicture());
+        Animation moveFromLeft = AnimationUtils.loadAnimation(this, R.anim.move_from_left);
+        carImage.startAnimation(moveFromLeft);
+        Animation moveFromRight = AnimationUtils.loadAnimation(this, R.anim.move_from_right);
+        cityImage.startAnimation(moveFromRight);
+        carImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startWashCarActivity();
+            }
+        });
+    }
+
     private void startWashCarActivity() {
         float lat = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lat_key), (float) Constants.DEFAULT_LATITUDE);
         float lon = SharedPrefsUtils.getFloatPreference(this, getString(R.string.pref_lon_key), (float) Constants.DEFAULT_LONGITUDE);
@@ -219,12 +271,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void chooseCity() {
         startActivity(new Intent(this, ChooseCityActivity.class));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        return true;
     }
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -240,10 +286,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 String textForecast = bundle.getString("TextForecast");
                 forecastMessage.setText(textForecast);
 
+                final MyWeatherForecast myWeatherForecast = (MyWeatherForecast) bundle.get("Weather");
 
-                myWeatherForecast = (MyWeatherForecast) bundle.get("Weather");
-
-                fillWeatherCard(Constants.FIRST_DAY_POSITION);
+                fillWeatherCard(myWeatherForecast, Constants.FIRST_DAY_POSITION);
 
                 MyForecastRVAdapter adapter = new MyForecastRVAdapter(myWeatherForecast);
                 forecastRecyclerView.setAdapter(adapter);
@@ -251,68 +296,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 adapter.setOnItemClickListener(new MyForecastRVAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        fillWeatherCard(position);
+                        fillWeatherCard(myWeatherForecast, position);
                     }
                 });
 
                 adapter.notifyDataSetChanged();
-                updateCarImage(Constants.FIRST_DAY_POSITION);
+                updateCarImage(myWeatherForecast, Constants.FIRST_DAY_POSITION);
             } else {
                 Toast.makeText(getApplicationContext(), R.string.error_from_response, Toast.LENGTH_SHORT).show();
             }
         }
     };
-
-    private void fillWeatherCard(int position) {
-        double maxTemp;
-        double minTemp;
-        String description;
-        int icon;
-        long dt;
-        long dtLast;
-        int humidity;
-        double barometer;
-        double speedWind;
-        int speedDirection;
-
-        maxTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMax());
-        minTemp = Math.round(myWeatherForecast.getMyWeatherList().get(position).getTempMin());
-        description = myWeatherForecast.getMyWeatherList().get(position).getDescription();
-        icon = myWeatherForecast.getMyWeatherList().get(position).getImageRes();
-        dt = myWeatherForecast.getMyWeatherList().get(position).getTime() * 1000;
-        humidity = Math.round(myWeatherForecast.getMyWeatherList().get(position).getHumidity());
-        barometer = myWeatherForecast.getMyWeatherList().get(position).getPressure();
-        speedWind = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindSpeed());
-        speedDirection = Math.round(myWeatherForecast.getMyWeatherList().get(position).getWindDirection());
-        dtLast = myWeatherForecast.getMyWeatherList().get(0).getTime() * 1000;
-
-
-        fillTitle(city, getFormattedDate(new Date(dt)));
-
-        curMaxTempField.setText(FormatUtils.getStringTemperature(this, maxTemp, units));
-        curMinTempField.setText(FormatUtils.getStringTemperature(this, minTemp, units));
-        humidityField.setText(FormatUtils.getStringHumidity(this, humidity));
-        barometerField.setText(FormatUtils.getStringBarometer(this, barometer, units));
-        speedWindField.setText(FormatUtils.getStringWind(this, speedDirection, speedWind, units));
-
-        float precipitation = myWeatherForecast.getMyWeatherList().get(position).getPrecipitation();
-        dirtyMeter.setMax(300);
-        dirtyMeter.setProgress(Math.round(precipitation * 100));
-
-        detailsField.setText(description);
-        weatherIconDay0.setImageResource(icon);
-
-        updateCarImage(position);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
-        String updatedOn = dateFormat.format(new Date(dtLast));
-
-        updatedField.setText(String.format("%s%s",
-                getString(R.string.last_update),
-                updatedOn));
-    }
-
-    private void fillTitle(String city, String dataWithFormat) {
-        toolbar.setTitle(city);
-        toolbar.setSubtitle(dataWithFormat);
-    }
 }

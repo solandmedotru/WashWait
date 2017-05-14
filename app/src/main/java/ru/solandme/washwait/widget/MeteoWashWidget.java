@@ -78,7 +78,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
-        MeteoWashService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startServiceForGetForecast(context, Constants.RUN_FROM_ACTIVITY);
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);
         }
@@ -87,7 +87,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     @Override
     public void onEnabled(Context context) {
         // Enter relevant functionality for when the first widget is created
-        MeteoWashService.startActionGetForecast(context, Constants.RUN_FROM_ACTIVITY);
+        MeteoWashService.startServiceForGetForecast(context, Constants.RUN_FROM_ACTIVITY);
     }
 
     @Override

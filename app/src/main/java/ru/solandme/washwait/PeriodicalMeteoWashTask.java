@@ -25,7 +25,7 @@ public class PeriodicalMeteoWashTask extends GcmTaskService {
         LocalBroadcastManager.getInstance(this).registerReceiver(receiver, new IntentFilter(
                 Constants.NOTIFICATION));
 
-        MeteoWashService.startActionGetForecast(this, Constants.RUN_FROM_BACKGROUND);
+        MeteoWashService.startServiceForGetForecast(this, Constants.RUN_FROM_BACKGROUND);
 
         if (!isForecastResultOK) {
             return GcmNetworkManager.RESULT_FAILURE;

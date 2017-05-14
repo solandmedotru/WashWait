@@ -36,7 +36,7 @@ public class MeteoWashService extends IntentService {
         super(TAG);
     }
 
-    public static void startActionGetForecast(Context context, boolean isRunFromBackground) {
+    public static void startServiceForGetForecast(Context context, boolean isRunFromBackground) {
         Intent intent = new Intent(context, MeteoWashService.class);
         intent.setAction(Constants.ACTION_GET_FORECAST);
         intent.putExtra(Constants.RUN_FROM, isRunFromBackground);
@@ -108,6 +108,7 @@ public class MeteoWashService extends IntentService {
         String units = SharedPrefsUtils.getStringPreference(this, getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
         int textColor = SharedPrefsUtils.getIntegerPreference(this, getString(R.string.pref_textColor_key), Color.GRAY);
         int bgColor = SharedPrefsUtils.getIntegerPreference(this, getString(R.string.pref_bgColor_key), Color.BLACK);
+
         if (myWeatherForecast.isForecastResultOK() && myWeatherForecast.isCurrWeatherResultOK()) {
 
             if (washForecast.getWashDayNumber() == Constants.FIRST_DAY_POSITION && runFromService)
