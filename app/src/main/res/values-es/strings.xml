@@ -66,4 +66,7 @@
     <string name="select_number_days_without_precipitation">Seleccionar el número de días sin precipitación en el pronóstico del tiempo</string>
     <string name="weather_provider">Un proveedor de pronóstico del tiempo</string>
     <string name="number_clean_days">Especifique el número de días sin precipitación en el pronóstico del tiempo</string>
+    <string name="recommend">Recomendar</string>
+    <string name="recommendText">Permítanme recomendarle esta aplicación:</string>
+    <string name="share_link_text">Cuota:</string>
 </resources>

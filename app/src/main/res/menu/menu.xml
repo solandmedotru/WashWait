@@ -52,4 +52,11 @@
         android:title="@string/wash_car"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/action_share_app_link"
+        android:icon="@android:drawable/ic_menu_share"
+        android:orderInCategory="50"
+        android:title="@string/recommend"
+        app:showAsAction="ifRoom" />
+
 </menu>

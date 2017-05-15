@@ -67,6 +67,9 @@
     <string name="select_number_days_without_precipitation">Вкажіть потрібну кількість днів без опадів в прогнозі погоди</string>
     <string name="weather_provider">Провайдер прогнозу погоди</string>
     <string name="number_clean_days">Вкажіть потрібну кількість днів без опадів в прогнозі погоди</string>
+    <string name="recommend">Рекомендувати</string>
+    <string name="recommendText">Дозвольте мені порекомендувати вам це додаток:</string>
+    <string name="share_link_text">Поділитися:</string>
 
 
 </resources>

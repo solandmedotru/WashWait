@@ -69,4 +69,7 @@
     <string name="select_number_days_without_precipitation">Select number of days without precipitation in the weather forecast</string>
     <string name="weather_provider">A weather forecast provider</string>
     <string name="number_clean_days">Specify the number of days without precipitation in the weather forecast</string>
+    <string name="recommend">Recommend</string>
+    <string name="recommendText">Let me recommend you this application:</string>
+    <string name="share_link_text">Share link:</string>
 </resources>
