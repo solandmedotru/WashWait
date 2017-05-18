@@ -1,10 +1,6 @@
-#
-# Build configuration for Circle CI
-#
-
 general:
     artifacts:
-        - /home/ubuntu/meteowash/app/build/outputs/apk/
+        - /home/ubuntu/washwait/app/build/outputs/apk/
 
 machine:
     java:
