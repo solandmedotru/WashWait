@@ -1,6 +1,6 @@
 general:
     artifacts:
-        - /home/ubuntu/washwait/app/build/outputs/apk/
+        - /home/ubuntu/WashWait/app/build/outputs/apk/
 
 machine:
     java:
@@ -16,8 +16,11 @@ dependencies:
     cache_directories:
         - /usr/local/android-sdk-linux/tools
         - /usr/local/android-sdk-linux/build-tools/25.0.3
+    override:
+        - chmod +x gradlew
+        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
 
 test:
-    override:
-        - ./gradlew assemble
-        - cp -r app/build/outputs $CIRCLE_ARTIFACTS
+  override:
+    - ./gradlew assembleRelease
+    - cp -r project-name/build/outputs $CIRCLE_ARTIFACTS
