@@ -121,6 +121,14 @@ public class MapActivity extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         map = setMapStyle(googleMap);
 
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                int position = (int)(marker.getTag());
+                onPlaceItemSelected(position, results.get(position));
+            }
+        });
+
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this,
@@ -167,13 +175,16 @@ public class MapActivity extends AppCompatActivity implements
                 results.addAll(response.body().getResults());
                 adapter.notifyDataSetChanged();
 
-                for (ru.solandme.washwait.map.pojo.map.Result result : results) {
+                for (int i = 0; i < results.size(); i++) {
+                    ru.solandme.washwait.map.pojo.map.Result result = results.get(i);
                     ru.solandme.washwait.map.pojo.map.Location location = result.getGeometry().getLocation();
                     LatLng latLng = new LatLng(location.getLat(), location.getLng());
-                    map.addMarker(new MarkerOptions()
+
+                    Marker marker = map.addMarker(new MarkerOptions()
                             .position(latLng)
                             .snippet(result.getVicinity())
                             .title(result.getName()));
+                    marker.setTag(i);
                 }
                 moveCameraToLocation(currentLatLng);
 

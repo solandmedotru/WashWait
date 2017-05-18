@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -44,6 +45,7 @@ import ru.solandme.washwait.utils.Utils;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
+    private static final String TAG = MainActivity.class.getSimpleName();
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView updatedField;
@@ -189,7 +191,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             i.putExtra(Intent.EXTRA_TEXT, text + " " + link);
             startActivity(Intent.createChooser(i, getString(R.string.share_link_text)));
         } catch(Exception e) {
-            //e.toString();
+            Log.e(TAG, "startRecommendIntent: ", e);
+            Toast.makeText(this, "Sorry. I can not do it.", Toast.LENGTH_SHORT).show();
         }
     }
 
