@@ -61,7 +61,7 @@
                     android:textSize="@dimen/_34ssp" />
 
                 <ImageView
-                    android:id="@+id/weather_icon_day0"
+                    android:id="@+id/weather_icon_today"
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

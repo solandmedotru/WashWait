@@ -53,7 +53,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
     public static RemoteViews fillWidget(Context context, int textColor, int bgColor, RemoteViews remoteViews,
                                          String units, double maxTemp, double minTemp, String description, int icon, int humidity,
                                          double barometer, double speedWind, int speedDirection, String textForWashForecast) {
-        remoteViews.setImageViewResource(R.id.weather_icon_day0, icon);
+        remoteViews.setImageViewResource(R.id.weather_icon_today, icon);
         remoteViews.setImageViewBitmap(R.id.max_t_field, FormatUtils.getFontBitmap(context,
                 FormatUtils.getStringTemperature(context, maxTemp, units), textColor, 36));
         remoteViews.setTextViewText(R.id.separator, " | ");

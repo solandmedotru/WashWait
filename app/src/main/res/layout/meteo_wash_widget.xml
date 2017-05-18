@@ -49,7 +49,7 @@
           android:gravity="end" />
 
       <ImageView
-          android:id="@+id/weather_icon_day0"
+          android:id="@+id/weather_icon_today"
           android:layout_width="@dimen/_45sdp"
           android:layout_height="wrap_content"
           android:layout_gravity="center_horizontal"

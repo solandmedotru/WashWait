@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private TextView barometerField;
     private TextView speedWindField;
     private TextView forecastMessage;
-    private ImageView weatherIconDay0;
+    private ImageView weatherIconToday;
     private ImageView carImage;
     private ImageView cityImage;
     private ProgressBar dirtyMeter;
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         updatedField = (TextView) findViewById(R.id.updated_field);
         detailsField = (TextView) findViewById(R.id.details_field);
         forecastMessage = (TextView) findViewById(R.id.forecast_message);
-        weatherIconDay0 = (ImageView) findViewById(R.id.weather_icon_day0);
+        weatherIconToday = (ImageView) findViewById(R.id.weather_icon_today);
         carImage = (ImageView) findViewById(R.id.car_image);
         cityImage = (ImageView) findViewById(R.id.city_image);
         dirtyMeter = (ProgressBar) findViewById(R.id.precipitation_meter);
@@ -258,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         dirtyMeter.setProgress(Math.round(precipitation * 100));
 
         detailsField.setText(description);
-        weatherIconDay0.setImageResource(icon);
+        weatherIconToday.setImageResource(icon);
 
         updateCarImage(myWeatherForecast, position);
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy, HH:mm", Locale.getDefault());
