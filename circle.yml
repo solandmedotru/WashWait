@@ -1,26 +1,44 @@
-general:
+ general:
     artifacts:
-        - /home/ubuntu/WashWait/app/build/outputs/apk/
+      - /home/ubuntu/WashWait/app/build/outputs/apk/
 
-machine:
-    java:
-        version: oraclejdk8
-    environment:
-        ANDROID_HOME: /usr/local/android-sdk-linux
+ machine:
+   environment:
+     _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
+     ANDROID_HOME: /usr/local/android-sdk-linux
+     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
 
+ dependencies:
+   pre:
+     - echo y | android update sdk --no-ui --all --filter tools,platform-tools,android-25
+     - echo y | android update sdk --no-ui --all --filter build-tools-25.0.3
+     - echo y | android update sdk --no-ui --all --filter android-25
+     - echo y | android update sdk --no-ui --all --filter tools
+     - echo y | android update sdk --no-ui --all --filter extra-android-m2repository
+     - echo y | android update sdk --no-ui --all --filter extra-android-support
+     - echo y | android update sdk --no-ui --all --filter extra-google-google_play_services
+     - echo y | android update sdk --no-ui --all --filter extra-google-m2repository
 
-dependencies:
-    pre:
-        - echo y | android update sdk --no-ui --all --filter tools,platform-tools,extra-google-m2repository,extra-google-google_play_services,extra-android-support,extra-android-m2repository,android-25
-        - echo y | android update sdk --no-ui --all --filter build-tools-25.0.3
-    cache_directories:
-        - /usr/local/android-sdk-linux/tools
-        - /usr/local/android-sdk-linux/build-tools/25.0.3
-    override:
-        - chmod +x gradlew
-        - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies
+   override:
+     - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies || true
 
-test:
-  override:
-    - ./gradlew assembleRelease
-    - cp -r project-name/build/outputs $CIRCLE_ARTIFACTS
+ test:
+   override:
+     # start lint
+     #- ./gradlew lint
+     # start unit tests
+     - ./gradlew test
+     # start the emulator
+     - emulator -avd circleci-android25 -no-window:
+         background: true
+         parallel: true
+     # wait for it to have booted
+     - circle-android wait-for-boot
+     # run tests  against the emulator.
+     - ./gradlew connectedAndroidTest
+     # copy lint outputs to artifacts
+     - cp -r app/build/reports/lint-* $CIRCLE_ARTIFACTS
+     # copy the build outputs to artifacts
+     - cp -r app/build/outputs/apk/* $CIRCLE_ARTIFACTS
+     # copy the test results to the test results directory.
+     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
