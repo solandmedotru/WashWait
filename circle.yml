@@ -6,7 +6,6 @@ machine:
   java:
     version: oraclejdk8
   environment:
-    CIRCLECI: 1
     JAVA_OPTS: "-Xms1024m -Xmx1024m"
     GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx1560m -XX:+HeapDumpOnOutOfMemoryError" -Dorg.gradle.daemon=false'
     ANDROID_HOME: /usr/local/android-sdk-linux
