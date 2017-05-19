@@ -38,7 +38,7 @@ import ru.solandme.washwait.MeteoWashService;
 import ru.solandme.washwait.PeriodicalMeteoWashTask;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
-import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
+import ru.solandme.washwait.ui.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.utils.FormatUtils;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;

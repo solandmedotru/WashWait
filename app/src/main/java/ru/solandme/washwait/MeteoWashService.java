@@ -17,14 +17,14 @@ import android.widget.RemoteViews;
 
 import java.util.Locale;
 
-import ru.solandme.washwait.model.washForecast.MyWeatherForecast;
-import ru.solandme.washwait.model.washForecast.WashForecast;
-import ru.solandme.washwait.network.IWeatherClient;
-import ru.solandme.washwait.network.OpenWeather.OWMClient;
-import ru.solandme.washwait.network.darksky.DarkSkyClient;
+import ru.solandme.washwait.network.weather.IWeatherClient;
+import ru.solandme.washwait.network.weather.OpenWeather.OWMClient;
+import ru.solandme.washwait.network.weather.darksky.DarkSkyClient;
 import ru.solandme.washwait.ui.MainActivity;
+import ru.solandme.washwait.ui.model.washForecast.MyWeatherForecast;
+import ru.solandme.washwait.ui.model.washForecast.WashForecast;
+import ru.solandme.washwait.ui.widget.MeteoWashWidget;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
-import ru.solandme.washwait.widget.MeteoWashWidget;
 
 public class MeteoWashService extends IntentService {
 

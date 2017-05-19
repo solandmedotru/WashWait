@@ -18,7 +18,7 @@ import com.squareup.picasso.Picasso;
 
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.ReviewsAdapter;
-import ru.solandme.washwait.map.pojo.places.Result;
+import ru.solandme.washwait.network.map.model.places.Result;
 import ru.solandme.washwait.utils.Utils;
 
 public class AboutPlace extends AppCompatActivity implements View.OnClickListener {
