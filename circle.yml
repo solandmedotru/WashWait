@@ -25,21 +25,5 @@
 
  test:
    override:
-     # start lint
-     #- ./gradlew lint
-     # start unit tests
-     - ./gradlew test
-     # start the emulator
-     - emulator -avd circleci-android25 -no-window:
-         background: true
-         parallel: true
-     # wait for it to have booted
-     - circle-android wait-for-boot
-     # run tests  against the emulator.
-     - ./gradlew connectedAndroidTest
-     # copy lint outputs to artifacts
-     - cp -r app/build/reports/lint-* $CIRCLE_ARTIFACTS
-     # copy the build outputs to artifacts
-     - cp -r app/build/outputs/apk/* $CIRCLE_ARTIFACTS
-     # copy the test results to the test results directory.
-     - cp -r app/build/outputs/androidTest-results/* $CIRCLE_TEST_REPORTS
+     - ./gradlew assembleRelease
+     - cp -r ./app/build/outputs $CIRCLE_ARTIFACTS
