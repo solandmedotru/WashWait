@@ -2,11 +2,13 @@
     artifacts:
       - /home/ubuntu/WashWait/app/build/outputs/apk/
 
+ ## Gradle opts + JDK 8
  machine:
    environment:
      _JAVA_OPTIONS: "-Xms512m -Xmx1024m"
-     ANDROID_HOME: /usr/local/android-sdk-linux
      GRADLE_OPTS: '-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
+   java:
+     version: oraclejdk8
 
  dependencies:
    pre:
@@ -19,6 +21,14 @@
      - echo y | android update sdk --no-ui --all --filter extra-google-google_play_services
      - echo y | android update sdk --no-ui --all --filter extra-google-m2repository
      - echo y | $ANDROID_HOME/tools/bin/sdkmanager "extras;m2repository;com;android;support;constraint;constraint-layout-solver;1.0.2"
+     - sudo pip install -U crcmod
+   post:
+       - ./gradlew assembleVanillaDebug assembleVanillaDebugAndroidTest -PdisablePreDex
+       - echo $FIREBASE_SERVICE_ACCOUNT | base64 --decode > ${HOME}/google-services.json
+       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components update
+       - sudo /opt/google-cloud-sdk/bin/gcloud config set project $FIREBASE_PROJECT
+       - sudo /opt/google-cloud-sdk/bin/gcloud --quiet components install beta
+       - sudo /opt/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file ${HOME}/google-services.json
    override:
      - chmod +x gradlew
      - ANDROID_HOME=/usr/local/android-sdk-linux ./gradlew dependencies || true
