@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -166,9 +165,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             case R.id.action_view_wash:
                 startWashCarActivity();
                 break;
-            case R.id.action_share_app_link:
-                startRecommendIntent();
-                break;
         }
         return true;
     }
@@ -177,23 +173,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
         return true;
-    }
-
-    private void startRecommendIntent() {
-        try {
-            int applicationNameId = getApplication().getApplicationInfo().labelRes;
-            final String appPackageName = getApplication().getPackageName();
-            Intent i = new Intent(Intent.ACTION_SEND);
-            i.setType("text/plain");
-            i.putExtra(Intent.EXTRA_SUBJECT, getString(applicationNameId));
-            String text = getString(R.string.recommendText);
-            String link = "https://play.google.com/store/apps/details?id=" + appPackageName;
-            i.putExtra(Intent.EXTRA_TEXT, text + " " + link);
-            startActivity(Intent.createChooser(i, getString(R.string.share_link_text)));
-        } catch(Exception e) {
-            Log.e(TAG, "startRecommendIntent: ", e);
-            Toast.makeText(this, "Sorry. I can not do it.", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void fillTitle(String city, String dataWithFormat) {
