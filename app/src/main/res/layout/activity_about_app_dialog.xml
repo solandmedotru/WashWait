@@ -1,56 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
-<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:columnCount="2"
-    android:padding="@dimen/_16sdp"
-    android:rowCount="4"
-    android:useDefaultMargins="true"
-    tools:context=".ui.AboutAppDialog">
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/aboutImageCity"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:adjustViewBounds="true"
+        android:background="?attr/colorPrimary"
+        android:scaleType="fitXY"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/city8"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+    <ImageView
+        android:id="@+id/aboutAppIcon"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:adjustViewBounds="true"
+        app:layout_constraintBottom_toBottomOf="@+id/aboutImageCity"
+        app:layout_constraintLeft_toLeftOf="@+id/aboutImageCity"
+        app:layout_constraintRight_toRightOf="@+id/aboutImageCity"
+        app:layout_constraintTop_toBottomOf="@+id/aboutImageCity"
+        app:srcCompat="@mipmap/ic_launcher"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
+        android:id="@+id/aboutAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_row="0"
-        android:text="@string/author" />
+        android:layout_marginTop="16dp"
+        android:text="MeteoWash"
+        android:textSize="@dimen/_21sdp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/aboutAppIcon"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <TextView
+        android:id="@+id/aboutAppVersion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_column="1"
-        android:layout_row="0"
-        android:text="@string/author_name" />
+        android:layout_marginTop="8dp"
+        android:text="Version 0.2.7"
+        app:layout_constraintLeft_toLeftOf="@+id/aboutAppName"
+        app:layout_constraintRight_toRightOf="@+id/aboutAppName"
+        app:layout_constraintTop_toBottomOf="@+id/aboutAppName" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/imageView4"
+        app:layout_constraintHorizontal_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_column="1"
-        android:layout_row="1"
-        android:text="@string/author_email"
-        android:textSize="@dimen/_12ssp"
-        android:layout_marginBottom="@dimen/_8sdp" />
+        android:background="?attr/colorPrimary"
+        android:padding="@dimen/_8sdp"
+        android:src="@drawable/ic_share"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/imageView5"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/aboutAppVersion" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="0dp"
+        app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
-        android:layout_column="0"
-        android:layout_row="2"
-        android:text="@string/designer" />
+        android:background="?attr/colorPrimary"
+        android:padding="@dimen/_8sdp"
+        android:src="@drawable/ic_share"
+        app:layout_constraintLeft_toRightOf="@id/imageView4"
+        app:layout_constraintRight_toLeftOf="@+id/imageView6"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/aboutAppVersion" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="0dp"
+        app:layout_constraintHorizontal_weight="1"
         android:layout_height="wrap_content"
-        android:layout_column="1"
-        android:layout_row="2"
-        android:text="@string/designer_name" />
+        android:background="?attr/colorPrimary"
+        android:padding="@dimen/_8sdp"
+        android:src="@drawable/ic_share"
+        app:layout_constraintTop_toBottomOf="@+id/aboutAppVersion"
+        app:layout_constraintLeft_toRightOf="@id/imageView5"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintHorizontal_bias="0.0" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_column="1"
-        android:layout_row="3"
-        android:text="@string/designer_email"
-        android:textSize="@dimen/_12ssp" />
-</GridLayout>
+</android.support.constraint.ConstraintLayout>
