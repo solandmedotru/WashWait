@@ -44,6 +44,7 @@ public class DarkSkyClient implements IWeatherClient {
     private MyWeatherForecast myWeatherForecast;
 
     private List<String> mExcludeBlocks;
+    private List<MyWeather> myWeatherList = new ArrayList<>();
 
     public DarkSkyClient(Context context) {
         ForecastApiHelper.resetRetrofit();
@@ -70,8 +71,6 @@ public class DarkSkyClient implements IWeatherClient {
                 myWeatherForecast.setCountry("");
                 myWeatherForecast.setLatitude(darkSkyForecast.getLatitude());
                 myWeatherForecast.setLongitude(darkSkyForecast.getLongitude());
-
-                List<MyWeather> myWeatherList = new ArrayList<>();
 
                 for (int i = 0; i < darkSkyForecast.getDaily().getData().size(); i++) {
                     Datum__ item = darkSkyForecast.getDaily().getData().get(i);

@@ -3,6 +3,7 @@ package ru.solandme.washwait.ui.model.washForecast;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyWeatherForecast implements Parcelable {
@@ -17,7 +18,7 @@ public class MyWeatherForecast implements Parcelable {
     private int maxPeriod;
     private String units;
 
-    private List<MyWeather> myWeatherList;
+    private List<MyWeather> myWeatherList = new ArrayList<>();
 
     public MyWeatherForecast(int maxPeriod) {
         this.maxPeriod = maxPeriod;
