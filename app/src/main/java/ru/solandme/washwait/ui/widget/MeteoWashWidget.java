@@ -46,7 +46,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
         remoteViews = fillWidget(context, textColor, bgColor, remoteViews, units, maxTemp, minTemp, description, icon,
                 humidity, barometer, speedWind, speedDirection, textForWashForecast);
 
-        // Instruct the widget manager to update the widget
+        // Instruct the widget manager to load the widget
         appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
     }
 
@@ -77,7 +77,7 @@ public class MeteoWashWidget extends AppWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
-        // There may be multiple widgets active, so update all of them
+        // There may be multiple widgets active, so load all of them
         MeteoWashService.startServiceForGetForecast(context, Constants.RUN_FROM_ACTIVITY);
         for (int appWidgetId : appWidgetIds) {
             updateAppWidget(context, appWidgetManager, appWidgetId);

@@ -26,6 +26,7 @@ public class OWMClient implements IWeatherClient {
 
     private MyWeatherForecast myWeatherForecast;
     private final OWMService apiService;
+    private List<MyWeather> myWeatherList = new ArrayList<>();
 
     public OWMClient(Context context) {
         ForecastApiHelper.resetRetrofit();
@@ -52,8 +53,6 @@ public class OWMClient implements IWeatherClient {
                 myWeatherForecast.setCountry(weatherForecast.getCity().getCountry());
                 myWeatherForecast.setLatitude(weatherForecast.getCity().getCoord().getLat());
                 myWeatherForecast.setLongitude(weatherForecast.getCity().getCoord().getLon());
-
-                List<MyWeather> myWeatherList = new ArrayList<>();
 
                 for (int i = 0; i < weatherForecast.getList().size(); i++) {
                     ru.solandme.washwait.network.weather.OpenWeather.model.forecast.List item = weatherForecast.getList().get(i);

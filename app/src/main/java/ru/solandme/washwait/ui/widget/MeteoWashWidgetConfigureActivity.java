@@ -27,7 +27,7 @@ public class MeteoWashWidgetConfigureActivity extends AppCompatActivity
 
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
-            // It is the responsibility of the configuration activity to update the app widget
+            // It is the responsibility of the configuration activity to load the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
             MeteoWashWidget.updateAppWidget(context, appWidgetManager, mAppWidgetId);
 
