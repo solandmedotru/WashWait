@@ -22,10 +22,8 @@ import ru.solandme.washwait.utils.Utils;
 import ru.solandme.washwait.versionOne.main.IMainPresenter;
 import ru.solandme.washwait.versionOne.main.IMainView;
 import ru.solandme.washwait.versionOne.main.MainPresenter;
-import ru.solandme.washwait.versionOne.model.WashForecastDate;
-import ru.solandme.washwait.versionOne.model.WeatherDate;
 
-public class MainOneActivity extends AppCompatActivity implements IMainView,  SwipeRefreshLayout.OnRefreshListener{
+public class MainOneActivity extends AppCompatActivity implements IMainView, SwipeRefreshLayout.OnRefreshListener {
     private Toolbar toolbar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView updatedField;
@@ -56,7 +54,9 @@ public class MainOneActivity extends AppCompatActivity implements IMainView,  Sw
         setUpViews();
         setUpAnalytics();
 
-        mainPresenter = new MainPresenter();
+        if (mainPresenter == null) {
+            mainPresenter = new MainPresenter(this);
+        }
     }
 
     private void setUpAnalytics() {
@@ -112,19 +112,27 @@ public class MainOneActivity extends AppCompatActivity implements IMainView,  Sw
 
     @Override
     public void load() {
-        swipeRefreshLayout.setRefreshing(true);
         mainPresenter.load();
     }
 
     @Override
-    public void updateScreen(WeatherDate weatherDate, WashForecastDate forecastDate) {
+    public void startProgress() {
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void stopProgress() {
         swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showError(String errorMessage) {
-        swipeRefreshLayout.setRefreshing(false);
         Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showCurrentMaxTemperature(String currentMaxTemp) {
+        curMaxTempField.setText(currentMaxTemp);
     }
 
     @Override
