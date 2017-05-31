@@ -1,6 +1,6 @@
 package ru.solandme.washwait.versionOne.model;
 
-public class WeatherDate {
+public class WeatherDTO {
     private String currentMaxTemp;
 
     public void setCurrentMaxTemp(String currentMaxTemp) {
