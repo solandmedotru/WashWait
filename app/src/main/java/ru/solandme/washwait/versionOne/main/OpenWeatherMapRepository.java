@@ -4,16 +4,18 @@ import android.content.Context;
 
 import ru.solandme.washwait.versionOne.model.WeatherDate;
 
-class MainRepository implements IMainRepository {
+class OpenWeatherMapRepository implements IWeatherRepository {
 
     Context context;
 
-    public MainRepository(Context context) {
+    public OpenWeatherMapRepository(Context context) {
         this.context = context;
     }
 
+
     @Override
-    public WeatherDate getWeather() {
+    public WeatherDate getWeatherForecast() {
+
 
         return null;
     }
