@@ -34,7 +34,7 @@ public class MainPresenter implements IMainPresenter, OnDTOUpdatedListener {
     public void onSuccess(WeatherDTO weatherDTO, WashForecastDTO washForecastDTO) {
         mainView.stopProgress();
         //TODO сделать отдельные методы для заполнения каждой вьюшки. mainView.showCurrentMaxTemperature(temp)
-        mainView.showCurrentMaxTemperature(weatherDTO.getCurrentMaxTemp());
+        mainView.showCurrentMaxTemperature(weatherDTO.getCurrentWeather().getTempMax());
     }
 
     @Override
