@@ -1,4 +1,4 @@
-package ru.solandme.washwait.mvc;
+package ru.solandme.washwait;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -10,9 +10,6 @@ import android.util.Log;
 import com.google.android.gms.gcm.GcmNetworkManager;
 import com.google.android.gms.gcm.GcmTaskService;
 import com.google.android.gms.gcm.TaskParams;
-
-import ru.solandme.washwait.Constants;
-import ru.solandme.washwait.MeteoWashService;
 
 
 public class PeriodicalMeteoWashTask extends GcmTaskService {

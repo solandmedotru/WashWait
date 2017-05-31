@@ -34,9 +34,9 @@ import java.util.Locale;
 
 import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.MeteoWashService;
+import ru.solandme.washwait.PeriodicalMeteoWashTask;
 import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyForecastRVAdapter;
-import ru.solandme.washwait.mvc.PeriodicalMeteoWashTask;
 import ru.solandme.washwait.ui.model.washForecast.MyWeatherForecast;
 import ru.solandme.washwait.utils.FormatUtils;
 import ru.solandme.washwait.utils.SharedPrefsUtils;

@@ -51,7 +51,7 @@
             android:name=".MeteoWashService"
             android:exported="false" />
         <service
-            android:name=".mvc.PeriodicalMeteoWashTask"
+            android:name=".PeriodicalMeteoWashTask"
             android:exported="true"
             android:permission="com.google.android.gms.permission.BIND_NETWORK_TASK_SERVICE">
             <intent-filter>
