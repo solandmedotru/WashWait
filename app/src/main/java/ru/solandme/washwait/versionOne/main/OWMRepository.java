@@ -47,6 +47,7 @@ public class OWMRepository implements IWeatherRepository{
         float lon = SharedPrefsUtils.getFloatPreference(context, context.getString(R.string.pref_lon_key), (float) Constants.DEFAULT_LONGITUDE);
         String units = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
 
+
         Call<OpenWeatherForecast> weatherCall = apiService.getForecastByCoordinats(
                 String.valueOf(lat),
                 String.valueOf(lon),
