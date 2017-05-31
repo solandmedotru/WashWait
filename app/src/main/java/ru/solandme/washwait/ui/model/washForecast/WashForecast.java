@@ -30,8 +30,14 @@ public class WashForecast {
     }
 
     private String getTextForWashForecast(int washDayNumber, double dataToWash) {
+        String dateToWashFormat;
+        if (dataToWash != 0) {
+            dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
+        } else {
+            washDayNumber = 15;
+            dateToWashFormat = "N/D";
+        }
 
-        String dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
         switch (washDayNumber) {
             case 0:
                 return context.getResources().getString(R.string.can_wash);
@@ -72,8 +78,8 @@ public class WashForecast {
     private double getWashData(int washDayNumber, MyWeatherForecast myWeatherForecast) {
 
         if (myWeatherForecast != null) {
-            if (washDayNumber >= myWeatherForecast.getMyWeatherList().size())
-                return myWeatherForecast.getMyWeatherList().get(myWeatherForecast.getMyWeatherList().size() - 1).getTime();
+            if (washDayNumber > myWeatherForecast.getMyWeatherList().size())
+                return myWeatherForecast.getMyWeatherList().get(myWeatherForecast.getMaxPeriod() - 1).getTime();
             return myWeatherForecast.getMyWeatherList().get(washDayNumber).getTime();
         } else return 0;
 
