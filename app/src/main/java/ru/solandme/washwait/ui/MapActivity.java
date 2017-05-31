@@ -46,8 +46,8 @@ import ru.solandme.washwait.R;
 import ru.solandme.washwait.adapters.MyPlacesRVAdapter;
 import ru.solandme.washwait.network.map.PlacesApiHelper;
 import ru.solandme.washwait.network.map.model.map.PlacesResponse;
-import ru.solandme.washwait.network.map.model.map.Result;
 import ru.solandme.washwait.network.map.model.places.PlaceInfo;
+import ru.solandme.washwait.network.map.model.places.Result;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.utils.Utils;
 
@@ -69,7 +69,7 @@ public class MapActivity extends AppCompatActivity implements
     private String lang;
 
     private MyPlacesRVAdapter adapter;
-    private List<Result> results;
+    private List<ru.solandme.washwait.network.map.model.map.Result> results;
 
     private PlacesApiHelper placesHelper;
 
@@ -176,7 +176,7 @@ public class MapActivity extends AppCompatActivity implements
                 adapter.notifyDataSetChanged();
 
                 for (int i = 0; i < results.size(); i++) {
-                    Result result = results.get(i);
+                    ru.solandme.washwait.network.map.model.map.Result result = results.get(i);
                     ru.solandme.washwait.network.map.model.map.Location location = result.getGeometry().getLocation();
                     LatLng latLng = new LatLng(location.getLat(), location.getLng());
 
@@ -199,13 +199,13 @@ public class MapActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onPlaceItemSelected(final int position, final Result result) {
+    public void onPlaceItemSelected(final int position, final ru.solandme.washwait.network.map.model.map.Result result) {
 
         placesHelper.requestPlaceInfo(result.getPlaceId(), lang, new Callback<PlaceInfo>() {
             @Override
             public void onResponse(Call<PlaceInfo> call, Response<PlaceInfo> response) {
 
-                ru.solandme.washwait.network.map.model.places.Result result = response.body().getResult();
+                Result result = response.body().getResult();
 
                 Intent intent = new Intent(MapActivity.this, AboutPlace.class);
                 intent.putExtra(AboutPlace.RESULT_KEY, new Gson().toJson(result));
