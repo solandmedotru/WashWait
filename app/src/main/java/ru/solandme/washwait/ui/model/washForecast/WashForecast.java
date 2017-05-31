@@ -30,49 +30,45 @@ public class WashForecast {
     }
 
     private String getTextForWashForecast(int washDayNumber, double dataToWash) {
-        String dateToWashFormat;
-        if (dataToWash != 0) {
-            dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
+        if (dataToWash == 0 || washDayNumber > 14) {
+            return context.getResources().getString(R.string.not_wash);
         } else {
-            washDayNumber = 15;
-            dateToWashFormat = "N/D";
+            String dateToWashFormat = new SimpleDateFormat("dd MMMM, EE", Locale.getDefault()).format(dataToWash * 1000);
+            switch (washDayNumber) {
+                case 0:
+                    return context.getResources().getString(R.string.can_wash);
+                case 1:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 2:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 3:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 4:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 5:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 6:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 7:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 8:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 9:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 10:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 11:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 12:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 13:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                case 14:
+                    return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
+                default:
+                    return context.getResources().getString(R.string.not_wash);
+            }
         }
-
-        switch (washDayNumber) {
-            case 0:
-                return context.getResources().getString(R.string.can_wash);
-            case 1:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 2:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 3:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 4:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 5:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 6:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 7:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 8:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 9:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 10:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 11:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 12:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 13:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            case 14:
-                return context.getResources().getString(R.string.wash, dateToWashFormat.toUpperCase());
-            default:
-                return context.getResources().getString(R.string.not_wash);
-        }
-
     }
 
     private double getWashData(int washDayNumber, MyWeatherForecast myWeatherForecast) {
@@ -86,30 +82,32 @@ public class WashForecast {
     }
 
     private int getWashDayByDistance(String forecastDistance, float precipitationLimit, MyWeatherForecast myWeatherForecast) {
+        if (myWeatherForecast != null) {
+            washDayNumber = myWeatherForecast.getMaxPeriod() - 1;
+            int firstDirtyDay = -1;
+            int clearDaysCounter = 0;
+            int daysCounter = 0;
 
-        int washDayNumber = myWeatherForecast.getMaxPeriod() - 1;
-        int firstDirtyDay = -1;
-        int clearDaysCounter = 0;
-        int daysCounter = 0;
+            for (int i = 0; i < myWeatherForecast.getMyWeatherList().size(); i++) {
+                double maxTemp = myWeatherForecast.getMyWeatherList().get(i).getTempMax();
+                float precipitation = myWeatherForecast.getMyWeatherList().get(i).getPrecipitation();
 
-        for (int i = 0; i < myWeatherForecast.getMyWeatherList().size(); i++) {
-            double maxTemp = myWeatherForecast.getMyWeatherList().get(i).getTempMax();
-            float precipitation = myWeatherForecast.getMyWeatherList().get(i).getPrecipitation();
-
-            daysCounter++;
-            if (!isBadConditions(maxTemp, precipitation, precipitationLimit, myWeatherForecast.getUnits())) {
-                clearDaysCounter++;
-                if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
-                    if (washDayNumber == myWeatherForecast.getMaxPeriod() - 1) {
-                        washDayNumber = daysCounter - clearDaysCounter;
+                daysCounter++;
+                if (!isBadConditions(maxTemp, precipitation, precipitationLimit, myWeatherForecast.getUnits())) {
+                    clearDaysCounter++;
+                    if (clearDaysCounter == Integer.parseInt(forecastDistance)) {
+                        if (washDayNumber == myWeatherForecast.getMaxPeriod() - 1) {
+                            washDayNumber = daysCounter - clearDaysCounter;
+                        }
                     }
+                } else {
+                    clearDaysCounter = 0;
                 }
-            } else {
-                clearDaysCounter = 0;
             }
+            Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
+        } else {
+            washDayNumber = 100;
         }
-        Log.e(TAG, "day: " + washDayNumber + " " + firstDirtyDay);
-
         return washDayNumber;
     }
 
