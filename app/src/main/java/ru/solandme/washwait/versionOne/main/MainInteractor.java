@@ -11,13 +11,13 @@ class MainInteractor implements IMainInteractor, OnWeatherUpdatedListener {
 
     public MainInteractor(Context context, OnDTOUpdatedListener onDTOUpdatedListener) {
         this.onDTOUpdatedListener = onDTOUpdatedListener;
-        this.weatherRepository = new WeatherRepository(context, this);
+        this.weatherRepository = new OWMRepository(context, this);
     }
 
 
     @Override
     public void loadWeather() {
-        weatherRepository.getWeatherForecast();
+        weatherRepository.requestWeatherForecast();
     }
 
     @Override

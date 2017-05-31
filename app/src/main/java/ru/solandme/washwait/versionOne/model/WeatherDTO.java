@@ -1,13 +1,24 @@
 package ru.solandme.washwait.versionOne.model;
 
-public class WeatherDTO {
-    private String currentMaxTemp;
+import java.util.List;
 
-    public void setCurrentMaxTemp(String currentMaxTemp) {
-        this.currentMaxTemp = currentMaxTemp;
+public class WeatherDTO {
+    private Weather currentWeather;
+    private List<Weather> forecast;
+
+    public Weather getCurrentWeather() {
+        return currentWeather;
     }
 
-    public String getCurrentMaxTemp() {
-        return currentMaxTemp;
+    public void setCurrentWeather(Weather currentWeather) {
+        this.currentWeather = currentWeather;
+    }
+
+    public List<Weather> getForecast() {
+        return forecast;
+    }
+
+    public void setForecast(List<Weather> forecast) {
+        this.forecast = forecast;
     }
 }
