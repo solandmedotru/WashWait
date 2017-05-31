@@ -3,6 +3,8 @@ package ru.solandme.washwait.versionOne.main;
 import android.content.Context;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -15,6 +17,7 @@ import ru.solandme.washwait.utils.SharedPrefsUtils;
 import ru.solandme.washwait.versionOne.main.network.OWMService;
 import ru.solandme.washwait.versionOne.main.network.RetrofitHelper;
 import ru.solandme.washwait.versionOne.main.network.forecast.OpenWeatherForecast;
+import ru.solandme.washwait.versionOne.model.Weather;
 import ru.solandme.washwait.versionOne.model.WeatherDTO;
 
 public class OWMRepository implements IWeatherRepository{
@@ -36,7 +39,6 @@ public class OWMRepository implements IWeatherRepository{
         apiService = RetrofitHelper.requestForecast(context, BASE_URL).create(OWMService.class);
         weatherDTO = new WeatherDTO();
     }
-
 
     @Override
     public void requestWeatherForecast() {
@@ -60,10 +62,21 @@ public class OWMRepository implements IWeatherRepository{
                 weatherDTO = new WeatherDTO();
                 if (response !=null) {
                     OpenWeatherForecast forecast = response.body();
-                    weatherDTO.getCurrentWeather().setTempMax(String.valueOf(forecast.getList().get(0).getTemp().getMax()));
+
+                    Weather currentWeather = new Weather();
+                    List<Weather> weatherList = new ArrayList<>();
+
+                    currentWeather.setTempMax(String.valueOf(forecast.getList().get(0).getTemp().getMax()));
                     //TODO доделать полное заполнение всех параметров погоды
+
+
+                    weatherDTO.setCurrentWeather(currentWeather);
+                    weatherDTO.setForecast(weatherList);
+
+                    listener.onSuccess(weatherDTO);
+                } else {
+                    listener.onError(context.getString(R.string.error_from_response));
                 }
-                listener.onSuccess(weatherDTO);
             }
 
             @Override
