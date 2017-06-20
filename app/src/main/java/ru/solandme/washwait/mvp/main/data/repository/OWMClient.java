@@ -12,8 +12,8 @@ import retrofit2.Response;
 import ru.solandme.washwait.BuildConfig;
 import ru.solandme.washwait.Constants;
 import ru.solandme.washwait.R;
+import ru.solandme.washwait.mvp.main.data.network.ApiFactory;
 import ru.solandme.washwait.mvp.main.data.network.OWMService;
-import ru.solandme.washwait.mvp.main.data.network.RetrofitHelper;
 import ru.solandme.washwait.mvp.main.data.network.forecast.OpenWeatherForecast;
 import ru.solandme.washwait.mvp.main.domain.model.Weather;
 import ru.solandme.washwait.mvp.main.domain.model.WeatherDTO;
@@ -27,15 +27,15 @@ public class OWMClient implements IWeatherClient{
     private static final int MAX_PERIOD = 16;
 
     private WeatherDTO weatherDTO;
-    private final OWMService apiService;
+    private final OWMService weatherService;
     private IWeatherClient.Callback callback;
     private Context context;
 
     public OWMClient(Context context, IWeatherClient.Callback callback) {
         this.callback = callback;
         this.context = context;
-        RetrofitHelper.resetRetrofit();
-        apiService = RetrofitHelper.requestForecast(context, BASE_URL).create(OWMService.class);
+        ApiFactory.resetService();
+        weatherService = ApiFactory.getWeatherService(context, BASE_URL).create(OWMService.class);
         weatherDTO = new WeatherDTO();
     }
 
@@ -47,7 +47,7 @@ public class OWMClient implements IWeatherClient{
         String units = SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_units_key), Constants.DEFAULT_UNITS);
 
 
-        Call<OpenWeatherForecast> weatherCall = apiService.getForecastByCoordinats(
+        Call<OpenWeatherForecast> weatherCall = weatherService.getForecastByCoordinats(
                 String.valueOf(lat),
                 String.valueOf(lon),
                 units,
@@ -63,13 +63,8 @@ public class OWMClient implements IWeatherClient{
                 if (response !=null) {
                     OpenWeatherForecast forecast = response.body();
 
-                    Weather currentWeather = new Weather();
-                    List<Weather> weatherList = new ArrayList<>();
-
-                    currentWeather.setTempMax(String.valueOf(forecast.getList().get(0).getTemp().getMax()));
-                    currentWeather.setTempMin(String.valueOf(forecast.getList().get(0).getTemp().getMin()));
-                    //TODO доделать полное заполнение всех параметров погоды
-
+                    Weather currentWeather = takeWeather(forecast, 0);
+                    List<Weather> weatherList = takeWeathersForAllPerriod(forecast);
 
                     weatherDTO.setCurrentWeather(currentWeather);
                     weatherDTO.setForecast(weatherList);
@@ -85,6 +80,25 @@ public class OWMClient implements IWeatherClient{
                 callback.onError(t.getMessage());
             }
         });
+    }
+
+    private List<Weather> takeWeathersForAllPerriod(OpenWeatherForecast forecast) {
+        //TODO доделать полное заполнение всех параметров погоды
+        List<Weather> weatherList = new ArrayList<>();
+        for (int i = 0; i < forecast.getList().size(); i++) {
+            Weather weather = takeWeather(forecast, i);
+            weatherList.add(weather);
+        }
+
+        return weatherList;
+    }
+
+    private Weather takeWeather(OpenWeatherForecast forecast, int day) {
+        //TODO доделать полное заполнение всех параметров погоды
+        Weather weather = new Weather();
+        weather.setTempMax(String.valueOf(forecast.getList().get(day).getTemp().getMax()));
+        weather.setTempMin(String.valueOf(forecast.getList().get(day).getTemp().getMin()));
+        return  weather;
     }
 
     @Override

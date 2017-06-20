@@ -20,14 +20,14 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitHelper {
+public class ApiFactory {
 
     private static final long HTTP_RESPONSE_DISK_CACHE_MAX_SIZE = 10 * 1024 * 1024;
     private static final long CONNECTION_TIMEOUT = 10;
-    private static final String TAG = RetrofitHelper.class.getSimpleName();
+    private static final String TAG = ApiFactory.class.getSimpleName();
     private static Retrofit retrofit = null;
 
-    public static Retrofit requestForecast(@NonNull Context context, String url) {
+    public static Retrofit getWeatherService(@NonNull Context context, String url) {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
@@ -37,8 +37,8 @@ public class RetrofitHelper {
         }
         return retrofit;
     }
-    public static void resetRetrofit(){
-        Log.d(TAG, "resetRetrofit: " );
+    public static void resetService(){
+        Log.d(TAG, "resetService: " );
         retrofit = null;
     }
 

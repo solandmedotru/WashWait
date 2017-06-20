@@ -3,7 +3,6 @@ package ru.solandme.washwait.mvp.main.domain.interactor;
 import android.content.Context;
 
 import ru.solandme.washwait.mvp.main.data.repository.WeatherRepository;
-import ru.solandme.washwait.mvp.main.domain.model.WashForecastDTO;
 import ru.solandme.washwait.mvp.main.domain.model.WeatherDTO;
 
 public class MainInteractor implements IMainInteractor, WeatherRepository.Callback {
@@ -23,14 +22,12 @@ public class MainInteractor implements IMainInteractor, WeatherRepository.Callba
 
     @Override
     public void onSuccess(WeatherDTO weatherDTO) {
-        //TODO сделать метод который после успешного получения погоды делает прогноз мыть или не мыть машину который возвращает WashForecastDTO
-        WashForecastDTO washForecastDTO = new WashForecastDTO(); //как доделаю удалить
-//        WashForecastDTO washForecastDTO = getWashForecast(weatherDTO);
-        callback.onSuccess(weatherDTO, washForecastDTO);
+        callback.onSuccess(weatherDTO);
     }
 
     @Override
     public void onError(String errorMessage) {
         callback.onError(errorMessage);
     }
+
 }

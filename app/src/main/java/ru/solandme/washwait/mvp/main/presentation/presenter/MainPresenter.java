@@ -4,7 +4,6 @@ import android.content.Context;
 
 import ru.solandme.washwait.mvp.main.domain.interactor.IMainInteractor;
 import ru.solandme.washwait.mvp.main.domain.interactor.MainInteractor;
-import ru.solandme.washwait.mvp.main.domain.model.WashForecastDTO;
 import ru.solandme.washwait.mvp.main.domain.model.WeatherDTO;
 import ru.solandme.washwait.mvp.main.presentation.view.IMainView;
 
@@ -34,7 +33,7 @@ public class MainPresenter implements IMainPresenter, IMainInteractor.Callback {
     }
 
     @Override
-    public void onSuccess(WeatherDTO weatherDTO, WashForecastDTO washForecastDTO) {
+    public void onSuccess(WeatherDTO weatherDTO) {
         mainView.stopProgress();
         //TODO сделать отдельные методы для заполнения каждой вьюшки. mainView.showCurrentMaxTemperature(temp)
         mainView.showCurrentMaxTemperature(weatherDTO.getCurrentWeather().getTempMax());

@@ -13,6 +13,7 @@ public class Weather {
     private String snow;
     private String rain;
     private String precipitation;
+    private boolean washDay;
 
     public String getTime() {
         return time;
@@ -108,5 +109,13 @@ public class Weather {
 
     public void setPrecipitation(String precipitation) {
         this.precipitation = precipitation;
+    }
+
+    public boolean isWashDay() {
+        return washDay;
+    }
+
+    public void setWashDay(boolean washDay) {
+        this.washDay = washDay;
     }
 }

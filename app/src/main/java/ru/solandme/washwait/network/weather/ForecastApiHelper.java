@@ -38,7 +38,7 @@ public class ForecastApiHelper {
         return retrofit;
     }
     public static void resetRetrofit(){
-        Log.d(TAG, "resetRetrofit: " );
+        Log.d(TAG, "resetService: " );
         retrofit = null;
     }
 
