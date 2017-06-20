@@ -8,4 +8,6 @@ public interface IMainView {
     void stopProgress();
 
     void showCurrentMaxTemperature(String currentMaxTemp);
+
+    void showCurrentMinTemperature(String currentMinTemp);
 }

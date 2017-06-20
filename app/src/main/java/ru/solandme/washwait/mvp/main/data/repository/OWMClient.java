@@ -19,7 +19,7 @@ import ru.solandme.washwait.mvp.main.domain.model.Weather;
 import ru.solandme.washwait.mvp.main.domain.model.WeatherDTO;
 import ru.solandme.washwait.utils.SharedPrefsUtils;
 
-public class OWMClient implements IWeatherClient{
+public class OWMClient implements IWeatherClient {
     private static final String TAG = OWMClient.class.getSimpleName();
 
     private static final String OPEN_WEATHER_MAP_API_KEY = BuildConfig.OPEN_WEATHER_MAP_API_KEY;
@@ -60,11 +60,11 @@ public class OWMClient implements IWeatherClient{
             @Override
             public void onResponse(Call<OpenWeatherForecast> call, Response<OpenWeatherForecast> response) {
                 weatherDTO = new WeatherDTO();
-                if (response !=null) {
+                if (response != null) {
                     OpenWeatherForecast forecast = response.body();
 
                     Weather currentWeather = takeWeather(forecast, 0);
-                    List<Weather> weatherList = takeWeathersForAllPerriod(forecast);
+                    List<Weather> weatherList = takeWeathersForAllPeriod(forecast);
 
                     weatherDTO.setCurrentWeather(currentWeather);
                     weatherDTO.setForecast(weatherList);
@@ -82,7 +82,7 @@ public class OWMClient implements IWeatherClient{
         });
     }
 
-    private List<Weather> takeWeathersForAllPerriod(OpenWeatherForecast forecast) {
+    private List<Weather> takeWeathersForAllPeriod(OpenWeatherForecast forecast) {
         //TODO доделать полное заполнение всех параметров погоды
         List<Weather> weatherList = new ArrayList<>();
         for (int i = 0; i < forecast.getList().size(); i++) {
@@ -98,7 +98,40 @@ public class OWMClient implements IWeatherClient{
         Weather weather = new Weather();
         weather.setTempMax(String.valueOf(forecast.getList().get(day).getTemp().getMax()));
         weather.setTempMin(String.valueOf(forecast.getList().get(day).getTemp().getMin()));
-        return  weather;
+
+        weather.setWashDay(isWashDay(forecast, day));
+
+        weather.setIcon(getWeatherPicture(forecast.getList().get(day).getWeather().get(0).getIcon()));
+
+        return weather;
+    }
+
+    private boolean isWashDay(OpenWeatherForecast forecast, int day) {
+
+        double dirtyLimit = SharedPrefsUtils.getFloatPreference(context, context.getString(R.string.pref_dirty_limit_key), (float) Constants.DEFAULT_DIRTY_LIMIT);
+        int distance = Integer.parseInt(SharedPrefsUtils.getStringPreference(context, context.getString(R.string.pref_limit_key), Constants.DEFAULT_FORECAST_DISTANCE));
+        boolean isWashDay = true;
+
+        if (day + distance < forecast.getList().size()) {
+
+            for (int i = day; i < day + distance; i++) {
+                double rain = forecast.getList().get(i).getRain();
+                double snow = forecast.getList().get(i).getSnow();
+                double precipitation = calculatePrecipitation(rain, snow);
+                Log.d(TAG, "dirty: " + i + " " + precipitation);
+
+                if (precipitation > dirtyLimit) {
+                    isWashDay = false;
+                }
+            }
+
+            Log.d(TAG, "isWashDay in period: " + day + isWashDay);
+
+            return isWashDay;
+        } else {
+            Log.d(TAG, "isWashDay out period: " + day + false);
+            return false;
+        }
     }
 
     @Override
@@ -107,8 +140,7 @@ public class OWMClient implements IWeatherClient{
     }
 
 
-    private float calculatePrecipitation(float rain, float snow) {
-        Log.e(TAG, "dirtyCounter: " + (rain + (snow * 2)) * 4);
+    private double calculatePrecipitation(double rain, double snow) {
         return (rain + (snow * 2)) * 4; //осадки за 12 часов, умножаем на 4 так, как приходят количество осадков за 3 часа
     }
 

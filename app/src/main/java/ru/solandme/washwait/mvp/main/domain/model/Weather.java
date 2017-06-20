@@ -14,6 +14,7 @@ public class Weather {
     private String rain;
     private String precipitation;
     private boolean washDay;
+    private int icon;
 
     public String getTime() {
         return time;
@@ -117,5 +118,13 @@ public class Weather {
 
     public void setWashDay(boolean washDay) {
         this.washDay = washDay;
+    }
+
+    public int getIcon() {
+        return icon;
+    }
+
+    public void setIcon(int icon) {
+        this.icon = icon;
     }
 }

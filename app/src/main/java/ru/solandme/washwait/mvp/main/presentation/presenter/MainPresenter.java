@@ -37,6 +37,7 @@ public class MainPresenter implements IMainPresenter, IMainInteractor.Callback {
         mainView.stopProgress();
         //TODO сделать отдельные методы для заполнения каждой вьюшки. mainView.showCurrentMaxTemperature(temp)
         mainView.showCurrentMaxTemperature(weatherDTO.getCurrentWeather().getTempMax());
+        mainView.showCurrentMinTemperature(weatherDTO.getCurrentWeather().getTempMin());
     }
 
     @Override

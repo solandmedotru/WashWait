@@ -130,6 +130,11 @@ public class MainOneActivity extends AppCompatActivity implements IMainView, Swi
     }
 
     @Override
+    public void showCurrentMinTemperature(String currentMinTemp) {
+        curMinTempField.setText(currentMinTemp);
+    }
+
+    @Override
     public void navigateToMap() {
 
     }
