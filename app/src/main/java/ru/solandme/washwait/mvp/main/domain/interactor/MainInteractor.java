@@ -17,7 +17,9 @@ public class MainInteractor implements IMainInteractor, WeatherRepository.Callba
 
     @Override
     public void loadWeather() {
-        weatherRepository.requestWeatherForecast();
+        new Thread(() -> {
+            weatherRepository.requestWeatherForecast();
+        }).start();
     }
 
     @Override

@@ -135,6 +135,11 @@ public class MainOneActivity extends AppCompatActivity implements IMainView, Swi
     }
 
     @Override
+    public void showCurrentWeatherIcon(int icon) {
+        weatherIconToday.setImageResource(icon);
+    }
+
+    @Override
     public void navigateToMap() {
 
     }

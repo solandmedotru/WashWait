@@ -10,4 +10,6 @@ public interface IMainView {
     void showCurrentMaxTemperature(String currentMaxTemp);
 
     void showCurrentMinTemperature(String currentMinTemp);
+
+    void showCurrentWeatherIcon(int icon);
 }
